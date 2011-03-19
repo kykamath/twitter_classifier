@@ -23,4 +23,6 @@ class Utilities:
                 data = cjson.decode(line)
                 if 'text' in data: yield data
             except: pass
+    @staticmethod        
+    def getDataFile(currentTime): return '_'.join([str(currentTime.year), str(currentTime.month), str(currentTime.day)])
 
