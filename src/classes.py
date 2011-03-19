@@ -12,15 +12,7 @@ import cPickle
 class Evaluation:
     accuracy = 'accuracy'
     aucm = 'aucm'
-
-class ExpertUsers:
-    def __init__(self, number=1250):
-        self.number, self.list = number, defaultdict(dict)
-        usersData = defaultdict(list)
-        for l in open(Settings.usersToCrawl): data = l.strip().split(); usersData[data[0]].append(data[1:])
-        for k, v in usersData.iteritems(): 
-            for user in v[:self.number]: self.list[user[1]] = {'screen_name': user[0], 'class':k}
-
+    
 class Utilities:
     @staticmethod
     def createDirectory(path):
