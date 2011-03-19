@@ -5,6 +5,7 @@ Created on Mar 18, 2011
 '''
 from utilities import ExpertUsers, Utilities
 from settings import Settings
+from datetime import datetime
 import cjson
 
 class CreateDocuments:
@@ -15,9 +16,11 @@ class CreateDocuments:
     @staticmethod
     def createTrainingSetForDifferentNumberOfUsers(length):
         experts = ExpertUsers(number=length)
-        print experts.list
-        for tweet in CreateDocuments.getTweetsFromExperts(experts.list, Settings.twitterUsersTweetsFolder+'2011_3_10.gz'):
-            print cjson.encode(tweet)
+        currentTime = Settings.startTime
+        while currentTime <= Settings.endTime:
+            Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)
+#            for tweet in CreateDocuments.getTweetsFromExperts(experts.list, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)):
+#                print cjson.encode(tweet)
         
         
 if __name__ == '__main__':
