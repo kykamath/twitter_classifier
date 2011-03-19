@@ -5,6 +5,7 @@ Created on Mar 18, 2011
 '''
 from collections import defaultdict
 from settings import Settings
+from utilities import Utilities
 from nltk.classify.maxent import MaxentClassifier
 import os
 import cPickle
@@ -13,12 +14,6 @@ class Evaluation:
     accuracy = 'accuracy'
     aucm = 'aucm'
     
-class Utilities:
-    @staticmethod
-    def createDirectory(path):
-        dir = path[:path.rfind('/')]
-        if not os.path.exists(dir): os.umask(0), os.makedirs('%s'%dir, 0770)
-        
 class MultiClassAUC:
     def __init__(self, distributionList):
         self.c = len(distributionList[0][2])

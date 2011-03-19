@@ -21,6 +21,8 @@ class CreateDocuments:
                 experts = ExpertUsers(number=numberOfExperts)
                 outputFile = Settings.twitterClassifierTrainingSetsFolder+'%s/%s'%(numberOfExperts,Utilities.getDataFile(currentTime))
                 print outputFile
+                Utilities.createDirectory(outputFile)
+                exit()
 #                for tweet in CreateDocuments.getTweetsFromExperts(experts.list, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)):
 #                    print cjson.encode(tweet)
             currentTime+=timedelta(days=1)

@@ -5,7 +5,7 @@ Created on Mar 18, 2011
 '''
 from collections import defaultdict
 from settings import Settings
-import gzip, cjson
+import gzip, cjson, os
 
 class ExpertUsers:
     def __init__(self, number=1250):
@@ -25,4 +25,8 @@ class Utilities:
             except: pass
     @staticmethod        
     def getDataFile(currentTime): return '_'.join([str(currentTime.year), str(currentTime.month), str(currentTime.day)])
+    @staticmethod
+    def createDirectory(path):
+        dir = path[:path.rfind('/')]
+        if not os.path.exists(dir): os.umask(0), os.makedirs('%s'%dir, 0770)
 
