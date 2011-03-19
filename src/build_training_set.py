@@ -8,7 +8,7 @@ from settings import Settings
 from datetime import datetime, timedelta
 import cjson
 
-class CreateDocuments:
+class CreateTrainingAndTestSets:
     @staticmethod
     def getTweetsFromExperts(expertsList, file):
         for tweet in Utilities.iterateTweetsFromGzip(file):
@@ -16,17 +16,18 @@ class CreateDocuments:
     @staticmethod
     def createTrainingSetForDifferentNumberOfUsers():
         currentTime = Settings.startTime
+        allExperts = experts = ExpertUsers()
         while currentTime <= Settings.endTime:
             for numberOfExperts in Settings.expertListSizes:
-                experts = ExpertUsers(number=numberOfExperts)
-                outputFile = Settings.twitterClassifierTrainingSetsFolder+'%s/%s'%(numberOfExperts,Utilities.getDataFile(currentTime))
-                print outputFile
-                Utilities.createDirectory(outputFile)
-                exit()
-#                for tweet in CreateDocuments.getTweetsFromExperts(experts.list, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)):
-#                    print cjson.encode(tweet)
+                expertsForTraining = ExpertUsers(number=numberOfExperts)
+                trainingFile = Settings.twitterClassifierTrainingSetsFolder+'%s/%s'%(numberOfExperts,Utilities.getDataFile(currentTime))
+                testFile = Settings.twitterClassifierTestSetsFolder+'%s/%s'%(numberOfExperts,Utilities.getDataFile(currentTime))
+                Utilities.createDirectory(trainingFile), Utilities.createDirectory(testFile)
+                for tweet in CreateTrainingAndTestSets.getTweetsFromExperts(allExperts.list, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)):
+                    if tweet['user']['id_str'] in expertsForTraining.list: print 'train', cjson.encode(tweet)
+                    else: print 'test', cjson.encode(tweet)
             currentTime+=timedelta(days=1)
         
         
 if __name__ == '__main__':
-    CreateDocuments.createTrainingSetForDifferentNumberOfUsers()
+    CreateTrainingAndTestSets.createTrainingSetForDifferentNumberOfUsers()
