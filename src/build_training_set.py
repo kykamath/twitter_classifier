@@ -5,7 +5,7 @@ Created on Mar 18, 2011
 '''
 from utilities import ExpertUsers, Utilities
 from settings import Settings
-from datetime import datetime
+from datetime import datetime, timedelta
 import cjson
 
 class CreateDocuments:
@@ -18,7 +18,8 @@ class CreateDocuments:
         experts = ExpertUsers(number=length)
         currentTime = Settings.startTime
         while currentTime <= Settings.endTime:
-            Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)
+            print Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)
+            currentTime+=timedelta(days=1)
 #            for tweet in CreateDocuments.getTweetsFromExperts(experts.list, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)):
 #                print cjson.encode(tweet)
         
