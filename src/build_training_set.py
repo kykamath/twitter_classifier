@@ -25,12 +25,9 @@ class CreateTrainingAndTestSets:
                 Utilities.createDirectory(trainingFile), Utilities.createDirectory(testFile)
                 for tweet in CreateTrainingAndTestSets.getTweetsFromExperts(allExperts.list, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)):
                     tweet['class'] = allExperts.list[tweet['user']['id_str']]['class']
-                    if tweet['user']['id_str'] in expertsForTraining.list: 
-                        print cjson.encode(tweet)
-#                        Utilities.writeAsJsonToFile(tweet, trainingFile)
-#                    else: Utilities.writeAsJsonToFile(tweet, testFile)
+                    if tweet['user']['id_str'] in expertsForTraining.list: Utilities.writeAsJsonToFile(tweet, trainingFile)
+                    else: Utilities.writeAsJsonToFile(tweet, testFile)
             currentTime+=timedelta(days=1)
-        
         
 if __name__ == '__main__':
     CreateTrainingAndTestSets.createTrainingSetForDifferentNumberOfUsers()
