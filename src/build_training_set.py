@@ -5,7 +5,7 @@ Created on Mar 18, 2011
 '''
 from utilities import ExpertUsers, Utilities
 from settings import Settings
-
+import cjson
 
 class CreateDocuments:
     @staticmethod
@@ -17,7 +17,7 @@ class CreateDocuments:
         experts = ExpertUsers(number=length)
         print experts.list
         for tweet in CreateDocuments.getTweetsFromExperts(experts.list, Settings.twitterUsersTweetsFolder+'2011_3_10.gz'):
-            print tweet
+            print cjson.encode(tweet)
         
         
 if __name__ == '__main__':
