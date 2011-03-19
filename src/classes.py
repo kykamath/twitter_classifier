@@ -12,6 +12,7 @@ class ExpertUsers:
         for l in open(Settings.usersToCrawl): data = l.strip().split(); usersData[data[0]].append(data[1:])
         for k, v in usersData.iteritems(): 
             for user in v[:self.number]: self.list[user[1]] = {'screen_name': user[0], 'class':k}
+        for k, v in self.list.iteritems(): print k, v
 
 
 if __name__ == '__main__':
