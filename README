@@ -1,1 +1,3 @@
 A classifier for twitter users.
+
+1. Use a small percentage of users to predict other user tweets.
