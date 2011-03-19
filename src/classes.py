@@ -17,4 +17,4 @@ class ExpertUsers:
 
 
 if __name__ == '__main__':
-    ExpertUsers()
+    ExpertUsers(number=5)
