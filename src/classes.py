@@ -7,11 +7,12 @@ from collections import defaultdict
 class ExpertUsers:
     def __init__(self, number=None):
         self.number = number
-#        if self.number==None:
-        self.experts = defaultdict(dict)
+        usersData = defaultdict(list)
         for l in open('/data/twitter/users/crawl/users_to_crawl'):
             data = l.strip().split()
-            print data
+            usersData[data[0]].append(data[1:])
+        for k, v in usersData.iteritems(): print k, len(v)
+            
 #                self.experts[data[2]]={'screen_name': data[1], 'class':data[0]}
 
 
