@@ -14,15 +14,17 @@ class CreateDocuments:
         for tweet in Utilities.iterateTweetsFromGzip(file):
             if tweet['user']['id_str'] in expertsList: yield tweet
     @staticmethod
-    def createTrainingSetForDifferentNumberOfUsers(length):
-        experts = ExpertUsers(number=length)
+    def createTrainingSetForDifferentNumberOfUsers():
         currentTime = Settings.startTime
         while currentTime <= Settings.endTime:
-            print Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)
+            for numberOfExperts in Settings.expertListSizes:
+                experts = ExpertUsers(number=numberOfExperts)
+                outputFile = Settings.twitterClassifierTrainingSetsFolder+'%s/%s'%(numberOfExperts,Utilities.getDataFile(currentTime))
+                print outputFile
+#                for tweet in CreateDocuments.getTweetsFromExperts(experts.list, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)):
+#                    print cjson.encode(tweet)
             currentTime+=timedelta(days=1)
-#            for tweet in CreateDocuments.getTweetsFromExperts(experts.list, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)):
-#                print cjson.encode(tweet)
         
         
 if __name__ == '__main__':
-    CreateDocuments.createTrainingSetForDifferentNumberOfUsers(1)
+    CreateDocuments.createTrainingSetForDifferentNumberOfUsers()
