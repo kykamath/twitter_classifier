@@ -39,7 +39,7 @@ class CreateTrainingAndTestSets:
                 testFile = Settings.twitterClassifierTestSetsFolder+'%s/%s'%(numberOfExperts,Utilities.getDataFile(currentTime))
                 combinedFile = Settings.twitterClassifierAllFolder+'%s/%s'%(numberOfExperts,Utilities.getDataFile(currentTime))
                 Utilities.createDirectory(combinedFile)
-                for tweet in Utilities.iterateTweetsFromGzip(trainingFile):
+                for tweet in open(trainingFile):
                     print tweet
 #                    if tweet['user']['id_str'] in expertsForTraining.list: Utilities.writeAsJsonToFile(tweet, trainingFile)
 #                    else: Utilities.writeAsJsonToFile(tweet, testFile)
