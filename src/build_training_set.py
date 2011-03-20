@@ -49,7 +49,7 @@ class CreateTrainingAndTestSets:
     @staticmethod
     def splitFileByHours():
         file = Settings.twitterClassifierAllFolder+'%s'%(Utilities.getDataFile(datetime(2011,3,11)))
-        for tweet in Utilities.iterateTweetsFromGzip(file):
+        for tweet in Utilities.iterateTweetsFromFile(file):
             d = datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format)
             print d.hour, d
 if __name__ == '__main__':
