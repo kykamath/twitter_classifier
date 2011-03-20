@@ -36,7 +36,7 @@ class CreateTrainingAndTestSets:
             for numberOfExperts in Settings.expertListSizes:
                 trainingFile = Settings.twitterClassifierTrainingSetsFolder+'%s/%s'%(numberOfExperts,Utilities.getDataFile(currentTime))
                 testFile = Settings.twitterClassifierTestSetsFolder+'%s/%s'%(numberOfExperts,Utilities.getDataFile(currentTime))
-                combinedFile = Settings.twitterClassifierAllFolder+'%s/%s'%(numberOfExperts,Utilities.getDataFile(currentTime))
+                combinedFile = Settings.twitterClassifierAllFolder+'%s'%(Utilities.getDataFile(currentTime))
                 print combinedFile
                 Utilities.createDirectory(combinedFile)
                 for tweet in open(trainingFile):
