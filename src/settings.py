@@ -9,6 +9,7 @@ class Settings:
     twitterUsersTweetsFolder = '%susers/tweets/'%twitterDataFolder
     twitterClassifierTrainingSetsFolder = '%sclassifier/training_sets/'%twitterDataFolder
     twitterClassifierTestSetsFolder = '%sclassifier/test_sets/'%twitterDataFolder
+    twitterClassifierAllFolder = '%sclassifier/all_doc_sets/'%twitterDataFolder
     
     usersToCrawl = '%susers/crawl/users_to_crawl'%twitterDataFolder
     

@@ -14,7 +14,7 @@ class CreateTrainingAndTestSets:
         for tweet in Utilities.iterateTweetsFromGzip(file):
             if tweet['user']['id_str'] in expertsList: yield tweet
     @staticmethod
-    def createTrainingSetForDifferentNumberOfUsers():
+    def byNumberOfExpertUsers():
         currentTime = Settings.startTime
         allExperts = experts = ExpertUsers()
         while currentTime <= Settings.endTime:
@@ -28,6 +28,22 @@ class CreateTrainingAndTestSets:
                     if tweet['user']['id_str'] in expertsForTraining.list: Utilities.writeAsJsonToFile(tweet, trainingFile)
                     else: Utilities.writeAsJsonToFile(tweet, testFile)
             currentTime+=timedelta(days=1)
+    
+    @staticmethod
+    def combineExpertUsers():
+        currentTime = Settings.startTime
+        allExperts = experts = ExpertUsers()
+        while currentTime <= Settings.endTime:
+            for numberOfExperts in Settings.expertListSizes:
+                trainingFile = Settings.twitterClassifierTrainingSetsFolder+'%s/%s'%(numberOfExperts,Utilities.getDataFile(currentTime))
+                testFile = Settings.twitterClassifierTestSetsFolder+'%s/%s'%(numberOfExperts,Utilities.getDataFile(currentTime))
+                combinedFile = Settings.twitterClassifierAllFolder+'%s/%s'%(numberOfExperts,Utilities.getDataFile(currentTime))
+                Utilities.createDirectory(combinedFile)
+                for tweet in Utilities.iterateTweetsFromGzip(trainingFile):
+                    print tweet
+#                    if tweet['user']['id_str'] in expertsForTraining.list: Utilities.writeAsJsonToFile(tweet, trainingFile)
+#                    else: Utilities.writeAsJsonToFile(tweet, testFile)
+            currentTime+=timedelta(days=1)
         
 if __name__ == '__main__':
-    CreateTrainingAndTestSets.createTrainingSetForDifferentNumberOfUsers()
+    CreateTrainingAndTestSets.combineExpertUsers()

@@ -7,7 +7,6 @@ from collections import defaultdict
 from settings import Settings
 from utilities import Utilities
 from nltk.classify.maxent import MaxentClassifier
-import os
 import cPickle
 
 class Evaluation:
@@ -86,6 +85,9 @@ class Classifier(object):
         cPickle.dump(classifier, open(fileName, 'w'))
     @staticmethod
     def loadClassifier(fileName): return cPickle.load(open(fileName))
+
+class Analysis:
+    pass
 
 if __name__ == '__main__':
     ExpertUsers(number=5)
