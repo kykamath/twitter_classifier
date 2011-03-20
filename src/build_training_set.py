@@ -45,6 +45,10 @@ class CreateTrainingAndTestSets:
                 tweet = cjson.decode(tweet)
                 Utilities.writeAsJsonToFile(tweet, combinedFile)
             currentTime+=timedelta(days=1)
-        
+    
+    @staticmethod
+    def splitFileByHours():
+        file = Settings.twitterClassifierAllFolder+'%s'%(Utilities.getDataFile(datetime(2011,3,11)))
+        print file
 if __name__ == '__main__':
-    CreateTrainingAndTestSets.combineExpertUsers()
+    CreateTrainingAndTestSets.splitFileByHours()
