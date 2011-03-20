@@ -31,20 +31,19 @@ class CreateTrainingAndTestSets:
     
     @staticmethod
     def combineExpertUsers():
-        currentTime = Settings.startTime
+        currentTime, numberOfExperts = Settings.startTime, 50
         while currentTime <= Settings.endTime:
-            for numberOfExperts in Settings.expertListSizes:
-                trainingFile = Settings.twitterClassifierTrainingSetsFolder+'%s/%s'%(numberOfExperts,Utilities.getDataFile(currentTime))
-                testFile = Settings.twitterClassifierTestSetsFolder+'%s/%s'%(numberOfExperts,Utilities.getDataFile(currentTime))
-                combinedFile = Settings.twitterClassifierAllFolder+'%s'%(Utilities.getDataFile(currentTime))
-                print combinedFile
-                Utilities.createDirectory(combinedFile)
-                for tweet in open(trainingFile):
-                    tweet = cjson.decode(tweet)
-                    Utilities.writeAsJsonToFile(tweet, combinedFile)
-                for tweet in open(testFile):
-                    tweet = cjson.decode(tweet)
-                    Utilities.writeAsJsonToFile(tweet, combinedFile)
+            trainingFile = Settings.twitterClassifierTrainingSetsFolder+'%s/%s'%(numberOfExperts,Utilities.getDataFile(currentTime))
+            testFile = Settings.twitterClassifierTestSetsFolder+'%s/%s'%(numberOfExperts,Utilities.getDataFile(currentTime))
+            combinedFile = Settings.twitterClassifierAllFolder+'%s'%(Utilities.getDataFile(currentTime))
+            print combinedFile
+            Utilities.createDirectory(combinedFile)
+            for tweet in open(trainingFile):
+                tweet = cjson.decode(tweet)
+                Utilities.writeAsJsonToFile(tweet, combinedFile)
+            for tweet in open(testFile):
+                tweet = cjson.decode(tweet)
+                Utilities.writeAsJsonToFile(tweet, combinedFile)
             currentTime+=timedelta(days=1)
         
 if __name__ == '__main__':
