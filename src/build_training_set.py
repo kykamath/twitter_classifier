@@ -50,7 +50,8 @@ class CreateTrainingAndTestSets:
     def splitFileByHours():
         file = Settings.twitterClassifierAllFolder+'%s'%(Utilities.getDataFile(datetime(2011,3,11)))
         for tweet in Utilities.iterateTweetsFromFile(file):
-            outputFile = file+'/%s'%datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format).hour
+            outputFile = Settings.twitterDataFolder+'classifier/%s/%s'%(Utilities.getDataFile(datetime(2011,3,11)), 
+                                                                        datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format).hour)
             Utilities.createDirectory(outputFile)
             Utilities.writeAsJsonToFile(tweet, outputFile)
 if __name__ == '__main__':
