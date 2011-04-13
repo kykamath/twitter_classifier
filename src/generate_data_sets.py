@@ -18,7 +18,8 @@ class CreateTrainingAndTestSets:
         currentTime = Settings.startTime
         allExperts = ExpertUsers()
         while currentTime <= Settings.endTime:
-            for numberOfExperts in Settings.expertListSizes:
+#            for numberOfExperts in Settings.expertListSizes:
+            for numberOfExperts in [250]:
                 expertsForTraining = ExpertUsers(number=numberOfExperts)
                 trainingFile = Settings.twitterClassifierTrainingSetsFolder+'%s/%s'%(numberOfExperts,Utilities.getDataFile(currentTime))
                 testFile = Settings.twitterClassifierTestSetsFolder+'%s/%s'%(numberOfExperts,Utilities.getDataFile(currentTime))
