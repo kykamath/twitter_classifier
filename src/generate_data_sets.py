@@ -33,7 +33,7 @@ class CreateTrainingAndTestSets:
     
     @staticmethod
     def combineRawData():
-        currentTime, numberOfExperts = Settings.startTime, 50
+        currentTime, numberOfExperts = Settings.startTime, 250
         while currentTime <= Settings.endTime:
             trainingFile = Utilities.getTrainingFile(currentTime, DataType.raw, numberOfExperts)
             testFile = Utilities.getTestFile(currentTime, DataType.raw, numberOfExperts)
