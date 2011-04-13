@@ -16,7 +16,7 @@ class Settings:
     twitter_api_time_format = '%a %b %d %H:%M:%S +0000 %Y'
     
     # Classifier data
-    startTime=datetime(2011,3,9)
-    endTime=datetime(2011,3,18)
+    startTime=datetime(2011,3,19)
+    endTime=datetime(2011,4,12)
     
     expertListSizes = xrange(50,550,50)
