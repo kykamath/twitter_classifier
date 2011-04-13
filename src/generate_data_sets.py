@@ -39,13 +39,13 @@ class CreateTrainingAndTestSets:
             testFile = Utilities.getTestFile(currentTime, DataType.raw, numberOfExperts)
             combinedFile = Utilities.getCombinedFile(currentTime, DataType.raw)
             print trainingFile, testFile, combinedFile
-#            Utilities.createDirectory(combinedFile)
-#            for tweet in open(trainingFile):
-#                tweet = cjson.decode(tweet)
-#                Utilities.writeAsJsonToFile(tweet, combinedFile)
-#            for tweet in open(testFile):
-#                tweet = cjson.decode(tweet)
-#                Utilities.writeAsJsonToFile(tweet, combinedFile)
+            Utilities.createDirectory(combinedFile)
+            for tweet in open(trainingFile):
+                tweet = cjson.decode(tweet)
+                Utilities.writeAsJsonToFile(tweet, combinedFile)
+            for tweet in open(testFile):
+                tweet = cjson.decode(tweet)
+                Utilities.writeAsJsonToFile(tweet, combinedFile)
             currentTime+=timedelta(days=1)
     
 #    @staticmethod
