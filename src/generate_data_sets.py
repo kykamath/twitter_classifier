@@ -46,7 +46,7 @@ class CreateTrainingAndTestSets:
 #            for tweet in open(testFile):
 #                tweet = cjson.decode(tweet)
 #                Utilities.writeAsJsonToFile(tweet, combinedFile)
-#            currentTime+=timedelta(days=1)
+            currentTime+=timedelta(days=1)
     
 #    @staticmethod
 #    def splitFileByHours():
