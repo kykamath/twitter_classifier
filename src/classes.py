@@ -48,6 +48,8 @@ class Classifier(object):
     def trainClassifier(self, documents):
         from nltk.classify import apply_features
         trainSet = apply_features(Classifier.extractFeatures, documents)
+        for t in trainSet: print t
+        exit()
         self.classifier = self.nltkClassifier.train(trainSet)
     def testClassifier(self, documents):
         from nltk.classify import apply_features
@@ -85,9 +87,3 @@ class Classifier(object):
         cPickle.dump(classifier, open(fileName, 'w'))
     @staticmethod
     def loadClassifier(fileName): return cPickle.load(open(fileName))
-
-class Analysis:
-    pass
-
-if __name__ == '__main__':
-    ExpertUsers(number=5)

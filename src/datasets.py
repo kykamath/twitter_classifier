@@ -48,7 +48,7 @@ class DocumentTypeRawUnigram(DataType):
         sentance = removeHTTP(text.lower())
         sentance = removeUsers(sentance)
         returnWords = [pattern.sub('', word) for word, tag in pos_tag(word_tokenize(sentance))]
-        returnWords = filter(lambda w: w!='', lemmatizeWords(returnWords))
+        returnWords = filter(lambda w: w!='' and len(w)>2, lemmatizeWords(returnWords))
         return returnWords
 
 class CreateTrainingAndTestSets:
