@@ -22,4 +22,5 @@ class Settings:
     expertListSizes = xrange(50,550,50)
 
 class DataType:
-    raw = 'raw'
+    raw = 'raw' # Original file
+    raw_unigram = 'raw_unigram' # Original file with unigrams
