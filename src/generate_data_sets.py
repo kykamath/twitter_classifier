@@ -61,7 +61,8 @@ class CreateTrainingAndTestSets:
         global numberOfExperts
         currentTime = Settings.startTime
         allExpertsTop, allExpertsBottom = ExpertUsers(number=numberOfExperts), ExpertUsers(number=numberOfExperts, type=ExpertUsers.typeBottom)
-        allExpertsList=allExpertsTop.list
+        allExpertsList={}
+        for k, v in allExpertsTop.list.iteritems(): allExpertsList[k]=v
         for k, v in allExpertsBottom.list.iteritems(): allExpertsList[k]=v
         print len(allExpertsTop.list), len(allExpertsBottom.list), len(allExpertsList)
         exit()
