@@ -60,6 +60,7 @@ class Classifier(object):
         testSet = apply_features(Classifier.extractFeatures, list(documents))
         return accuracy(self.classifier, testSet)
     def classificationProbabilities(self, documents, resultsOnly = False):
+        global classToIntMap
         documentSet = []
         for d in documents: 
             tempDict = {}
@@ -69,7 +70,7 @@ class Classifier(object):
         returnPdists = []
         for pdist in pdists: 
             tempDict = {}
-            [tempDict.setdefault(k, pdist.prob('%s'%k)) for k in [1, 2, 3, 4, 5, 6]]
+            [tempDict.setdefault(k, pdist.prob('%s'%k)) for k in range(1, len(classToIntMap)+1)]
             returnPdists.append(tempDict)
         if not resultsOnly: return zip(documents, returnPdists)
         else: return returnPdists
