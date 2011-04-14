@@ -79,6 +79,7 @@ class CreateTrainingAndTestSets:
     def createModifiedData():
         currentTime = Settings.startTime
         while currentTime <= Settings.endTime:
+            print currentTime
             DocumentTypeRawUnigram(currentTime, Settings.numberOfExperts).convert()
             currentTime+=timedelta(days=1)
             
