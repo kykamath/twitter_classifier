@@ -81,7 +81,7 @@ class Classifier(object):
         documentSet = [d for d, c in documents]
         classifiedDocuments, i = [], 0
         for d, result in zip(documents, self.classificationProbabilities(documentSet, True)):
-            classifiedDocuments.append((i, classToIntMap[d[1]], result))
+            classifiedDocuments.append((i, d[1], result))
             i+=1
         return MultiClassAUC(classifiedDocuments).getMRevised()
     def evaluate(self, documents, methodology=None):
