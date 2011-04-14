@@ -72,9 +72,7 @@ class Classifier(object):
         for pdist in pdists: 
             tempDict = {}
             [tempDict.setdefault(k, pdist.prob('%s'%k)) for k in classToIntMap.keys()]
-            print tempDict
             returnPdists.append(tempDict)
-        exit()
         if not resultsOnly: return zip(documents, returnPdists)
         else: return returnPdists
     def getAUCM(self, documents):
