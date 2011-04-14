@@ -41,10 +41,6 @@ class TestDocuments:
     @staticmethod
     def getTestDocuments():
         pass
-
-def me(**kwargs):
-    print kwargs['arg']
         
 if __name__ == '__main__':
-#    ExpertsClassifier(Settings.startTime+timedelta(days=1), Settings.numberOfExperts, DataType.ruusl, historyLength=2).trainAndSave()  
-    me(arg=1)
+    ExpertsClassifier(Settings.startTime+timedelta(days=1), Settings.numberOfExperts, DataType.ruusl, historyLength=2).trainAndSave()  
