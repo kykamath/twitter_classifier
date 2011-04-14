@@ -38,6 +38,8 @@ class MultiClassAUC:
         return 2*totalA/(self.c*(self.c-1))
 
 class Classifier(object):
+    typeFixedWindow = 'fixed_window'
+    
     def __init__(self): 
         self.nltkClassifier = MaxentClassifier
         self.classifier = None
@@ -87,12 +89,12 @@ class Classifier(object):
     @staticmethod
     def loadClassifier(fileName): return cPickle.load(open(fileName))
 
-class ExpertsClassifier(Classifier):
-#        ExpertsClassifier(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=1)
+class FixedWindowClassifier(Classifier):
+#        FixedWindowClassifier(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=1)
     def __init__(self, **kwargs):
-        super(ExpertsClassifier, self).__init__()
+        super(FixedWindowClassifier, self).__init__()
         self.kwargs=kwargs
-        self.trainedClassifierFile = Utilities.getTrainedClassifierFile(**kwargs)
+        self.trainedClassifierFile = Utilities.getTrainedClassifierFile(classifierType=Classifier.typeFixedWindow **kwargs)
     def trainAndSave(self):
         Utilities.createDirectory(self.trainedClassifierFile)
         self.trainClassifier(Utilities.getDocuments(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs))

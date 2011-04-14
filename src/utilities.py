@@ -55,8 +55,8 @@ class Utilities:
         if not bottom: return Settings.twitterClassifierTestSetsFolder+'%s/%s/%s'%(numberOfExperts, dataType, Utilities.getDataFile(currentTime))
         else: return Settings.twitterClassifierTestSetsFolder+'_%s/%s/%s'%(numberOfExperts, dataType, Utilities.getDataFile(currentTime))
     @staticmethod
-    def getTrainedClassifierFile(currentTime, dataType, numberOfExperts, noOfDays, **kwargs):
-        return Settings.twitterClassifierTrainedModelsFolder +'%s/%s/%s/%s'%(numberOfExperts, dataType, Utilities.getDataFile(currentTime), noOfDays)
+    def getTrainedClassifierFile(classifierType, currentTime, dataType, numberOfExperts, noOfDays, **kwargs):
+        return Settings.twitterClassifierTrainedModelsFolder +'%s/%s/%s/%s/%s'%(classifierType, numberOfExperts, dataType, Utilities.getDataFile(currentTime), noOfDays)
     @staticmethod
     def getDocuments(**kwargs):
         currentTime=kwargs['currentTime']
