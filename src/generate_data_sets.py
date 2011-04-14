@@ -59,11 +59,10 @@ class CreateTrainingAndTestSets:
     @staticmethod
     def rawData():
         currentTime = Settings.startTime
-        allExperts = ExpertUsers()
+        allExpertsTop = ExpertUsers()
+        allExpertsBottom = ExpertUsers()
         while currentTime <= Settings.endTime:
-#            for numberOfExperts in Settings.expertListSizes:
             for numberOfExperts in [numberOfExperts]:
-                expertsForTraining = ExpertUsers(number=numberOfExperts)
                 trainingFile = Utilities.getTrainingFile(currentTime, DataType.raw, numberOfExperts)
                 testFile = Utilities.getTestFile(currentTime, DataType.raw, numberOfExperts)
                 Utilities.createDirectory(trainingFile), Utilities.createDirectory(testFile)
@@ -74,22 +73,22 @@ class CreateTrainingAndTestSets:
                     else: Utilities.writeAsJsonToFile(tweet, testFile)
             currentTime+=timedelta(days=1)
     
-    @staticmethod
-    def combineRawData():
-        currentTime, numberOfExperts = Settings.startTime, numberOfExperts
-        while currentTime <= Settings.endTime:
-            trainingFile = Utilities.getTrainingFile(currentTime, DataType.raw, numberOfExperts)
-            testFile = Utilities.getTestFile(currentTime, DataType.raw, numberOfExperts)
-            combinedFile = Utilities.getCombinedFile(currentTime, DataType.raw)
-            print trainingFile, testFile, combinedFile
-            Utilities.createDirectory(combinedFile)
-            for tweet in open(trainingFile):
-                tweet = cjson.decode(tweet)
-                Utilities.writeAsJsonToFile(tweet, combinedFile)
-            for tweet in open(testFile):
-                tweet = cjson.decode(tweet)
-                Utilities.writeAsJsonToFile(tweet, combinedFile)
-            currentTime+=timedelta(days=1)
+#    @staticmethod
+#    def combineRawData():
+#        currentTime, numberOfExperts = Settings.startTime, numberOfExperts
+#        while currentTime <= Settings.endTime:
+#            trainingFile = Utilities.getTrainingFile(currentTime, DataType.raw, numberOfExperts)
+#            testFile = Utilities.getTestFile(currentTime, DataType.raw, numberOfExperts)
+#            combinedFile = Utilities.getCombinedFile(currentTime, DataType.raw)
+#            print trainingFile, testFile, combinedFile
+#            Utilities.createDirectory(combinedFile)
+#            for tweet in open(trainingFile):
+#                tweet = cjson.decode(tweet)
+#                Utilities.writeAsJsonToFile(tweet, combinedFile)
+#            for tweet in open(testFile):
+#                tweet = cjson.decode(tweet)
+#                Utilities.writeAsJsonToFile(tweet, combinedFile)
+#            currentTime+=timedelta(days=1)
     
 #    @staticmethod
 #    def splitFileByHours():

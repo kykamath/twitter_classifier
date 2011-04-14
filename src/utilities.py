@@ -8,12 +8,20 @@ from settings import Settings
 import gzip, cjson, os
 
 class ExpertUsers:
-    def __init__(self, number=1250):
-        self.number, self.list = number, defaultdict(dict)
+    typeTop = 1
+    typeBottom = -1
+    def __init__(self, number=1250, type=ExpertUsers.typeTop):
+        self.number, self.list, self.type = number, defaultdict(dict), type
         usersData = defaultdict(list)
         for l in open(Settings.usersToCrawl): data = l.strip().split(); usersData[data[0]].append(data[1:])
         for k, v in usersData.iteritems(): 
-            for user in v[:self.number]: self.list[user[1]] = {'screen_name': user[0], 'class':k}
+            if self.type == ExpertUsers.typeTop:
+                for user in v[:self.number]: self.list[user[1]] = {'screen_name': user[0], 'class':k}
+            else:
+                for user in v[-self.number:]: self.list[user[1]] = {'screen_name': user[0], 'class':k}
+if __name__ == '__main__':
+    print ExpertUsers(number=5, ExpertUsers.typeTop).list
+    print ExpertUsers(number=5, ExpertUsers.typeBottom).list
             
 class Utilities:
     @staticmethod
