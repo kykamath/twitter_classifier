@@ -3,28 +3,26 @@ Created on Mar 18, 2011
 
 @author: kykamath
 '''
+import cjson, re
 from utilities import ExpertUsers, Utilities
 from settings import Settings
-from datetime import datetime, timedelta
-import cjson, pprint, re
+from datetime import timedelta
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk import pos_tag, word_tokenize
 
-class DataDirection:
-    future = 1
-    past=-1
+class DataDirection: future = 1; past=-1
 
 class DataType(object):
-    raw = 'raw' # Original file
-    ruusl = 'removed_url_users_specialcharaters_and_lemmatized'
+    typeRaw = 'typeRaw' # Original file
+    typeRuusl = 'removed_url_users_specialcharaters_and_lemmatized'
     
     keys = ['class', 'text', 'created_at', 'id']
 
     def __init__(self, currentTime, outputDataType, numberOfExperts):
         self.currentTime = currentTime
         self.numberOfExperts = numberOfExperts
-        self.inputTrainingSetFile = Utilities.getTrainingFile(currentTime, DataType.raw, self.numberOfExperts)
-        self.inputTestSetFile = Utilities.getTestFile(currentTime, DataType.raw, self.numberOfExperts, bottom=True)
+        self.inputTrainingSetFile = Utilities.getTrainingFile(currentTime, DataType.typeRaw, self.numberOfExperts)
+        self.inputTestSetFile = Utilities.getTestFile(currentTime, DataType.typeRaw, self.numberOfExperts, bottom=True)
         self.outputTrainingSetFile = Utilities.getTrainingFile(currentTime, outputDataType, self.numberOfExperts)
         self.outputTestSetFile = Utilities.getTestFile(currentTime, outputDataType, self.numberOfExperts, bottom=True)
         Utilities.createDirectory(self.outputTrainingSetFile), Utilities.createDirectory(self.outputTestSetFile)
@@ -36,12 +34,10 @@ class DataType(object):
                 data['screen_name'] = tweet['user']['screen_name']; data['user_id'] = tweet['user']['id_str']
                 data['document'] = self.modifyDocument(data['text'])
                 Utilities.writeAsJsonToFile(data, outputFile)
-#                pprint.pprint(data)
-#                exit()
 
 class DocumentTypeRuusl(DataType):
     def __init__(self, currentTime, numberOfExperts): 
-        super(DocumentTypeRuusl, self).__init__(currentTime, DataType.ruusl, numberOfExperts)
+        super(DocumentTypeRuusl, self).__init__(currentTime, DataType.typeRuusl, numberOfExperts)
     def modifyDocument(self, text): 
         pattern = re.compile('[\W_]+')
         def removeHTTP(s): return' '.join(filter(lambda x:x.find('http') == -1, s.lower().split()))
@@ -69,8 +65,8 @@ class CreateTrainingAndTestSets:
         for k, v in allExpertsBottom.list.iteritems(): allExpertsList[k]=v
         while currentTime <= Settings.endTime:
             for numberOfExperts in [Settings.numberOfExperts]:
-                trainingFile = Utilities.getTrainingFile(currentTime, DataType.raw, numberOfExperts)
-                testFile = Utilities.getTestFile(currentTime, DataType.raw, numberOfExperts, bottom=True)
+                trainingFile = Utilities.getTrainingFile(currentTime, DataType.typeRaw, numberOfExperts)
+                testFile = Utilities.getTestFile(currentTime, DataType.typeRaw, numberOfExperts, bottom=True)
                 Utilities.createDirectory(trainingFile), Utilities.createDirectory(testFile)
                 print numberOfExperts, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)
                 for tweet in CreateTrainingAndTestSets.getTweetsFromExperts(allExpertsList, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)):
@@ -87,33 +83,6 @@ class CreateTrainingAndTestSets:
             DocumentTypeRuusl(currentTime, Settings.numberOfExperts).convert()
             currentTime+=timedelta(days=1)
             
-#    @staticmethod
-#    def combineRawData():
-#        currentTime, numberOfExperts = Settings.startTime, numberOfExperts
-#        while currentTime <= Settings.endTime:
-#            trainingFile = Utilities.getTrainingFile(currentTime, DataType.raw, numberOfExperts)
-#            testFile = Utilities.getTestFile(currentTime, DataType.raw, numberOfExperts)
-#            combinedFile = Utilities.getCombinedFile(currentTime, DataType.raw)
-#            print trainingFile, testFile, combinedFile
-#            Utilities.createDirectory(combinedFile)
-#            for tweet in open(trainingFile):
-#                tweet = cjson.decode(tweet)
-#                Utilities.writeAsJsonToFile(tweet, combinedFile)
-#            for tweet in open(testFile):
-#                tweet = cjson.decode(tweet)
-#                Utilities.writeAsJsonToFile(tweet, combinedFile)
-#            currentTime+=timedelta(days=1)
-    
-#    @staticmethod
-#    def splitFileByHours():
-#        file = Settings.twitterClassifierAllFolder+'%s'%(Utilities.getDataFile(datetime(2011,3,11)))
-#        for tweet in Utilities.iterateTweetsFromFile(file):
-#            outputFile = Settings.twitterDataFolder+'classifier/%s/%s'%(Utilities.getDataFile(datetime(2011,3,11)), 
-#                                                                        datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format).hour)
-#            Utilities.createDirectory(outputFile)
-#            Utilities.writeAsJsonToFile(tweet, outputFile)
-
 if __name__ == '__main__':
-#    CreateTrainingAndTestSets.createModifiedData()
     CreateTrainingAndTestSets.rawData()
     CreateTrainingAndTestSets.createModifiedData()
