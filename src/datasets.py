@@ -35,9 +35,9 @@ class DataType(object):
 #                pprint.pprint(data)
 #                exit()
 
-class DocumentTypeRawUnigram(DataType):
+class DocumentTypeRuusl(DataType):
     def __init__(self, currentTime, numberOfExperts): 
-        super(DocumentTypeRawUnigram, self).__init__(currentTime, DataType.ruusl, numberOfExperts)
+        super(DocumentTypeRuusl, self).__init__(currentTime, DataType.ruusl, numberOfExperts)
     def modifyDocument(self, text): 
         pattern = re.compile('[\W_]+')
         def removeHTTP(s): return' '.join(filter(lambda x:x.find('http') == -1, s.lower().split()))
@@ -80,7 +80,7 @@ class CreateTrainingAndTestSets:
         currentTime = Settings.startTime
         while currentTime <= Settings.endTime:
             print currentTime
-            DocumentTypeRawUnigram(currentTime, Settings.numberOfExperts).convert()
+            DocumentTypeRuusl(currentTime, Settings.numberOfExperts).convert()
             currentTime+=timedelta(days=1)
             
 #    @staticmethod
@@ -110,5 +110,5 @@ class CreateTrainingAndTestSets:
 #            Utilities.writeAsJsonToFile(tweet, outputFile)
 
 if __name__ == '__main__':
-#    DocumentTypeRawUnigram(Settings.startTime).convert()
+#    DocumentTypeRuusl(Settings.startTime).convert()
     CreateTrainingAndTestSets.createModifiedData()
