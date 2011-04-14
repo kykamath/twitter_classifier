@@ -10,14 +10,14 @@ from datetime import timedelta
 from classes import Classifier
 
 class ExpertsClassifier(Classifier):
-    def __init__(self, currentTime, numberOfExperts, dataType, historyLength=1, **kwargs):
+    def __init__(self, **kwargs):
         super(ExpertsClassifier, self).__init__()
 #        self.currentTime = currentTime
 #        self.numberOfExperts = numberOfExperts
 #        self.dataType = dataType
 #        self.historyLength = historyLength
         self.kwargs=kwargs
-        self.trainedClassifierFile = Utilities.getTrainedClassifierFile(currentTime, dataType, numberOfExperts, historyLength)
+        self.trainedClassifierFile = Utilities.getTrainedClassifierFile(**kwargs)
 #    def trainingDocuments(self):
 #        currentTime=self.currentTime
 #        for i in range(self.historyLength):
