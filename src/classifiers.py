@@ -72,6 +72,7 @@ class Classifier(object):
         if not resultsOnly: return zip(documents, returnPdists)
         else: return returnPdists
     def getAUCM(self, documents):
+        documents = list(documents)
         documentSet = [d for d, c in documents]
         for d in documents: print d
         exit()
