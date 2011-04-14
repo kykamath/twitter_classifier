@@ -45,4 +45,4 @@ class ExpertsClassifier(Classifier):
 #        pass
         
 if __name__ == '__main__':
-    ExpertsClassifier(Settings.startTime+timedelta(days=1), Settings.numberOfExperts, DataType.ruusl, historyLength=2).trainAndSave()  
+    ExpertsClassifier(currentTime=Settings.startTime+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=2).trainAndSave()  
