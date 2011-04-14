@@ -64,8 +64,6 @@ class CreateTrainingAndTestSets:
         allExpertsList={}
         for k, v in allExpertsTop.list.iteritems(): allExpertsList[k]=v
         for k, v in allExpertsBottom.list.iteritems(): allExpertsList[k]=v
-        print len(allExpertsTop.list), len(allExpertsBottom.list), len(allExpertsList)
-        exit()
         while currentTime <= Settings.endTime:
             for numberOfExperts in [numberOfExperts]:
                 trainingFile = Utilities.getTrainingFile(currentTime, DataType.raw, numberOfExperts)
