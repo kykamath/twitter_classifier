@@ -40,4 +40,4 @@ class ExpertsClassifier(Classifier):
 #    def getTestDocuments():
         
 if __name__ == '__main__':
-    ExpertsClassifier(Settings.startTime+timedelta(days=1), Settings.numberOfExperts, DataType.ruusl, historyLength=1).trainAndSave()  
+    ExpertsClassifier(Settings.startTime+timedelta(days=1), Settings.numberOfExperts, DataType.ruusl, historyLength=2).trainAndSave()  
