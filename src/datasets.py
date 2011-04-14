@@ -110,5 +110,5 @@ class CreateTrainingAndTestSets:
 #            Utilities.writeAsJsonToFile(tweet, outputFile)
 
 if __name__ == '__main__':
-#    DocumentTypeRuusl(Settings.startTime).convert()
-    CreateTrainingAndTestSets.createModifiedData()
+#    CreateTrainingAndTestSets.createModifiedData()
+    CreateTrainingAndTestSets.rawData()
