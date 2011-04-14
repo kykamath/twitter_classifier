@@ -41,7 +41,7 @@ class Utilities:
     @staticmethod
     def createDirectory(path):
         dir = path[:path.rfind('/')]
-        if not os.path.exists(dir): os.umask(0), os.makedirs('%s'%dir, 0770)
+        if not os.path.exists(dir): os.umask(0), os.makedirs('%s'%dir, 0777)
     @staticmethod
     def writeAsJsonToFile(data, file):
         f = open(file, 'a')
