@@ -4,9 +4,36 @@ Created on Mar 18, 2011
 @author: kykamath
 '''
 from utilities import ExpertUsers, Utilities
-from settings import Settings, DataType
+from settings import Settings
 from datetime import datetime, timedelta
-import cjson
+import cjson, pprint
+
+class DataType(object):
+    keys = ['class', 'text', 'created_at', 'id']
+    numberOfExperts = 250
+
+    raw = 'raw' # Original file
+    raw_unigram = 'raw_unigram' # Original file with unigrams
+    
+    def __init__(self, currentTime, outputDataType):
+        self.currentTime = currentTime
+        self.inputTrainingSetFile = Utilities.getTrainingFile(currentTime, DataType.raw, DataType.numberOfExperts)
+        self.inputTestSetFile = Utilities.getTestFile(currentTime, DataType.raw, DataType.numberOfExperts)
+        self.outputTrainingSetFile = Utilities.getTrainingFile(currentTime, outputDataType, DataType.numberOfExperts)
+        self.outputTestSetFile = Utilities.getTestFile(currentTime, outputDataType, DataType.numberOfExperts)
+    def convert(self):
+        for inputFile, outputFile in [(self.inputTrainingSetFile, self.outputTrainingSetFile), (self.inputTestSetFile, self.outputTestSetFile)]:
+            for tweet in Utilities.iterateTweetsFromFile(inputFile):
+                data = {}
+                for k in DataType.keys: data[k]=tweet[k]
+                data['screen_name'] = tweet['user']['screen_name']; data['user_id'] = tweet['user']['id_str']
+                data['document'] = self.modifyDocument(data['text'])
+                pprint.pprint(data)
+                exit()
+
+class DocumentTypeRawUnigram(DataType):
+    def __init__(self, currentTime): super(DocumentTypeRawUnigram, self).__init__(currentTime, DataType.raw_unigram)
+    def modifyDocument(self, text): return text.strip().lower().split()
 
 class CreateTrainingAndTestSets:
     @staticmethod
@@ -56,5 +83,6 @@ class CreateTrainingAndTestSets:
 #                                                                        datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format).hour)
 #            Utilities.createDirectory(outputFile)
 #            Utilities.writeAsJsonToFile(tweet, outputFile)
+
 if __name__ == '__main__':
-    CreateTrainingAndTestSets.combineRawData()
+    DocumentTypeRawUnigram().convert()

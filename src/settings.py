@@ -20,7 +20,3 @@ class Settings:
     endTime=datetime(2011,4,12)
     
     expertListSizes = xrange(50,550,50)
-
-class DataType:
-    raw = 'raw' # Original file
-    raw_unigram = 'raw_unigram' # Original file with unigrams
