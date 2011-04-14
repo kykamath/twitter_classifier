@@ -14,7 +14,6 @@ class ExpertsClassifier:
         self.numberOfExperts = numberOfExperts
         self.dataType = dataType
         self.historyLength = historyLength
-        self.classifierId
     def _iterateTrainingDocuments(self):
         currentTime=self.currentTime
         for i in range(self.historyLength):
