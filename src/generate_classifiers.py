@@ -39,4 +39,5 @@ if __name__ == '__main__':
 #    print 'today:', classifier.getAccuracy(TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.typeRuusl, noOfDays=1).iterator())
 #    print 'future:', classifier.getAccuracy(TestDocuments(currentTime=Settings.startTime+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DataType.typeRuusl, noOfDays=1).iterator())
 
-    GenerateClassifiers.fixedWindowOfDifferentLengths()
+#    GenerateClassifiers.fixedWindowOfDifferentLengths()
+    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
