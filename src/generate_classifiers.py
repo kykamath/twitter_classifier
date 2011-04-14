@@ -22,7 +22,7 @@ class ExpertsClassifier(Classifier):
             for tweet in Utilities.iterateTweetsFromFile(trainingFile): yield (tweet['document'], tweet['class'])
             currentTime-=timedelta(days=1)
     def train(self):
-        self.trainClassifier(self.trainingDocuments())
+        self.trainClassifier([t for t in self.trainingDocuments()])
         
 if __name__ == '__main__':
     ExpertsClassifier(Settings.startTime, Settings.numberOfExperts, DataType.ruusl).train()  
