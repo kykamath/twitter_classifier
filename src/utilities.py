@@ -10,7 +10,7 @@ import gzip, cjson, os
 class ExpertUsers:
     typeTop = 1
     typeBottom = -1
-    def __init__(self, number=1250, type=ExpertUsers.typeTop):
+    def __init__(self, number=1250, type=typeTop):
         self.number, self.list, self.type = number, defaultdict(dict), type
         usersData = defaultdict(list)
         for l in open(Settings.usersToCrawl): data = l.strip().split(); usersData[data[0]].append(data[1:])
@@ -20,8 +20,8 @@ class ExpertUsers:
             else:
                 for user in v[-self.number:]: self.list[user[1]] = {'screen_name': user[0], 'class':k}
 if __name__ == '__main__':
-    print ExpertUsers(number=5, type=1).list
-    print ExpertUsers(number=5, type=-1).list
+    print ExpertUsers(number=5, type=ExpertUsers.typeTop).list
+    print ExpertUsers(number=5, type=ExpertUsers.typeBottom).list
             
 class Utilities:
     @staticmethod
