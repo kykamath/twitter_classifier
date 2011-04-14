@@ -9,18 +9,19 @@ from datetime import datetime, timedelta
 import cjson, pprint
 
 class DataType(object):
-    keys = ['class', 'text', 'created_at', 'id']
-    numberOfExperts = 250
-
     raw = 'raw' # Original file
     raw_unigram = 'raw_unigram' # Original file with unigrams
     
+    keys = ['class', 'text', 'created_at', 'id']
+    numberOfExperts = 250
+
     def __init__(self, currentTime, outputDataType):
         self.currentTime = currentTime
         self.inputTrainingSetFile = Utilities.getTrainingFile(currentTime, DataType.raw, DataType.numberOfExperts)
         self.inputTestSetFile = Utilities.getTestFile(currentTime, DataType.raw, DataType.numberOfExperts)
         self.outputTrainingSetFile = Utilities.getTrainingFile(currentTime, outputDataType, DataType.numberOfExperts)
         self.outputTestSetFile = Utilities.getTestFile(currentTime, outputDataType, DataType.numberOfExperts)
+        Utilities.createDirectory(self.outputTrainingSetFile), Utilities.createDirectory(self.outputTestSetFile)
     def convert(self):
         for inputFile, outputFile in [(self.inputTrainingSetFile, self.outputTrainingSetFile), (self.inputTestSetFile, self.outputTestSetFile)]:
             for tweet in Utilities.iterateTweetsFromFile(inputFile):
@@ -28,7 +29,7 @@ class DataType(object):
                 for k in DataType.keys: data[k]=tweet[k]
                 data['screen_name'] = tweet['user']['screen_name']; data['user_id'] = tweet['user']['id_str']
                 data['document'] = self.modifyDocument(data['text'])
-                pprint.pprint(data)
+                Utilities.writeAsJsonToFile(data, outputFile)
                 exit()
 
 class DocumentTypeRawUnigram(DataType):
