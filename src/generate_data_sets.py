@@ -10,7 +10,7 @@ import cjson, pprint, re
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk import pos_tag, word_tokenize
 
-numberOfExperts = 250
+numberOfExperts = 125
 
 class DataType(object):
     raw = 'raw' # Original file
@@ -59,17 +59,20 @@ class CreateTrainingAndTestSets:
     @staticmethod
     def rawData():
         currentTime = Settings.startTime
-        allExpertsTop = ExpertUsers()
-        allExpertsBottom = ExpertUsers()
+        allExpertsTop, allExpertsBottom = ExpertUsers(number=numberOfExperts), ExpertUsers(number=numberOfExperts, type=ExpertUsers.typeBottom)
+        allExpertsList=allExpertsTop.list
+        for k, v in allExpertsBottom.list.iteritems(): allExpertsList[k]=v
+        print len(allExpertsTop.list), len(allExpertsBottom.list), len(allExpertsList)
+        exit()
         while currentTime <= Settings.endTime:
             for numberOfExperts in [numberOfExperts]:
                 trainingFile = Utilities.getTrainingFile(currentTime, DataType.raw, numberOfExperts)
-                testFile = Utilities.getTestFile(currentTime, DataType.raw, numberOfExperts)
+                testFile = Utilities.getTestFile(currentTime, DataType.raw, numberOfExperts, bottom=True)
                 Utilities.createDirectory(trainingFile), Utilities.createDirectory(testFile)
                 print numberOfExperts, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)
-                for tweet in CreateTrainingAndTestSets.getTweetsFromExperts(allExperts.list, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)):
-                    tweet['class'] = allExperts.list[tweet['user']['id_str']]['class']
-                    if tweet['user']['id_str'] in expertsForTraining.list: Utilities.writeAsJsonToFile(tweet, trainingFile)
+                for tweet in CreateTrainingAndTestSets.getTweetsFromExperts(allExpertsList, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)):
+                    tweet['class'] = allExpertsList[tweet['user']['id_str']]['class']
+                    if tweet['user']['id_str'] in allExpertsTop.list: Utilities.writeAsJsonToFile(tweet, trainingFile)
                     else: Utilities.writeAsJsonToFile(tweet, testFile)
             currentTime+=timedelta(days=1)
     
@@ -100,4 +103,5 @@ class CreateTrainingAndTestSets:
 #            Utilities.writeAsJsonToFile(tweet, outputFile)
 
 if __name__ == '__main__':
-    DocumentTypeRawUnigram(Settings.startTime).convert()
+#    DocumentTypeRawUnigram(Settings.startTime).convert()
+    CreateTrainingAndTestSets.rawData()

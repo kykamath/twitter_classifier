@@ -19,9 +19,6 @@ class ExpertUsers:
                 for user in v[:self.number]: self.list[user[1]] = {'screen_name': user[0], 'class':k}
             else:
                 for user in v[-self.number:]: self.list[user[1]] = {'screen_name': user[0], 'class':k}
-if __name__ == '__main__':
-    print ExpertUsers(number=5, type=ExpertUsers.typeTop).list
-    print ExpertUsers(number=5, type=ExpertUsers.typeBottom).list
             
 class Utilities:
     @staticmethod
@@ -52,6 +49,9 @@ class Utilities:
     @staticmethod
     def getTrainingFile(currentTime, inputType, numberOfExperts): return Settings.twitterClassifierTrainingSetsFolder+'%s/%s/%s'%(numberOfExperts, inputType, Utilities.getDataFile(currentTime))
     @staticmethod
-    def getTestFile(currentTime, inputType, numberOfExperts): return Settings.twitterClassifierTestSetsFolder+'%s/%s/%s'%(numberOfExperts, inputType, Utilities.getDataFile(currentTime))
+    def getTestFile(currentTime, inputType, numberOfExperts, bottom=False): 
+        if not bottom: return Settings.twitterClassifierTestSetsFolder+'%s/%s/%s'%(numberOfExperts, inputType, Utilities.getDataFile(currentTime))
+        else: return Settings.twitterClassifierTestSetsFolder+'_%s/%s/%s'%(numberOfExperts, inputType, Utilities.getDataFile(currentTime))
+    
     @staticmethod
     def getCombinedFile(currentTime, inputType): return Settings.twitterClassifierCombinedSetsFolder+'%s/%s'%(inputType, Utilities.getDataFile(currentTime))
