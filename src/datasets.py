@@ -10,11 +10,9 @@ import cjson, pprint, re
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk import pos_tag, word_tokenize
 
-numberOfExperts = 125
-
 class DataType(object):
     raw = 'raw' # Original file
-    raw_unigram = 'removed_url_users_specialcharaters_and_lemmatized'
+    ruusl = 'removed_url_users_specialcharaters_and_lemmatized'
     
     keys = ['class', 'text', 'created_at', 'id']
 
@@ -39,7 +37,7 @@ class DataType(object):
 
 class DocumentTypeRawUnigram(DataType):
     def __init__(self, currentTime, numberOfExperts): 
-        super(DocumentTypeRawUnigram, self).__init__(currentTime, DataType.raw_unigram, numberOfExperts)
+        super(DocumentTypeRawUnigram, self).__init__(currentTime, DataType.ruusl, numberOfExperts)
     def modifyDocument(self, text): 
         pattern = re.compile('[\W_]+')
         def removeHTTP(s): return' '.join(filter(lambda x:x.find('http') == -1, s.lower().split()))
@@ -60,9 +58,8 @@ class CreateTrainingAndTestSets:
             if tweet['user']['id_str'] in expertsList: yield tweet
     @staticmethod
     def rawData():
-        global numberOfExperts
         currentTime = Settings.startTime
-        allExpertsTop, allExpertsBottom = ExpertUsers(number=numberOfExperts), ExpertUsers(number=numberOfExperts, type=ExpertUsers.typeBottom)
+        allExpertsTop, allExpertsBottom = ExpertUsers(number=Settings.numberOfExperts), ExpertUsers(number=Settings.numberOfExperts, type=ExpertUsers.typeBottom)
         allExpertsList={}
         for k, v in allExpertsTop.list.iteritems(): allExpertsList[k]=v
         for k, v in allExpertsBottom.list.iteritems(): allExpertsList[k]=v
@@ -80,10 +77,9 @@ class CreateTrainingAndTestSets:
     
     @staticmethod
     def createModifiedData():
-        global numberOfExperts
         currentTime = Settings.startTime
         while currentTime <= Settings.endTime:
-            DocumentTypeRawUnigram(currentTime, numberOfExperts).convert()
+            DocumentTypeRawUnigram(currentTime, Settings.numberOfExperts).convert()
             currentTime+=timedelta(days=1)
             
 #    @staticmethod
