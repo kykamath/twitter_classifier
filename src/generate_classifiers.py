@@ -25,7 +25,7 @@ class ExpertsClassifier(Classifier):
             currentTime-=timedelta(days=1)
     def trainAndSave(self):
         Utilities.createDirectory(self.trainedClassifierFile)
-        for t in self.trainingDocuments(): print t['class']
+        for t in self.trainingDocuments(): print t[1]
         exit()
         self.trainClassifier([t for t in self.trainingDocuments()])
         Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
