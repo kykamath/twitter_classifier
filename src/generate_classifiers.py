@@ -25,14 +25,19 @@ class ExpertsClassifier(Classifier):
             currentTime-=timedelta(days=1)
     def trainAndSave(self):
         Utilities.createDirectory(self.trainedClassifierFile)
+        i = 1
+        for t in self.trainingDocuments(): 
+            print t[1]
+            i+=1
+        exit()
         self.trainClassifier([t for t in self.trainingDocuments()])
         Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
     def load(self):
         self.classifier = Classifier.loadClassifier(self.trainedClassifierFile)
 
-class TestDocuments:
-    @staticmethod
-    def getTestDocuments():
+#class TestDocuments:
+#    @staticmethod
+#    def getTestDocuments():
         
 if __name__ == '__main__':
-    ExpertsClassifier(Settings.startTime, Settings.numberOfExperts, DataType.ruusl).load()  
+    ExpertsClassifier(Settings.startTime+timedelta(days=1), Settings.numberOfExperts, DataType.ruusl, historyLength=1).trainAndSave()  
