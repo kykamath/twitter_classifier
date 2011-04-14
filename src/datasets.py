@@ -112,3 +112,4 @@ class CreateTrainingAndTestSets:
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.createModifiedData()
     CreateTrainingAndTestSets.rawData()
+    CreateTrainingAndTestSets.createModifiedData()
