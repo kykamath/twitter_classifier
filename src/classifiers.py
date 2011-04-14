@@ -73,6 +73,8 @@ class Classifier(object):
         else: return returnPdists
     def getAUCM(self, documents):
         documentSet = [d for d, c in documents]
+        for d in documents: print d
+        exit()
         classifiedDocuments, i = [], 0
         for d, result in zip(documents, self.classificationProbabilities(documentSet, True)):
             print (i, int(d[1]), result)
