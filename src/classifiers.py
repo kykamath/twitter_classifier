@@ -68,13 +68,13 @@ class Classifier(object):
             for term in d: tempDict[term] = True
             documentSet.append(tempDict)
         pdists = self.classifier.batch_prob_classify(documentSet)
-        for d in pdists: print d
-        exit()
         returnPdists = []
         for pdist in pdists: 
             tempDict = {}
             [tempDict.setdefault(k, pdist.prob('%s'%k)) for k in range(1, len(classToIntMap)+1)]
+            print tempDict
             returnPdists.append(tempDict)
+        exit()
         if not resultsOnly: return zip(documents, returnPdists)
         else: return returnPdists
     def getAUCM(self, documents):
