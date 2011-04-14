@@ -9,12 +9,12 @@ from datasets import DataType
 from datetime import timedelta
         
 class ExpertsClassifier:
-    def __init__(self, currentTime, numberOfExperts, dataType, historyLength=1):
+    def __init__(self, currentTime, numberOfExperts, dataType, historyLength=2):
         self.currentTime = currentTime
         self.numberOfExperts = numberOfExperts
         self.dataType = dataType
         self.historyLength = historyLength
-    def _iterateTrainingDocuments(self):
+    def trainingDocuments(self):
         currentTime=self.currentTime
         for i in range(self.historyLength):
             trainingFile = Utilities.getTrainingFile(currentTime, self.dataType, self.numberOfExperts)
@@ -22,8 +22,8 @@ class ExpertsClassifier:
             currentTime-=timedelta(days=1)
     def train(self):
         i = 1
-        for tweet in self._iterateTrainingDocuments(): 
+        for tweet in self.trainingDocuments(): 
             print i, tweet['id']
             i+=1
 if __name__ == '__main__':
-    ExpertsClassifier(Settings.startTime, Settings.numberOfExperts, DataType.ruusl).train()  
+    ExpertsClassifier(Settings.startTime+timedelta(days=1), Settings.numberOfExperts, DataType.ruusl).train()  
