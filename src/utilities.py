@@ -48,14 +48,14 @@ class Utilities:
         f.write(cjson.encode(data)+'\n')
         f.close()
     @staticmethod
-    def getTrainingFile(currentTime, dataType, numberOfExperts): 
+    def getTrainingFile(currentTime, dataType, numberOfExperts, **kwargs): 
         return Settings.twitterClassifierTrainingSetsFolder+'%s/%s/%s'%(numberOfExperts, dataType, Utilities.getDataFile(currentTime))
     @staticmethod
-    def getTestFile(currentTime, dataType, numberOfExperts, bottom=False): 
+    def getTestFile(currentTime, dataType, numberOfExperts, bottom=False, **kwargs): 
         if not bottom: return Settings.twitterClassifierTestSetsFolder+'%s/%s/%s'%(numberOfExperts, dataType, Utilities.getDataFile(currentTime))
         else: return Settings.twitterClassifierTestSetsFolder+'_%s/%s/%s'%(numberOfExperts, dataType, Utilities.getDataFile(currentTime))
     @staticmethod
-    def getTrainedClassifierFile(currentTime, dataType, numberOfExperts, historyLength):
+    def getTrainedClassifierFile(currentTime, dataType, numberOfExperts, historyLength, **kwargs):
         return Settings.twitterClassifierTrainedModelsFolder +'%s/%s/%s/%s'%(numberOfExperts, dataType, Utilities.getDataFile(currentTime), historyLength)
     @staticmethod
     def getDocuments(**kwargs):
