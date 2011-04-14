@@ -63,7 +63,7 @@ class Utilities:
         fileNameMethod=kwargs['fileNameMethod']
         del kwargs['currentTime']
         for i in range(kwargs['historyLength']):
-            for tweet in fileNameMethod(currentTime=currentTime, **kwargs): yield (tweet['document'], tweet['class'])
+            for tweet in Utilities.iterateTweetsFromFile(fileNameMethod(currentTime=currentTime, **kwargs)): yield (tweet['document'], tweet['class'])
             currentTime=currentTime+kwargs['dataDirection']*timedelta(days=1)
 #    @staticmethod
 #    def getCombinedFile(currentTime, dataType): return Settings.twitterClassifierCombinedSetsFolder+'%s/%s'%(dataType, Utilities.getDataFile(currentTime))
