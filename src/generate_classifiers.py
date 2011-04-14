@@ -7,6 +7,7 @@ from settings import Settings
 from datasets import DataType
 from datetime import timedelta
 from classifiers import FixedWindowClassifier, TestDocuments
+from utilities import Utilities
 
 
 class GenerateClassifiers:
@@ -14,8 +15,7 @@ class GenerateClassifiers:
     def fixedWindowOfDifferentLengths(maxLength=16):
         currentDay = Settings.startTime
         while currentDay<=Settings.endTime:
-            classifierLengths = [1]+range(2,min([maxLength, (currentDay-Settings.startTime).days+2]),2)
-            print currentDay, classifierLengths
+            print currentDay, Utilities.getClassifierLengthsByDay(currentDay, maxLength)
             currentDay+=timedelta(days=1)
     
 

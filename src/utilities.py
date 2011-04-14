@@ -65,6 +65,8 @@ class Utilities:
         for i in range(kwargs['noOfDays']):
             for tweet in Utilities.iterateTweetsFromFile(fileNameMethod(currentTime=currentTime, **kwargs)): yield (tweet['document'], tweet['class'])
             currentTime=currentTime+kwargs['dataDirection']*timedelta(days=1)
+    @staticmethod
+    def getClassifierLengthsByDay(currentDay, maxLength): return [1]+range(2,min([maxLength, (currentDay-Settings.startTime).days+2]),2)
 #    @staticmethod
 #    def getCombinedFile(currentTime, dataType): return Settings.twitterClassifierCombinedSetsFolder+'%s/%s'%(dataType, Utilities.getDataFile(currentTime))
 
