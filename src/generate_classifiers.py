@@ -27,7 +27,7 @@ class ExpertsClassifier(Classifier):
         Utilities.createDirectory(self.trainedClassifierFile)
         i = 1
         for t in self.trainingDocuments(): 
-            print t[1]
+            print i, t[1]
             i+=1
         exit()
         self.trainClassifier([t for t in self.trainingDocuments()])
