@@ -5,13 +5,14 @@ Created on Apr 13, 2011
 '''
 from utilities import Utilities
 from settings import DataType, Settings
+import pprint
 class DocumentFormatUnigram(object):
     def __init__(self, currentTime):
         self.currentTime = currentTime
         self.combinedSetFile = Utilities.getCombinedFile(currentTime, DataType.raw)
     def convert(self):
         for tweet in Utilities.iterateTweetsFromFile(self.combinedSetFile):
-            print tweet
+            pprint(tweet)
             exit()
         
 class ExpertsClassifier:
