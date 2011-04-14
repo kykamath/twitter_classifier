@@ -10,6 +10,8 @@ from nltk.classify.maxent import MaxentClassifier
 import cPickle
 from datasets import DataDirection
 
+classToIntMap = {'technology':0, 'sports': 1, 'politics': 2, 'entertainment': 3}
+
 class Evaluation:
     accuracy = 'accuracy'
     aucm = 'aucm'
@@ -72,11 +74,12 @@ class Classifier(object):
         if not resultsOnly: return zip(documents, returnPdists)
         else: return returnPdists
     def getAUCM(self, documents):
+        global classToIntMap
         documents = list(documents)
         documentSet = [d for d, c in documents]
         classifiedDocuments, i = [], 0
         for d, result in zip(documents, self.classificationProbabilities(documentSet, True)):
-            classifiedDocuments.append((i, d[1], result))
+            classifiedDocuments.append((i, classToIntMap[d[1]], result))
             i+=1
         return MultiClassAUC(classifiedDocuments).getMRevised()
     def evaluate(self, documents, methodology=None):
