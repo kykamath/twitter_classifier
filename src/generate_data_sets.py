@@ -33,9 +33,9 @@ class DataType(object):
                 for k in DataType.keys: data[k]=tweet[k]
                 data['screen_name'] = tweet['user']['screen_name']; data['user_id'] = tweet['user']['id_str']
                 data['document'] = self.modifyDocument(data['text'])
-#                Utilities.writeAsJsonToFile(data, outputFile)
-                pprint.pprint(data)
-                exit()
+                Utilities.writeAsJsonToFile(data, outputFile)
+#                pprint.pprint(data)
+#                exit()
 
 class DocumentTypeRawUnigram(DataType):
     def __init__(self, currentTime, numberOfExperts): 
