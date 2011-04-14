@@ -75,8 +75,10 @@ class Classifier(object):
         documentSet = [d for d, c in documents]
         classifiedDocuments, i = [], 0
         for d, result in zip(documents, self.classificationProbabilities(documentSet, True)):
+            print (i, int(d[1]), result)
             classifiedDocuments.append((i, int(d[1]), result))
             i+=1
+        exit()
         for d in classifiedDocuments: print d
         exit()
         return MultiClassAUC(classifiedDocuments).getMRevised()
