@@ -8,6 +8,7 @@ from settings import Settings
 from utilities import Utilities
 from nltk.classify.maxent import MaxentClassifier
 import cPickle
+from datasets import DataDirection
 
 class Evaluation:
     accuracy = 'accuracy'
@@ -85,3 +86,21 @@ class Classifier(object):
         cPickle.dump(classifier, open(fileName, 'w'))
     @staticmethod
     def loadClassifier(fileName): return cPickle.load(open(fileName))
+
+class ExpertsClassifier(Classifier):
+#        ExpertsClassifier(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=1)
+    def __init__(self, **kwargs):
+        super(ExpertsClassifier, self).__init__()
+        self.kwargs=kwargs
+        self.trainedClassifierFile = Utilities.getTrainedClassifierFile(**kwargs)
+    def trainAndSave(self):
+        Utilities.createDirectory(self.trainedClassifierFile)
+        self.trainClassifier(Utilities.getDocuments(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs))
+        Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
+    def load(self): self.classifier = Classifier.loadClassifier(self.trainedClassifierFile)
+
+class TestDocuments:
+#    TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=4)
+    def __init__(self, **kwargs): self.kwargs=kwargs
+    def iterator(self):
+        return Utilities.getDocuments(fileNameMethod=Utilities.getTestFile, dataDirection=DataDirection.future, bottom=True, **self.kwargs)
