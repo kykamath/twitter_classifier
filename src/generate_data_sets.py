@@ -58,6 +58,7 @@ class CreateTrainingAndTestSets:
             if tweet['user']['id_str'] in expertsList: yield tweet
     @staticmethod
     def rawData():
+        global numberOfExperts
         currentTime = Settings.startTime
         allExpertsTop, allExpertsBottom = ExpertUsers(number=numberOfExperts), ExpertUsers(number=numberOfExperts, type=ExpertUsers.typeBottom)
         allExpertsList=allExpertsTop.list
