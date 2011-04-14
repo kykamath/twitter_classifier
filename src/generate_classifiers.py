@@ -24,12 +24,12 @@ class ExpertsClassifier(Classifier):
             for tweet in Utilities.iterateTweetsFromFile(trainingFile): yield (tweet['document'], tweet['class'])
             currentTime-=timedelta(days=1)
     def train(self):
-        print self.trainedClassifierFile
-        exit()
+        Utilities.createDirectory(self.trainedClassifierFile)
         self.trainClassifier([t for t in self.trainingDocuments()])
-        Classifier.saveClassifier(self.classifier, fileName)
+        print self.trainedClassifierFile
+        Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
     def load(self):
-        self.classifier = Classifier.loadClassifier(fileName)
+        self.classifier = Classifier.loadClassifier(self.trainedClassifierFile)
         
 if __name__ == '__main__':
     ExpertsClassifier(Settings.startTime, Settings.numberOfExperts, DataType.ruusl).train()  
