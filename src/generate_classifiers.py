@@ -29,6 +29,10 @@ class ExpertsClassifier(Classifier):
         Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
     def load(self):
         self.classifier = Classifier.loadClassifier(self.trainedClassifierFile)
+
+class TestDocuments:
+    @staticmethod
+    def getTestDocuments():
         
 if __name__ == '__main__':
     ExpertsClassifier(Settings.startTime, Settings.numberOfExperts, DataType.ruusl).load()  

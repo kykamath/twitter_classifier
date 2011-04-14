@@ -18,7 +18,7 @@ class Settings:
     
     # Classifier data
     startTime=datetime(2011,3,19)
-    endTime=datetime(2011,3,19)
+    endTime=datetime(2011,4,12)
     
     numberOfExperts = 125
     expertListSizes = xrange(50,550,50)
