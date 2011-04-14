@@ -21,20 +21,24 @@ class ExpertsClassifier(Classifier):
 #        exit()
         self.trainClassifier([t for t in Utilities.getDocuments(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs)])
         Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
-    def load(self):
-        self.classifier = Classifier.loadClassifier(self.trainedClassifierFile)
+    def load(self): self.classifier = Classifier.loadClassifier(self.trainedClassifierFile)
 
 class TestDocuments:
 #    TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=4)
     def __init__(self, **kwargs): self.kwargs=kwargs
-    def iterate(self):
+    def iterator(self):
         return Utilities.getDocuments(fileNameMethod=Utilities.getTestFile, dataDirection=DataDirection.future, bottom=True, **self.kwargs)
-        
+
+def gen(): 
+    for r in range(10): yield r
+
 if __name__ == '__main__':
-    ExpertsClassifier(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, noOfDays=1).trainAndSave()
+#    ExpertsClassifier(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, noOfDays=1).trainAndSave()
+    classifier = ExpertsClassifier(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, noOfDays=1)
+    classifier.load()
+    print classifier.getAccuracy(list(TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, noOfDays=4).iterator()))
 #    i = 1
-#    for d in TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=4).iterate():
+#    for d in TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=4).iterator():
 #        print i, d[1]
 #        i+=1
-
-#    testDocuments = TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, noOfDays=4).iterate()
+    

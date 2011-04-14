@@ -49,7 +49,7 @@ class Classifier(object):
         from nltk.classify import apply_features
         trainSet = apply_features(Classifier.extractFeatures, documents)
         self.classifier = self.nltkClassifier.train(trainSet)
-    def testClassifier(self, documents):
+    def getAccuracy(self, documents):
         from nltk.classify import apply_features
         from nltk.classify.util import accuracy
         testSet = apply_features(Classifier.extractFeatures, documents)
@@ -76,8 +76,8 @@ class Classifier(object):
             i+=1
         return MultiClassAUC(classifiedDocuments).getMRevised()
     def evaluate(self, documents, methodology=None):
-        if methodology==None: return {Evaluation.accuracy: self.testClassifier(documents), Evaluation.aucm: self.getAUCM(documents)}
-        elif methodology==Evaluation.accuracy: return {Evaluation.accuracy: self.testClassifier(documents)}
+        if methodology==None: return {Evaluation.accuracy: self.getAccuracy(documents), Evaluation.aucm: self.getAUCM(documents)}
+        elif methodology==Evaluation.accuracy: return {Evaluation.accuracy: self.getAccuracy(documents)}
         elif methodology==Evaluation.aucm: return {Evaluation.aucm: self.getAUCM(documents)}
     @staticmethod
     def saveClassifier(classifier, fileName): 
