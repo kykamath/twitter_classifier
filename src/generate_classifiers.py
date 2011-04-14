@@ -12,7 +12,7 @@ class DocumentFormatUnigram(object):
         self.combinedSetFile = Utilities.getCombinedFile(currentTime, DataType.raw)
     def convert(self):
         for tweet in Utilities.iterateTweetsFromFile(self.combinedSetFile):
-            pprint(tweet)
+            pprint.pprint(tweet)
             exit()
         
 class ExpertsClassifier:
