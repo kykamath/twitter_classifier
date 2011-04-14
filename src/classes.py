@@ -47,12 +47,12 @@ class Classifier(object):
         return features
     def trainClassifier(self, documents):
         from nltk.classify import apply_features
-        trainSet = apply_features(Classifier.extractFeatures, documents)
+        trainSet = apply_features(Classifier.extractFeatures, list(documents))
         self.classifier = self.nltkClassifier.train(trainSet)
     def getAccuracy(self, documents):
         from nltk.classify import apply_features
         from nltk.classify.util import accuracy
-        testSet = apply_features(Classifier.extractFeatures, documents)
+        testSet = apply_features(Classifier.extractFeatures, list(documents))
         return accuracy(self.classifier, testSet)
     def classificationProbabilities(self, documents, resultsOnly = False):
         documentSet = []

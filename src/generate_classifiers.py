@@ -19,7 +19,7 @@ class ExpertsClassifier(Classifier):
         Utilities.createDirectory(self.trainedClassifierFile)
 #        for t in Utilities.getDocuments(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs): print t[1]
 #        exit()
-        self.trainClassifier([t for t in Utilities.getDocuments(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs)])
+        self.trainClassifier(Utilities.getDocuments(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs))
         Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
     def load(self): self.classifier = Classifier.loadClassifier(self.trainedClassifierFile)
 
@@ -34,11 +34,18 @@ def gen():
 
 if __name__ == '__main__':
 #    ExpertsClassifier(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, noOfDays=1).trainAndSave()
+    
     classifier = ExpertsClassifier(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, noOfDays=1)
     classifier.load()
     print classifier.getAccuracy(list(TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, noOfDays=4).iterator()))
+    
+    
 #    i = 1
 #    for d in TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=4).iterator():
 #        print i, d[1]
 #        i+=1
     
+#    print list(gen())
+#    l = range(5)
+#    print l
+#    print list(l)
