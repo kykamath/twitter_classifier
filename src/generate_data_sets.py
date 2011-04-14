@@ -14,16 +14,16 @@ numberOfExperts = 125
 
 class DataType(object):
     raw = 'raw' # Original file
-    raw_unigram = 'raw_unigram' # Original file with unigrams
+    raw_unigram = 'removed_url_users_specialcharaters_and_lemmatized'
     
     keys = ['class', 'text', 'created_at', 'id']
 
     def __init__(self, currentTime, outputDataType):
         self.currentTime = currentTime
         self.inputTrainingSetFile = Utilities.getTrainingFile(currentTime, DataType.raw, numberOfExperts)
-        self.inputTestSetFile = Utilities.getTestFile(currentTime, DataType.raw, numberOfExperts)
+        self.inputTestSetFile = Utilities.getTestFile(currentTime, DataType.raw, numberOfExperts, bottom=True)
         self.outputTrainingSetFile = Utilities.getTrainingFile(currentTime, outputDataType, numberOfExperts)
-        self.outputTestSetFile = Utilities.getTestFile(currentTime, outputDataType, numberOfExperts)
+        self.outputTestSetFile = Utilities.getTestFile(currentTime, outputDataType, numberOfExperts, bottom=True)
         Utilities.createDirectory(self.outputTrainingSetFile), Utilities.createDirectory(self.outputTestSetFile)
     def convert(self):
         for inputFile, outputFile in [(self.inputTrainingSetFile, self.outputTrainingSetFile), (self.inputTestSetFile, self.outputTestSetFile)]:
