@@ -10,8 +10,8 @@ from datetime import timedelta
 from classes import Classifier
 
 class ExpertsClassifier(Classifier):
-    def __init__(self, **kwargs):
 #        ExpertsClassifier(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=1)
+    def __init__(self, **kwargs):
         super(ExpertsClassifier, self).__init__()
         self.kwargs=kwargs
         self.trainedClassifierFile = Utilities.getTrainedClassifierFile(**kwargs)
@@ -25,13 +25,16 @@ class ExpertsClassifier(Classifier):
         self.classifier = Classifier.loadClassifier(self.trainedClassifierFile)
 
 class TestDocuments:
+#    TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=4)
     def __init__(self, **kwargs): self.kwargs=kwargs
     def iterate(self):
         return Utilities.getDocuments(fileNameMethod=Utilities.getTestFile, dataDirection=DataDirection.future, bottom=True, **self.kwargs)
         
 if __name__ == '__main__':
-#    ExpertsClassifier(currentTime=Settings.startTime+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=2).trainAndSave()  
-    i = 1
-    for d in TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=4).iterate():
-        print i, d[1]
-        i+=1
+    ExpertsClassifier(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, noOfDays=1).trainAndSave()
+#    i = 1
+#    for d in TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=4).iterate():
+#        print i, d[1]
+#        i+=1
+
+#    testDocuments = TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, noOfDays=4).iterate()

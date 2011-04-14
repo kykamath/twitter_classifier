@@ -55,14 +55,14 @@ class Utilities:
         if not bottom: return Settings.twitterClassifierTestSetsFolder+'%s/%s/%s'%(numberOfExperts, dataType, Utilities.getDataFile(currentTime))
         else: return Settings.twitterClassifierTestSetsFolder+'_%s/%s/%s'%(numberOfExperts, dataType, Utilities.getDataFile(currentTime))
     @staticmethod
-    def getTrainedClassifierFile(currentTime, dataType, numberOfExperts, historyLength, **kwargs):
-        return Settings.twitterClassifierTrainedModelsFolder +'%s/%s/%s/%s'%(numberOfExperts, dataType, Utilities.getDataFile(currentTime), historyLength)
+    def getTrainedClassifierFile(currentTime, dataType, numberOfExperts, noOfDays, **kwargs):
+        return Settings.twitterClassifierTrainedModelsFolder +'%s/%s/%s/%s'%(numberOfExperts, dataType, Utilities.getDataFile(currentTime), noOfDays)
     @staticmethod
     def getDocuments(**kwargs):
         currentTime=kwargs['currentTime']
         fileNameMethod=kwargs['fileNameMethod']
         del kwargs['currentTime']
-        for i in range(kwargs['historyLength']):
+        for i in range(kwargs['noOfDays']):
             for tweet in Utilities.iterateTweetsFromFile(fileNameMethod(currentTime=currentTime, **kwargs)): yield (tweet['document'], tweet['class'])
             currentTime=currentTime+kwargs['dataDirection']*timedelta(days=1)
 #    @staticmethod
