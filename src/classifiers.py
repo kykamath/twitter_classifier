@@ -72,7 +72,7 @@ class Classifier(object):
         for pdist in pdists: 
             tempDict = {}
             print list(pdist)
-            [tempDict.setdefault(k, pdist.prob('%s'%k)) for k in range(1, len(classToIntMap)+1)]
+            [tempDict.setdefault(k, pdist.prob('%s'%k)) for k in classToIntMap.keys()]
             returnPdists.append(tempDict)
         exit()
         if not resultsOnly: return zip(documents, returnPdists)
