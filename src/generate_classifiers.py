@@ -18,7 +18,7 @@ class ExpertsClassifier:
         currentTime=self.currentTime
         for i in range(self.historyLength):
             trainingFile = Utilities.getTrainingFile(currentTime, self.dataType, self.numberOfExperts)
-            for tweet in Utilities.iterateTweetsFromFile(trainingFile): yield tweet
+            for tweet in Utilities.iterateTweetsFromFile(trainingFile): yield (tweet['document'], tweet['class'])
             currentTime-=timedelta(days=1)
     def train(self):
         i = 1
@@ -26,4 +26,4 @@ class ExpertsClassifier:
             print i, tweet['id']
             i+=1
 if __name__ == '__main__':
-    ExpertsClassifier(Settings.startTime+timedelta(days=1), Settings.numberOfExperts, DataType.ruusl).train()  
+    ExpertsClassifier(Settings.startTime, Settings.numberOfExperts, DataType.ruusl).train()  
