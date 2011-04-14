@@ -4,7 +4,7 @@ Created on Mar 18, 2011
 @author: kykamath
 '''
 from collections import defaultdict
-from settings import Settings, DataType
+from settings import Settings
 import gzip, cjson, os
 
 class ExpertUsers:
@@ -47,7 +47,4 @@ class Utilities:
     def getTestFile(currentTime, inputType, numberOfExperts): return Settings.twitterClassifierTestSetsFolder+'%s/%s/%s'%(numberOfExperts, inputType, Utilities.getDataFile(currentTime))
     @staticmethod
     def getCombinedFile(currentTime, inputType): return Settings.twitterClassifierCombinedSetsFolder+'%s/%s'%(inputType, Utilities.getDataFile(currentTime))
-
-if __name__ == '__main__':
-    print Utilities.getTestFile(Settings.startTime, DataType.raw, 250)
 
