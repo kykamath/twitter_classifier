@@ -18,12 +18,13 @@ class DataType(object):
     
     keys = ['class', 'text', 'created_at', 'id']
 
-    def __init__(self, currentTime, outputDataType):
+    def __init__(self, currentTime, outputDataType, numberOfExperts):
         self.currentTime = currentTime
-        self.inputTrainingSetFile = Utilities.getTrainingFile(currentTime, DataType.raw, numberOfExperts)
-        self.inputTestSetFile = Utilities.getTestFile(currentTime, DataType.raw, numberOfExperts, bottom=True)
-        self.outputTrainingSetFile = Utilities.getTrainingFile(currentTime, outputDataType, numberOfExperts)
-        self.outputTestSetFile = Utilities.getTestFile(currentTime, outputDataType, numberOfExperts, bottom=True)
+        self.numberOfExperts = numberOfExperts
+        self.inputTrainingSetFile = Utilities.getTrainingFile(currentTime, DataType.raw, self.numberOfExperts)
+        self.inputTestSetFile = Utilities.getTestFile(currentTime, DataType.raw, self.numberOfExperts, bottom=True)
+        self.outputTrainingSetFile = Utilities.getTrainingFile(currentTime, outputDataType, self.numberOfExperts)
+        self.outputTestSetFile = Utilities.getTestFile(currentTime, outputDataType, self.numberOfExperts, bottom=True)
         Utilities.createDirectory(self.outputTrainingSetFile), Utilities.createDirectory(self.outputTestSetFile)
     def convert(self):
         for inputFile, outputFile in [(self.inputTrainingSetFile, self.outputTrainingSetFile), (self.inputTestSetFile, self.outputTestSetFile)]:
@@ -37,7 +38,8 @@ class DataType(object):
                 exit()
 
 class DocumentTypeRawUnigram(DataType):
-    def __init__(self, currentTime): super(DocumentTypeRawUnigram, self).__init__(currentTime, DataType.raw_unigram)
+    def __init__(self, currentTime, numberOfExperts): 
+        super(DocumentTypeRawUnigram, self).__init__(currentTime, DataType.raw_unigram, numberOfExperts)
     def modifyDocument(self, text): 
         pattern = re.compile('[\W_]+')
         def removeHTTP(s): return' '.join(filter(lambda x:x.find('http') == -1, s.lower().split()))
@@ -76,6 +78,14 @@ class CreateTrainingAndTestSets:
                     else: Utilities.writeAsJsonToFile(tweet, testFile)
             currentTime+=timedelta(days=1)
     
+    @staticmethod
+    def createModifiedData():
+        global numberOfExperts
+        currentTime = Settings.startTime
+        while currentTime <= Settings.endTime:
+            DocumentTypeRawUnigram(currentTime, numberOfExperts).convert()
+            currentTime+=timedelta(days=1)
+            
 #    @staticmethod
 #    def combineRawData():
 #        currentTime, numberOfExperts = Settings.startTime, numberOfExperts
@@ -103,5 +113,5 @@ class CreateTrainingAndTestSets:
 #            Utilities.writeAsJsonToFile(tweet, outputFile)
 
 if __name__ == '__main__':
-    DocumentTypeRawUnigram(Settings.startTime).convert()
-#    CreateTrainingAndTestSets.rawData()
+#    DocumentTypeRawUnigram(Settings.startTime).convert()
+    CreateTrainingAndTestSets.createModifiedData()
