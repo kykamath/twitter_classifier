@@ -16,7 +16,7 @@ class DocumentFormat(object):
         self.outputTrainingSetFile = Utilities.getTrainingFile(currentTime, outputDataType, DocumentFormat.numberOfExperts)
         self.outputTestSetFile = Utilities.getTestFile(currentTime, outputDataType, DocumentFormat.numberOfExperts)
     def convert(self):
-        for tweet in Utilities.iterateTweetsFromFile(self.combinedSetFile):
+        for tweet in Utilities.iterateTweetsFromFile(self.inputTrainingSetFile):
             data = {}
             for k in DocumentFormat.keys: data[k]=tweet[k]
             data['screen_name'] = tweet['user']['screen_name']; data['user_id'] = tweet['user']['id_str']
