@@ -62,7 +62,7 @@ class Utilities:
         currentTime=kwargs['currentTime']
         fileNameMethod=kwargs['fileNameMethod']
         for i in range(kwargs['historyLength']):
-            yield fileNameMethod(**kwargs)
+            yield fileNameMethod(currentTime=currentTime, **kwargs)
             
 #            for tweet in Utilities.iterateTweetsFromFile(fileName): yield (tweet['document'], tweet['class'])
             currentTime=currentTime+kwargs['dataDirection']*timedelta(days=1)
