@@ -31,5 +31,7 @@ class TestDocuments:
         
 if __name__ == '__main__':
 #    ExpertsClassifier(currentTime=Settings.startTime+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=2).trainAndSave()  
+    i = 1
     for d in TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=2).iterate():
-        print d[1]
+        print i, d[1]
+        i+=1
