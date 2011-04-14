@@ -61,6 +61,7 @@ class Utilities:
     def getFiles(**kwargs):
         currentTime=kwargs['currentTime']
         fileNameMethod=kwargs['fileNameMethod']
+        del kwargs['currentTime']
         for i in range(kwargs['historyLength']):
             yield fileNameMethod(currentTime=currentTime, **kwargs)
             
