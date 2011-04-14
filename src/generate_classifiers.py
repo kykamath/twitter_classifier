@@ -9,15 +9,28 @@ from datetime import timedelta
 from classifiers import FixedWindowClassifier, TestDocuments
 from utilities import Utilities
 
+maxLength=16
 
 class GenerateClassifiers:
     @staticmethod
-    def fixedWindowOfDifferentLengths(maxLength=16):
+    def fixedWindowOfDifferentLengths():
+        global maxLength
         currentDay = Settings.startTime
         while currentDay<=Settings.endTime:
             for noOfDays in Utilities.getClassifierLengthsByDay(currentDay, maxLength): FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DataType.typeRuusl, noOfDays=noOfDays).trainAndSave()
             currentDay+=timedelta(days=1)
-    
+
+class AnalyzeClassifiers:
+    @staticmethod
+    def generateStatsToDetermineFixedWindowLength():
+        global maxLength
+        currentDay = Settings.startTime
+        while currentDay<=Settings.endTime:
+            for noOfDays in Utilities.getClassifierLengthsByDay(currentDay, maxLength): 
+                classifier = FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DataType.typeRuusl, noOfDays=noOfDays)
+                classifier.load()
+                print currentDay, noOfDays, classifier.getAccuracy(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DataType.typeRuusl, noOfDays=1).iterator())
+            currentDay+=timedelta(days=1)
 
 if __name__ == '__main__':
 #    FixedWindowClassifier(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.typeRuusl, noOfDays=1).trainAndSave()
