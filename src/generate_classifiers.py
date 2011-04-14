@@ -9,7 +9,7 @@ from datasets import DataType
 from datetime import timedelta
         
 class ExpertsClassifier:
-    def __init__(self, currentTime, numberOfExperts, dataType, historyLength=1):
+    def __init__(self, currentTime, numberOfExperts, dataType, historyLength=5):
         self.currentTime = currentTime
         self.numberOfExperts = numberOfExperts
         self.dataType = dataType
