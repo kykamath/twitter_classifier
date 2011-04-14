@@ -15,7 +15,7 @@ class GenerateClassifiers:
         currentDay = Settings.startTime
         while currentDay<=Settings.endTime:
             classifierLengths = [1]+range(2,min([maxLength, (currentDay-Settings.startTime).days]),2)
-            print classifierLengths
+            print currentDay, classifierLengths
             currentDay+=timedelta(days=1)
     
 
