@@ -94,7 +94,7 @@ class FixedWindowClassifier(Classifier):
     def __init__(self, **kwargs):
         super(FixedWindowClassifier, self).__init__()
         self.kwargs=kwargs
-        self.trainedClassifierFile = Utilities.getTrainedClassifierFile(classifierType=Classifier.typeFixedWindow **kwargs)
+        self.trainedClassifierFile = Utilities.getTrainedClassifierFile(classifierType=Classifier.typeFixedWindow, **kwargs)
     def trainAndSave(self):
         Utilities.createDirectory(self.trainedClassifierFile)
         self.trainClassifier(Utilities.getDocuments(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs))
