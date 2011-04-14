@@ -37,7 +37,7 @@ if __name__ == '__main__':
     
     classifier = ExpertsClassifier(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, noOfDays=1)
     classifier.load()
-    print classifier.getAccuracy(list(TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, noOfDays=4).iterator()))
+    print classifier.getAccuracy(TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, noOfDays=4).iterator())
     
     
 #    i = 1
