@@ -10,6 +10,10 @@ import cjson, pprint, re
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk import pos_tag, word_tokenize
 
+class DataDirection:
+    future = 1
+    past=-1
+
 class DataType(object):
     raw = 'raw' # Original file
     ruusl = 'removed_url_users_specialcharaters_and_lemmatized'

@@ -7,6 +7,7 @@ from collections import defaultdict
 from settings import Settings
 import gzip, cjson, os
 from datetime import timedelta
+from datasets import DataType
 
 class ExpertUsers:
     typeTop = 1
@@ -58,12 +59,17 @@ class Utilities:
     def getTrainedClassifierFile(currentTime, dataType, numberOfExperts, historyLength, **kwargs):
         return Settings.twitterClassifierTrainedModelsFolder +'%s/%s/%s/%s'%(numberOfExperts, dataType, Utilities.getDataFile(currentTime), historyLength)
     @staticmethod
-    def getDocuments(**kwargs):
+    def getFiles(**kwargs):
         currentTime=kwargs['currentTime']
         fileNameMethod=kwargs['fileNameMethod']
         for i in range(kwargs['historyLength']):
-            fileName = fileNameMethod(**kwargs)
-            for tweet in Utilities.iterateTweetsFromFile(fileName): yield (tweet['document'], tweet['class'])
-            currentTime-=timedelta(days=1)
+            yield fileNameMethod(**kwargs)
+            
+#            for tweet in Utilities.iterateTweetsFromFile(fileName): yield (tweet['document'], tweet['class'])
+            currentTime=currentTime+kwargs['dataDirection']*timedelta(days=1)
 #    @staticmethod
 #    def getCombinedFile(currentTime, dataType): return Settings.twitterClassifierCombinedSetsFolder+'%s/%s'%(dataType, Utilities.getDataFile(currentTime))
+
+if __name__ == '__main__':
+    for f in Utilities.getFiles(fileNameMethod=Utilities.getTrainingFile, currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=1):
+        print f
