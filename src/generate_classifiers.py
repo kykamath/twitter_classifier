@@ -15,7 +15,7 @@ class GenerateClassifiers:
     def fixedWindowOfDifferentLengths(maxLength=16):
         currentDay = Settings.startTime
         while currentDay<=Settings.endTime:
-            print currentDay, Utilities.getClassifierLengthsByDay(currentDay, maxLength)
+            for noOfDays in Utilities.getClassifierLengthsByDay(currentDay, maxLength): FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DataType.typeRuusl, noOfDays=noOfDays).trainAndSave()
             currentDay+=timedelta(days=1)
     
 
