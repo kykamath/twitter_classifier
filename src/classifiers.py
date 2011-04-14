@@ -62,10 +62,13 @@ class Classifier(object):
     def classificationProbabilities(self, documents, resultsOnly = False):
         global classToIntMap
         documentSet = []
+#        documents = list(documents)
         for d in documents: 
             tempDict = {}
             for term in d: tempDict[term] = True
             documentSet.append(tempDict)
+        for d in documentSet: print d
+        exit()
         pdists = self.classifier.batch_prob_classify(documentSet)
         returnPdists = []
         for pdist in pdists: 
