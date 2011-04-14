@@ -22,8 +22,8 @@ class ExpertsClassifier:
             currentTime-=timedelta(days=1)
     def train(self):
         i = 1
-        for tweet in self.trainingDocuments(): 
-            print i, tweet['id']
+        for document in self.trainingDocuments(): 
+            print i, document
             i+=1
 if __name__ == '__main__':
     ExpertsClassifier(Settings.startTime, Settings.numberOfExperts, DataType.ruusl).train()  
