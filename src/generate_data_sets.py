@@ -6,14 +6,17 @@ Created on Mar 18, 2011
 from utilities import ExpertUsers, Utilities
 from settings import Settings
 from datetime import datetime, timedelta
-import cjson, pprint
+import cjson, pprint, re
+from nltk.stem.wordnet import WordNetLemmatizer
+from nltk import pos_tag, word_tokenize
+
+numberOfExperts = 250
 
 class DataType(object):
     raw = 'raw' # Original file
     raw_unigram = 'raw_unigram' # Original file with unigrams
     
     keys = ['class', 'text', 'created_at', 'id']
-    numberOfExperts = 250
 
     def __init__(self, currentTime, outputDataType):
         self.currentTime = currentTime
@@ -29,12 +32,24 @@ class DataType(object):
                 for k in DataType.keys: data[k]=tweet[k]
                 data['screen_name'] = tweet['user']['screen_name']; data['user_id'] = tweet['user']['id_str']
                 data['document'] = self.modifyDocument(data['text'])
-                Utilities.writeAsJsonToFile(data, outputFile)
+#                Utilities.writeAsJsonToFile(data, outputFile)
+                pprint.pprint(data)
                 exit()
 
 class DocumentTypeRawUnigram(DataType):
     def __init__(self, currentTime): super(DocumentTypeRawUnigram, self).__init__(currentTime, DataType.raw_unigram)
-    def modifyDocument(self, text): return text.strip().lower().split()
+    def modifyDocument(self, text): 
+        pattern = re.compile('[\W_]+')
+        def removeHTTP(s): return' '.join(filter(lambda x:x.find('http') == -1, s.lower().split()))
+        def lemmatizeWords(terms):
+            lmtzr = WordNetLemmatizer()
+            return [lmtzr.lemmatize(term) for term in terms]
+        def removeUsers(sentance): return ' '.join(filter(lambda term: not term.startswith('@'), sentance.split()))
+        sentance = removeHTTP(text.lower())
+        sentance = removeUsers(sentance)
+        returnWords = [pattern.sub('', word) for word, tag in pos_tag(word_tokenize(sentance))]
+        returnWords = lemmatizeWords(returnWords)
+        return returnWords
 
 class CreateTrainingAndTestSets:
     @staticmethod
@@ -47,7 +62,7 @@ class CreateTrainingAndTestSets:
         allExperts = ExpertUsers()
         while currentTime <= Settings.endTime:
 #            for numberOfExperts in Settings.expertListSizes:
-            for numberOfExperts in [250]:
+            for numberOfExperts in [numberOfExperts]:
                 expertsForTraining = ExpertUsers(number=numberOfExperts)
                 trainingFile = Utilities.getTrainingFile(currentTime, DataType.raw, numberOfExperts)
                 testFile = Utilities.getTestFile(currentTime, DataType.raw, numberOfExperts)
@@ -61,7 +76,7 @@ class CreateTrainingAndTestSets:
     
     @staticmethod
     def combineRawData():
-        currentTime, numberOfExperts = Settings.startTime, 250
+        currentTime, numberOfExperts = Settings.startTime, numberOfExperts
         while currentTime <= Settings.endTime:
             trainingFile = Utilities.getTrainingFile(currentTime, DataType.raw, numberOfExperts)
             testFile = Utilities.getTestFile(currentTime, DataType.raw, numberOfExperts)

@@ -47,4 +47,3 @@ class Utilities:
     def getTestFile(currentTime, inputType, numberOfExperts): return Settings.twitterClassifierTestSetsFolder+'%s/%s/%s'%(numberOfExperts, inputType, Utilities.getDataFile(currentTime))
     @staticmethod
     def getCombinedFile(currentTime, inputType): return Settings.twitterClassifierCombinedSetsFolder+'%s/%s'%(inputType, Utilities.getDataFile(currentTime))
-
