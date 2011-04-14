@@ -71,5 +71,5 @@ class Utilities:
 #    def getCombinedFile(currentTime, dataType): return Settings.twitterClassifierCombinedSetsFolder+'%s/%s'%(dataType, Utilities.getDataFile(currentTime))
 
 if __name__ == '__main__':
-    for f in Utilities.getFiles(fileNameMethod=Utilities.getTrainingFile, dataDirection=1, currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType='removed_url_users_specialcharaters_and_lemmatized', historyLength=10):
+    for f in Utilities.getFiles(fileNameMethod=Utilities.getTrainingFile, dataDirection=-1, currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType='removed_url_users_specialcharaters_and_lemmatized', historyLength=10):
         print f
