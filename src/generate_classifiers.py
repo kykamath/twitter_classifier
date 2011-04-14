@@ -5,17 +5,18 @@ Created on Apr 13, 2011
 '''
 from utilities import Utilities
 from settings import Settings
-from datasets import DataType
+from datasets import DataType, DataDirection
 from datetime import timedelta
 from classes import Classifier
 
 class ExpertsClassifier(Classifier):
-    def __init__(self, currentTime, numberOfExperts, dataType, historyLength=1):
+    def __init__(self, currentTime, numberOfExperts, dataType, historyLength=1, **kwargs):
         super(ExpertsClassifier, self).__init__()
-        self.currentTime = currentTime
-        self.numberOfExperts = numberOfExperts
-        self.dataType = dataType
-        self.historyLength = historyLength
+#        self.currentTime = currentTime
+#        self.numberOfExperts = numberOfExperts
+#        self.dataType = dataType
+#        self.historyLength = historyLength
+        self.kwargs=kwargs
         self.trainedClassifierFile = Utilities.getTrainedClassifierFile(currentTime, dataType, numberOfExperts, historyLength)
 #    def trainingDocuments(self):
 #        currentTime=self.currentTime
@@ -26,22 +27,22 @@ class ExpertsClassifier(Classifier):
     def trainAndSave(self):
         Utilities.createDirectory(self.trainedClassifierFile)
 #        for t in self.trainingDocuments(): print t[1]
-        for t in Utilities.getDocuments(fileNameMethod=Utilities.getTrainingFile, currentTime=self.currentTime, numberOfExperts=self.numberOfExperts, dataType=self.dataType, historyLength=self.historyLength): print t[1]
+        for t in Utilities.getDocuments(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs): print t[1]
         exit()
         self.trainClassifier([t for t in self.trainingDocuments()])
         Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
     def load(self):
         self.classifier = Classifier.loadClassifier(self.trainedClassifierFile)
 
-class TestDocuments:
-    def __init__(self, currentTime, numberOfExperts, dataType, historyLength=1):
-        self.currentTime = currentTime
-        self.numberOfExperts = numberOfExperts
-        self.dataType = dataType
-        self.historyLength = historyLength
-    @staticmethod
-    def getTestDocuments():
-        pass
+#class TestDocuments:
+#    def __init__(self, currentTime, numberOfExperts, dataType, historyLength=1):
+#        self.currentTime = currentTime
+#        self.numberOfExperts = numberOfExperts
+#        self.dataType = dataType
+#        self.historyLength = historyLength
+#    @staticmethod
+#    def getTestDocuments():
+#        pass
         
 if __name__ == '__main__':
     ExpertsClassifier(Settings.startTime+timedelta(days=1), Settings.numberOfExperts, DataType.ruusl, historyLength=2).trainAndSave()  
