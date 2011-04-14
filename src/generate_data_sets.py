@@ -20,10 +20,10 @@ class DataType(object):
 
     def __init__(self, currentTime, outputDataType):
         self.currentTime = currentTime
-        self.inputTrainingSetFile = Utilities.getTrainingFile(currentTime, DataType.raw, DataType.numberOfExperts)
-        self.inputTestSetFile = Utilities.getTestFile(currentTime, DataType.raw, DataType.numberOfExperts)
-        self.outputTrainingSetFile = Utilities.getTrainingFile(currentTime, outputDataType, DataType.numberOfExperts)
-        self.outputTestSetFile = Utilities.getTestFile(currentTime, outputDataType, DataType.numberOfExperts)
+        self.inputTrainingSetFile = Utilities.getTrainingFile(currentTime, DataType.raw, numberOfExperts)
+        self.inputTestSetFile = Utilities.getTestFile(currentTime, DataType.raw, numberOfExperts)
+        self.outputTrainingSetFile = Utilities.getTrainingFile(currentTime, outputDataType, numberOfExperts)
+        self.outputTestSetFile = Utilities.getTestFile(currentTime, outputDataType, numberOfExperts)
         Utilities.createDirectory(self.outputTrainingSetFile), Utilities.createDirectory(self.outputTestSetFile)
     def convert(self):
         for inputFile, outputFile in [(self.inputTrainingSetFile, self.outputTrainingSetFile), (self.inputTestSetFile, self.outputTestSetFile)]:
