@@ -48,8 +48,6 @@ class Classifier(object):
     def trainClassifier(self, documents):
         from nltk.classify import apply_features
         trainSet = apply_features(Classifier.extractFeatures, documents)
-        for t in trainSet: print t
-        exit()
         self.classifier = self.nltkClassifier.train(trainSet)
     def testClassifier(self, documents):
         from nltk.classify import apply_features
