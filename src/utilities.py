@@ -47,11 +47,15 @@ class Utilities:
         f.write(cjson.encode(data)+'\n')
         f.close()
     @staticmethod
-    def getTrainingFile(currentTime, inputType, numberOfExperts): return Settings.twitterClassifierTrainingSetsFolder+'%s/%s/%s'%(numberOfExperts, inputType, Utilities.getDataFile(currentTime))
+    def getTrainingFile(currentTime, inputType, numberOfExperts): 
+        return Settings.twitterClassifierTrainingSetsFolder+'%s/%s/%s'%(numberOfExperts, inputType, Utilities.getDataFile(currentTime))
     @staticmethod
     def getTestFile(currentTime, inputType, numberOfExperts, bottom=False): 
         if not bottom: return Settings.twitterClassifierTestSetsFolder+'%s/%s/%s'%(numberOfExperts, inputType, Utilities.getDataFile(currentTime))
         else: return Settings.twitterClassifierTestSetsFolder+'_%s/%s/%s'%(numberOfExperts, inputType, Utilities.getDataFile(currentTime))
-    
     @staticmethod
-    def getCombinedFile(currentTime, inputType): return Settings.twitterClassifierCombinedSetsFolder+'%s/%s'%(inputType, Utilities.getDataFile(currentTime))
+    def getTrainedClassifierFile(currentTime, inputType, numberOfExperts, historyLength):
+        return Settings.twitterClassifierTrainedModelsFolder +'%s/%s/%s/%s'%(numberOfExperts, inputType, Utilities.getDataFile(currentTime), historyLength)
+        
+#    @staticmethod
+#    def getCombinedFile(currentTime, inputType): return Settings.twitterClassifierCombinedSetsFolder+'%s/%s'%(inputType, Utilities.getDataFile(currentTime))
