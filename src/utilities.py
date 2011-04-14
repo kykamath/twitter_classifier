@@ -6,6 +6,7 @@ Created on Mar 18, 2011
 from collections import defaultdict
 from settings import Settings
 import gzip, cjson, os
+from datetime import timedelta
 
 class ExpertUsers:
     typeTop = 1
@@ -56,6 +57,12 @@ class Utilities:
     @staticmethod
     def getTrainedClassifierFile(currentTime, inputType, numberOfExperts, historyLength):
         return Settings.twitterClassifierTrainedModelsFolder +'%s/%s/%s/%s'%(numberOfExperts, inputType, Utilities.getDataFile(currentTime), historyLength)
-        
+    @staticmethod
+    def getDocuments(**kwargs):
+        currentTime=kwargs['currentTime']
+        for i in range(kwargs['historyLength']):
+            trainingFile = Utilities.getTrainingFile(**kwargs)
+            for tweet in Utilities.iterateTweetsFromFile(trainingFile): yield (tweet['document'], tweet['class'])
+            currentTime-=timedelta(days=1)
 #    @staticmethod
 #    def getCombinedFile(currentTime, inputType): return Settings.twitterClassifierCombinedSetsFolder+'%s/%s'%(inputType, Utilities.getDataFile(currentTime))

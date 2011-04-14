@@ -8,7 +8,7 @@ from settings import Settings
 from datasets import DataType
 from datetime import timedelta
 from classes import Classifier
-        
+
 class ExpertsClassifier(Classifier):
     def __init__(self, currentTime, numberOfExperts, dataType, historyLength=1):
         super(ExpertsClassifier, self).__init__()
@@ -25,19 +25,26 @@ class ExpertsClassifier(Classifier):
             currentTime-=timedelta(days=1)
     def trainAndSave(self):
         Utilities.createDirectory(self.trainedClassifierFile)
-        i = 1
-        for t in self.trainingDocuments(): 
-            print i, t[1]
-            i+=1
+        for t in self.trainingDocuments(): print t['class']
         exit()
         self.trainClassifier([t for t in self.trainingDocuments()])
         Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
     def load(self):
         self.classifier = Classifier.loadClassifier(self.trainedClassifierFile)
 
-#class TestDocuments:
-#    @staticmethod
-#    def getTestDocuments():
+class TestDocuments:
+    def __init__(self, currentTime, numberOfExperts, dataType, historyLength=1):
+        self.currentTime = currentTime
+        self.numberOfExperts = numberOfExperts
+        self.dataType = dataType
+        self.historyLength = historyLength
+    @staticmethod
+    def getTestDocuments():
+        pass
+
+def me(**kwargs):
+    print kwargs['arg']
         
 if __name__ == '__main__':
-    ExpertsClassifier(Settings.startTime+timedelta(days=1), Settings.numberOfExperts, DataType.ruusl, historyLength=2).trainAndSave()  
+#    ExpertsClassifier(Settings.startTime+timedelta(days=1), Settings.numberOfExperts, DataType.ruusl, historyLength=2).trainAndSave()  
+    me(arg=1)
