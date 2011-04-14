@@ -48,15 +48,15 @@ class Utilities:
         f.write(cjson.encode(data)+'\n')
         f.close()
     @staticmethod
-    def getTrainingFile(currentTime, inputType, numberOfExperts): 
-        return Settings.twitterClassifierTrainingSetsFolder+'%s/%s/%s'%(numberOfExperts, inputType, Utilities.getDataFile(currentTime))
+    def getTrainingFile(currentTime, dataType, numberOfExperts): 
+        return Settings.twitterClassifierTrainingSetsFolder+'%s/%s/%s'%(numberOfExperts, dataType, Utilities.getDataFile(currentTime))
     @staticmethod
-    def getTestFile(currentTime, inputType, numberOfExperts, bottom=False): 
-        if not bottom: return Settings.twitterClassifierTestSetsFolder+'%s/%s/%s'%(numberOfExperts, inputType, Utilities.getDataFile(currentTime))
-        else: return Settings.twitterClassifierTestSetsFolder+'_%s/%s/%s'%(numberOfExperts, inputType, Utilities.getDataFile(currentTime))
+    def getTestFile(currentTime, dataType, numberOfExperts, bottom=False): 
+        if not bottom: return Settings.twitterClassifierTestSetsFolder+'%s/%s/%s'%(numberOfExperts, dataType, Utilities.getDataFile(currentTime))
+        else: return Settings.twitterClassifierTestSetsFolder+'_%s/%s/%s'%(numberOfExperts, dataType, Utilities.getDataFile(currentTime))
     @staticmethod
-    def getTrainedClassifierFile(currentTime, inputType, numberOfExperts, historyLength):
-        return Settings.twitterClassifierTrainedModelsFolder +'%s/%s/%s/%s'%(numberOfExperts, inputType, Utilities.getDataFile(currentTime), historyLength)
+    def getTrainedClassifierFile(currentTime, dataType, numberOfExperts, historyLength):
+        return Settings.twitterClassifierTrainedModelsFolder +'%s/%s/%s/%s'%(numberOfExperts, dataType, Utilities.getDataFile(currentTime), historyLength)
     @staticmethod
     def getDocuments(**kwargs):
         currentTime=kwargs['currentTime']
@@ -65,4 +65,4 @@ class Utilities:
             for tweet in Utilities.iterateTweetsFromFile(trainingFile): yield (tweet['document'], tweet['class'])
             currentTime-=timedelta(days=1)
 #    @staticmethod
-#    def getCombinedFile(currentTime, inputType): return Settings.twitterClassifierCombinedSetsFolder+'%s/%s'%(inputType, Utilities.getDataFile(currentTime))
+#    def getCombinedFile(currentTime, dataType): return Settings.twitterClassifierCombinedSetsFolder+'%s/%s'%(dataType, Utilities.getDataFile(currentTime))
