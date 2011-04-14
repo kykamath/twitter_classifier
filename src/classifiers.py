@@ -71,7 +71,7 @@ class Classifier(object):
         returnPdists = []
         for pdist in pdists: 
             tempDict = {}
-            [tempDict.setdefault(k, pdist.prob('%s'%k)) for k in classToIntMap.keys()]
+            [tempDict.setdefault(classToIntMap[k], pdist.prob('%s'%k)) for k in classToIntMap.keys()]
             returnPdists.append(tempDict)
         if not resultsOnly: return zip(documents, returnPdists)
         else: return returnPdists
@@ -81,7 +81,7 @@ class Classifier(object):
         documentSet = [d for d, c in documents]
         classifiedDocuments, i = [], 0
         for d, result in zip(documents, self.classificationProbabilities(documentSet, True)):
-            classifiedDocuments.append((i, d[1], result))
+            classifiedDocuments.append((i, classToIntMap[d[1]], result))
             i+=1
         return MultiClassAUC(classifiedDocuments).getMRevised()
     def evaluate(self, documents, methodology=None):
