@@ -20,8 +20,8 @@ class ExpertUsers:
             else:
                 for user in v[-self.number:]: self.list[user[1]] = {'screen_name': user[0], 'class':k}
 if __name__ == '__main__':
-    print ExpertUsers(number=5, ExpertUsers.typeTop).list
-    print ExpertUsers(number=5, ExpertUsers.typeBottom).list
+    print ExpertUsers(number=5, type=ExpertUsers.typeTop).list
+    print ExpertUsers(number=5, type=ExpertUsers.typeBottom).list
             
 class Utilities:
     @staticmethod
