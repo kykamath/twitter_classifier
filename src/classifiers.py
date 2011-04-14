@@ -77,6 +77,8 @@ class Classifier(object):
         for d, result in zip(documents, self.classificationProbabilities(documentSet, True)):
             classifiedDocuments.append((i, int(d[1]), result))
             i+=1
+        for d in classifiedDocuments: print d
+        exit()
         return MultiClassAUC(classifiedDocuments).getMRevised()
     def evaluate(self, documents, methodology=None):
         if methodology==None: return {Evaluation.accuracy: self.getAccuracy(documents), Evaluation.aucm: self.getAUCM(documents)}
