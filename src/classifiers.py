@@ -10,7 +10,7 @@ from nltk.classify.maxent import MaxentClassifier
 import cPickle
 from datasets import DataDirection
 
-classToIntMap = {'technology':0, 'sports': 1, 'politics': 2, 'entertainment': 3}
+classToIntMap = {'sports': 1, 'politics': 2, 'entertainment': 3, 'technology': 4}
 
 class Evaluation:
     accuracy = 'accuracy'
