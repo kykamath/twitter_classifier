@@ -7,7 +7,6 @@ from collections import defaultdict
 from settings import Settings
 import gzip, cjson, os
 from datetime import timedelta
-from datasets import DataType
 
 class ExpertUsers:
     typeTop = 1
@@ -71,5 +70,5 @@ class Utilities:
 #    def getCombinedFile(currentTime, dataType): return Settings.twitterClassifierCombinedSetsFolder+'%s/%s'%(dataType, Utilities.getDataFile(currentTime))
 
 if __name__ == '__main__':
-    for f in Utilities.getFiles(fileNameMethod=Utilities.getTrainingFile, currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=1):
+    for f in Utilities.getFiles(fileNameMethod=Utilities.getTrainingFile, currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType='removed_url_users_specialcharaters_and_lemmatized', historyLength=1):
         print f
