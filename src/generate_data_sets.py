@@ -85,4 +85,4 @@ class CreateTrainingAndTestSets:
 #            Utilities.writeAsJsonToFile(tweet, outputFile)
 
 if __name__ == '__main__':
-    DocumentTypeRawUnigram().convert()
+    DocumentTypeRawUnigram(Settings.startTime).convert()
