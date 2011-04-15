@@ -18,6 +18,7 @@ class DocumentType(object):
     typeRaw = 'raw' # Original file
     typeRuuslUnigram = 'removed_url_users_specialcharaters_and_lemmatized'
     typeRuuslBigram = 'removed_url_users_specialcharaters_and_lemmatized_bigram'
+    typeRuuslTrigram = 'removed_url_users_specialcharaters_and_lemmatized_trigram'
     
     keys = ['class', 'text', 'created_at', 'id']
 
@@ -62,6 +63,11 @@ class DocumentTypeRuuslBigram(DocumentType):
         super(DocumentTypeRuuslBigram, self).__init__(currentTime, DocumentType.typeRuuslBigram, numberOfExperts)
     def modifyDocument(self, text): return kgram(2, self.getUnigrams(text))
 
+class DocumentTypeRuuslTrigram(DocumentType):
+    def __init__(self, currentTime, numberOfExperts): 
+        super(DocumentTypeRuuslTrigram, self).__init__(currentTime, DocumentType.typeRuuslTrigram, numberOfExperts)
+    def modifyDocument(self, text): return kgram(3, self.getUnigrams(text))
+
 class CreateTrainingAndTestSets:
     @staticmethod
     def getTweetsFromExperts(expertsList, file):
@@ -86,16 +92,16 @@ class CreateTrainingAndTestSets:
                     else: Utilities.writeAsJsonToFile(tweet, testFile)
             currentTime+=timedelta(days=1)
     
-    @staticmethod
-    def createModifiedData():
-        currentTime = Settings.startTime
-        while currentTime <= Settings.endTime:
-            print currentTime
-            DocumentTypeRuuslUnigram(currentTime, Settings.numberOfExperts).convert()
-            currentTime+=timedelta(days=1)
+#    @staticmethod
+#    def createModifiedData():
+#        currentTime = Settings.startTime
+#        while currentTime <= Settings.endTime:
+#            print currentTime
+#            DocumentTypeRuuslUnigram(currentTime, Settings.numberOfExperts).convert()
+#            currentTime+=timedelta(days=1)
             
     @staticmethod
-    def createModifiedData1(dataTypes):
+    def createModifiedData(dataTypes):
         currentTime = Settings.startTime
         while currentTime <= Settings.endTime:
             for dataType in dataTypes: dataType(currentTime, Settings.numberOfExperts).convert()
@@ -104,4 +110,4 @@ class CreateTrainingAndTestSets:
   
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
-    CreateTrainingAndTestSets.createModifiedData1([DocumentTypeRuuslBigram])
+    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslTrigram])
