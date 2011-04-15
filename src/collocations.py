@@ -14,6 +14,10 @@ def iterateWordsFromTweetsFile():
 
 class Collocations:
     measureTypeRawFrequency = 'frequency'
+    measureTypeChiSquare = 'chi_sqare'
+    measureTypeLikelihoodRatio = 'likelihood_ratio'
+    measureTypePMI = 'pmi'
+    measureTypeStudentT = 'student_t'
     
     def __init__(self, measureType, **kwargs):
         self.measureType = measureType
@@ -22,7 +26,11 @@ class Collocations:
     def getMeasure(self):
         bigram_measures = nltk.collocations.BigramAssocMeasures()
         return {
-                Collocations.measureTypeRawFrequency: bigram_measures.raw_freq
+                Collocations.measureTypeRawFrequency: bigram_measures.raw_freq,
+                Collocations.measureTypeChiSquare: bigram_measures.chi_sq,
+                Collocations.measureTypeLikelihoodRatio: bigram_measures.likelihood_ratio,
+                Collocations.measureTypePMI: bigram_measures.pmi,
+                Collocations.measureTypeStudentT: bigram_measures.student_t
                 }[self.measureType]
     
     def discoverAndWrite(self):
@@ -32,5 +40,5 @@ class Collocations:
         scored = finder.score_ngrams(self.getMeasure())
         for i in scored[:10]: print i
 
-Collocations(Collocations.measureTypeRawFrequency, currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).discoverAndWrite()
+Collocations(Collocations.measureTypeChiSquare, currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).discoverAndWrite()
     
