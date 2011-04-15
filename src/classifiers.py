@@ -111,9 +111,9 @@ class Classifier(object):
                 ccount+=nonzero(labels[cls_members]==real_label)[0].shape[0]
             return double(ccount)/predicted.shape[0]
         documents = list(documents)
-        labels = [l for (fs,l) in documents]
+        labels = array([l for (fs,l) in documents])
         testSet = apply_features(Classifier.extractFeatures, list(documents))
-        predicted = self.classifier.batch_classify([fs for (fs,l) in testSet])
+        predicted = array(self.classifier.batch_classify([fs for (fs,l) in testSet]))
         p=P(predicted,labels)
         r=R(predicted,labels)
         return 2*p*r/(p+r),p,r
