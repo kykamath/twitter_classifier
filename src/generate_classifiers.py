@@ -3,9 +3,10 @@ Created on Apr 13, 2011
 
 @author: kykamath
 '''
+import cjson
 from settings import Settings
 from datasets import DocumentType
-from datetime import timedelta
+from datetime import timedelta, datetime
 from classifiers import FixedWindowClassifier, TestDocuments
 from utilities import Utilities
 
@@ -34,10 +35,9 @@ class AnalyzeClassifiers:
             for noOfDays in Utilities.getClassifierLengthsByDay(currentDay, maxLength): 
                 classifier = FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDays)
                 classifier.load()
-#                print currentDay, noOfDays, 'accuracy', classifier.getAccuracy(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
-                print currentDay, noOfDays, 'aucm', classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
-#                print currentDay, noOfDays, 'F', classifier.getF(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
-#                print currentDay, noOfDays, 'MI', classifier.getMI(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
+                data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'classifier_length': noOfDays, 'metric': 'aucm', 'number_of_experts': Settings.numberOfExperts, 'data_type': DocumentType.typeRuuslUnigram, 'test_data_days': 1}
+                data['value'] = classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
+                cjson.encode(data)
             currentDay+=timedelta(days=1)
 
 if __name__ == '__main__':
