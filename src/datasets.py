@@ -12,15 +12,10 @@ from nltk import pos_tag, word_tokenize
 
 class DataDirection: future = 1; past=-1
 
-class DataType(object):
+class DocumentType(object):
     typeRaw = 'typeRaw' # Original file
     typeRuuslUnigram = 'removed_url_users_specialcharaters_and_lemmatized'
     typeRuuslBigram = 'removed_url_users_specialcharaters_and_lemmatized_bigram'
-    
-    classes = {
-               typeRuuslUnigram: DocumentTypeRuuslUnigram,
-               typeRuuslBigram: DocumentTypeRuuslBigram
-               }
     
     keys = ['class', 'text', 'created_at', 'id']
 
@@ -55,14 +50,14 @@ class DataType(object):
         returnWords = filter(lambda w: w!='' and len(w)>2, lemmatizeWords(returnWords))
         return returnWords
 
-class DocumentTypeRuuslUnigram(DataType):
+class DocumentTypeRuuslUnigram(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
-        super(DocumentTypeRuuslUnigram, self).__init__(currentTime, DataType.typeRuuslUnigram, numberOfExperts)
+        super(DocumentTypeRuuslUnigram, self).__init__(currentTime, DocumentType.typeRuuslUnigram, numberOfExperts)
     def modifyDocument(self, text): return self.getUnigrams(text)
     
-class DocumentTypeRuuslBigram(DataType):
+class DocumentTypeRuuslBigram(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
-        super(DocumentTypeRuuslUnigram, self).__init__(currentTime, DataType.typeRuuslUnigram, numberOfExperts)
+        super(DocumentTypeRuuslUnigram, self).__init__(currentTime, DocumentType.typeRuuslUnigram, numberOfExperts)
     def modifyDocument(self, text): 
         return self.getUnigrams(text)
 
@@ -80,8 +75,8 @@ class CreateTrainingAndTestSets:
         for k, v in allExpertsBottom.list.iteritems(): allExpertsList[k]=v
         while currentTime <= Settings.endTime:
             for numberOfExperts in [Settings.numberOfExperts]:
-                trainingFile = Utilities.getTrainingFile(currentTime, DataType.typeRaw, numberOfExperts)
-                testFile = Utilities.getTestFile(currentTime, DataType.typeRaw, numberOfExperts, bottom=True)
+                trainingFile = Utilities.getTrainingFile(currentTime, DocumentType.typeRaw, numberOfExperts)
+                testFile = Utilities.getTestFile(currentTime, DocumentType.typeRaw, numberOfExperts, bottom=True)
                 Utilities.createDirectory(trainingFile), Utilities.createDirectory(testFile)
                 print numberOfExperts, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)
                 for tweet in CreateTrainingAndTestSets.getTweetsFromExperts(allExpertsList, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)):
@@ -102,9 +97,9 @@ class CreateTrainingAndTestSets:
     def createModifiedData1(dataTypes):
         currentTime = Settings.startTime
         while currentTime <= Settings.endTime:
-            for dataType in dataTypes: DataType.classes[dataType](currentTime, Settings.numberOfExperts).convert()
+            for dataType in dataTypes: dataType(currentTime, Settings.numberOfExperts).convert()
             currentTime+=timedelta(days=1)
             
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
-    CreateTrainingAndTestSets.createModifiedData1([DataType.typeRuuslBigram])
+    CreateTrainingAndTestSets.createModifiedData1([DocumentTypeRuuslBigram])
