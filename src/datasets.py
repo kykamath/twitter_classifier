@@ -37,7 +37,8 @@ class DocumentType(object):
                 for k in DocumentType.keys: data[k]=tweet[k]
                 data['screen_name'] = tweet['user']['screen_name']; data['user_id'] = tweet['user']['id_str']
                 data['document'] = self.modifyDocument(data['text'])
-                print outputFile, data['document']
+                print outputFile
+                print data['document']
                 exit()
                 Utilities.writeAsJsonToFile(data, outputFile)
     def getUnigrams(self, text): 
