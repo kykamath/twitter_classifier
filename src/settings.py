@@ -27,3 +27,4 @@ class Settings:
     # Experiments
     stats_folder = 'stats/'
     stats_to_determine_fixed_window_length = stats_folder+'stats_to_determine_fixed_window_length'
+    stats_to_compare_language_models = stats_folder+'stats_to_compare_language_models'
