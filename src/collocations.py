@@ -26,7 +26,8 @@ class Collocations:
     
     def discoverAndWrite(self):
         finder = BigramCollocationFinder.from_words(iterateWordsFromTweetsFile())
-#        print Utilities.getTrainingFile(**self.kwargs)
+        print Utilities.getTrainingFile(**self.kwargs)
+        exit()
         i = 1
         for w in Utilities.getDocuments(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs):
             print i, w
