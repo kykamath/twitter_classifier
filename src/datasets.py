@@ -22,8 +22,8 @@ class DocumentType(object):
     def __init__(self, currentTime, outputDataType, numberOfExperts):
         self.currentTime = currentTime
         self.numberOfExperts = numberOfExperts
-        self.inputTrainingSetFile = Utilities.getTrainingFile(currentTime, DataType.typeRaw, self.numberOfExperts)
-        self.inputTestSetFile = Utilities.getTestFile(currentTime, DataType.typeRaw, self.numberOfExperts, bottom=True)
+        self.inputTrainingSetFile = Utilities.getTrainingFile(currentTime, DocumentType.typeRaw, self.numberOfExperts)
+        self.inputTestSetFile = Utilities.getTestFile(currentTime, DocumentType.typeRaw, self.numberOfExperts, bottom=True)
         self.outputTrainingSetFile = Utilities.getTrainingFile(currentTime, outputDataType, self.numberOfExperts)
         self.outputTestSetFile = Utilities.getTestFile(currentTime, outputDataType, self.numberOfExperts, bottom=True)
         Utilities.createDirectory(self.outputTrainingSetFile), Utilities.createDirectory(self.outputTestSetFile)
@@ -31,7 +31,7 @@ class DocumentType(object):
         for inputFile, outputFile in [(self.inputTrainingSetFile, self.outputTrainingSetFile), (self.inputTestSetFile, self.outputTestSetFile)]:
             for tweet in Utilities.iterateTweetsFromFile(inputFile):
                 data = {}
-                for k in DataType.keys: data[k]=tweet[k]
+                for k in DocumentType.keys: data[k]=tweet[k]
                 data['screen_name'] = tweet['user']['screen_name']; data['user_id'] = tweet['user']['id_str']
                 data['document'] = self.modifyDocument(data['text'])
                 print data['document']
@@ -57,7 +57,7 @@ class DocumentTypeRuuslUnigram(DocumentType):
     
 class DocumentTypeRuuslBigram(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
-        super(DocumentTypeRuuslUnigram, self).__init__(currentTime, DocumentType.typeRuuslUnigram, numberOfExperts)
+        super(DocumentTypeRuuslBigram, self).__init__(currentTime, DocumentType.typeRuuslBigram, numberOfExperts)
     def modifyDocument(self, text): 
         return self.getUnigrams(text)
 
