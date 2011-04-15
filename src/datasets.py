@@ -14,7 +14,13 @@ class DataDirection: future = 1; past=-1
 
 class DataType(object):
     typeRaw = 'typeRaw' # Original file
-    typeRuusl = 'removed_url_users_specialcharaters_and_lemmatized'
+    typeRuuslUnigram = 'removed_url_users_specialcharaters_and_lemmatized'
+    typeRuuslBigram = 'removed_url_users_specialcharaters_and_lemmatized_bigram'
+    
+    classes = {
+               typeRuuslUnigram: DocumentTypeRuuslUnigram,
+               typeRuuslBigram: DocumentTypeRuuslBigram
+               }
     
     keys = ['class', 'text', 'created_at', 'id']
 
@@ -33,12 +39,10 @@ class DataType(object):
                 for k in DataType.keys: data[k]=tweet[k]
                 data['screen_name'] = tweet['user']['screen_name']; data['user_id'] = tweet['user']['id_str']
                 data['document'] = self.modifyDocument(data['text'])
+                print data['document']
+                exit()
                 Utilities.writeAsJsonToFile(data, outputFile)
-
-class DocumentTypeRuusl(DataType):
-    def __init__(self, currentTime, numberOfExperts): 
-        super(DocumentTypeRuusl, self).__init__(currentTime, DataType.typeRuusl, numberOfExperts)
-    def modifyDocument(self, text): 
+    def getUnigrams(self, text): 
         pattern = re.compile('[\W_]+')
         def removeHTTP(s): return' '.join(filter(lambda x:x.find('http') == -1, s.lower().split()))
         def lemmatizeWords(terms):
@@ -50,6 +54,17 @@ class DocumentTypeRuusl(DataType):
         returnWords = [pattern.sub('', word) for word, tag in pos_tag(word_tokenize(sentance))]
         returnWords = filter(lambda w: w!='' and len(w)>2, lemmatizeWords(returnWords))
         return returnWords
+
+class DocumentTypeRuuslUnigram(DataType):
+    def __init__(self, currentTime, numberOfExperts): 
+        super(DocumentTypeRuuslUnigram, self).__init__(currentTime, DataType.typeRuuslUnigram, numberOfExperts)
+    def modifyDocument(self, text): return self.getUnigrams(text)
+    
+class DocumentTypeRuuslBigram(DataType):
+    def __init__(self, currentTime, numberOfExperts): 
+        super(DocumentTypeRuuslUnigram, self).__init__(currentTime, DataType.typeRuuslUnigram, numberOfExperts)
+    def modifyDocument(self, text): 
+        return self.getUnigrams(text)
 
 class CreateTrainingAndTestSets:
     @staticmethod
@@ -80,9 +95,16 @@ class CreateTrainingAndTestSets:
         currentTime = Settings.startTime
         while currentTime <= Settings.endTime:
             print currentTime
-            DocumentTypeRuusl(currentTime, Settings.numberOfExperts).convert()
+            DocumentTypeRuuslUnigram(currentTime, Settings.numberOfExperts).convert()
+            currentTime+=timedelta(days=1)
+            
+    @staticmethod
+    def createModifiedData1(dataTypes):
+        currentTime = Settings.startTime
+        while currentTime <= Settings.endTime:
+            for dataType in dataTypes: DataType.classes[dataType](currentTime, Settings.numberOfExperts).convert()
             currentTime+=timedelta(days=1)
             
 if __name__ == '__main__':
-    CreateTrainingAndTestSets.rawData()
-    CreateTrainingAndTestSets.createModifiedData()
+#    CreateTrainingAndTestSets.rawData()
+    CreateTrainingAndTestSets.createModifiedData1([DataType.typeRuuslBigram])

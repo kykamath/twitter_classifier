@@ -17,7 +17,7 @@ class GenerateClassifiers:
         global maxLength
         currentDay = Settings.startTime
         while currentDay<=Settings.endTime:
-            for noOfDays in Utilities.getClassifierLengthsByDay(currentDay, maxLength): FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DataType.typeRuusl, noOfDays=noOfDays).trainAndSave()
+            for noOfDays in Utilities.getClassifierLengthsByDay(currentDay, maxLength): FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DataType.typeRuuslUnigram, noOfDays=noOfDays).trainAndSave()
             currentDay+=timedelta(days=1)
 
 class AnalyzeClassifiers:
@@ -27,10 +27,10 @@ class AnalyzeClassifiers:
         currentDay = Settings.startTime
         while currentDay<=Settings.endTime:
             for noOfDays in Utilities.getClassifierLengthsByDay(currentDay, maxLength): 
-                classifier = FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DataType.typeRuusl, noOfDays=noOfDays)
+                classifier = FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DataType.typeRuuslUnigram, noOfDays=noOfDays)
                 classifier.load()
-                print currentDay, noOfDays, 'accuracy', classifier.getAccuracy(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DataType.typeRuusl, noOfDays=1).iterator())
-                print currentDay, noOfDays, 'aucm', classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DataType.typeRuusl, noOfDays=1).iterator())
+                print currentDay, noOfDays, 'accuracy', classifier.getAccuracy(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DataType.typeRuuslUnigram, noOfDays=1).iterator())
+                print currentDay, noOfDays, 'aucm', classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DataType.typeRuuslUnigram, noOfDays=1).iterator())
             currentDay+=timedelta(days=1)
 
 if __name__ == '__main__':
