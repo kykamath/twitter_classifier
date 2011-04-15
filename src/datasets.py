@@ -13,7 +13,7 @@ from nltk import pos_tag, word_tokenize
 class DataDirection: future = 1; past=-1
 
 class DocumentType(object):
-    typeRaw = 'typeRaw' # Original file
+    typeRaw = 'raw' # Original file
     typeRuuslUnigram = 'removed_url_users_specialcharaters_and_lemmatized'
     typeRuuslBigram = 'removed_url_users_specialcharaters_and_lemmatized_bigram'
     
