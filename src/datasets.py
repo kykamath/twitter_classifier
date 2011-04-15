@@ -59,7 +59,7 @@ class DocumentTypeRuuslBigram(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
         super(DocumentTypeRuuslBigram, self).__init__(currentTime, DocumentType.typeRuuslBigram, numberOfExperts)
     def modifyDocument(self, text): 
-        return self.getUnigrams(text)
+        return ['sdfs']+self.getUnigrams(text)
 
 class CreateTrainingAndTestSets:
     @staticmethod
