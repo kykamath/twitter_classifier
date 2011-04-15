@@ -14,6 +14,7 @@ from scipy.stats import mode
 from scipy.misc.common import factorial
 import cPickle
 from datasets import DataDirection
+from classification_evaluation_metrics import ClassificationEvaluationMetrics
 
 classToIntMap = {'sports': 1, 'politics': 2, 'entertainment': 3, 'technology': 4}
 
@@ -90,38 +91,17 @@ class Classifier(object):
             i+=1
         return MultiClassAUC(classifiedDocuments).getMRevised()
     def getF(self, documents):
+        predicted, labels = self._getPredictedAndLabeled(documents)
+        return ClassificationEvaluationMetrics.F(predicted, labels)
+    def _getPredictedAndLabeled(self, documents):
         from nltk.classify import apply_features
-        def P(predicted,labels):
-            K=unique(predicted)
-            p=0
-            for cls in K:
-                cls_members=nonzero(predicted==cls)[0]
-                if cls_members.shape[0]<=1:
-                    continue
-                real_label=mode(labels[cls_members])[0][0]
-                correctCount=nonzero(labels[cls_members]==real_label)[0].shape[0]
-                p+=double(correctCount)/cls_members.shape[0]
-            return p/K.shape[0]
-        def R(predicted,labels):
-            K=unique(predicted)
-            ccount=0
-            for cls in K:
-                cls_members=nonzero(predicted==cls)[0]
-                real_label=mode(labels[cls_members])[0][0]
-                ccount+=nonzero(labels[cls_members]==real_label)[0].shape[0]
-            return double(ccount)/predicted.shape[0]
         documents = list(documents)
-        labels = array([l for (fs,l) in documents])
         testSet = apply_features(Classifier.extractFeatures, list(documents))
-        predicted = array(self.classifier.batch_classify([fs for (fs,l) in testSet]))
-        p=P(predicted,labels)
-        r=R(predicted,labels)
-        return 2*p*r/(p+r),p,r
-    
-    def evaluate(self, documents, methodology=None):
-        if methodology==None: return {Evaluation.accuracy: self.getAccuracy(documents), Evaluation.aucm: self.getAUCM(documents)}
-        elif methodology==Evaluation.accuracy: return {Evaluation.accuracy: self.getAccuracy(documents)}
-        elif methodology==Evaluation.aucm: return {Evaluation.aucm: self.getAUCM(documents)}
+        return (array(self.classifier.batch_classify([fs for (fs,l) in testSet])), array([l for (fs,l) in documents]))
+#    def evaluate(self, documents, methodology=None):
+#        if methodology==None: return {Evaluation.accuracy: self.getAccuracy(documents), Evaluation.aucm: self.getAUCM(documents)}
+#        elif methodology==Evaluation.accuracy: return {Evaluation.accuracy: self.getAccuracy(documents)}
+#        elif methodology==Evaluation.aucm: return {Evaluation.aucm: self.getAUCM(documents)}
     @staticmethod
     def saveClassifier(classifier, fileName): 
         Utilities.createDirectory(fileName)
