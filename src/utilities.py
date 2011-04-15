@@ -42,10 +42,10 @@ class Utilities:
             try:
                 yield cjson.decode(line)
             except: pass
-    @staticmethod
-    def iterateWordsFromTrainingFile(file):
-        for tweet in Utilities.iterateTweetsFromFile(file):
-            for word in tweet['document']: yield word
+#    @staticmethod
+#    def iterateWordsFromTrainingFile(file):
+#        for tweet in Utilities.iterateTweetsFromFile(file):
+#            for word in tweet['document']: yield word
             
     @staticmethod        
     def getDataFile(currentTime): return '_'.join([str(currentTime.year), str(currentTime.month), str(currentTime.day)])
@@ -77,12 +77,17 @@ class Utilities:
             for tweet in Utilities.iterateTweetsFromFile(fileNameMethod(currentTime=currentTime, **kwargs)): yield (tweet['document'], tweet['class'])
             currentTime=currentTime+kwargs['dataDirection']*timedelta(days=1)
     @staticmethod
+    def getWords(**kwargs):
+        for document in Utilities.getDocuments(**kwargs):
+            for word in document[0]: yield word
+    @staticmethod
     def getClassifierLengthsByDay(currentDay, maxLength): return [1]+range(2,min([maxLength, (currentDay-Settings.startTime).days+2]),2)
 #    @staticmethod
 #    def getCombinedFile(currentTime, dataType): return Settings.twitterClassifierCombinedSetsFolder+'%s/%s'%(dataType, Utilities.getDataFile(currentTime))
 
-if __name__ == '__main__':
-    i = 1
-    for w in Utilities.iterateWordsFromTrainingFile('/mnt/chevron/kykamath/data/twitter/classifier/training_sets/125/removed_url_users_specialcharaters_and_lemmatized/2011_3_19'):
-        print i, w
-        i+=1
+#if __name__ == '__main__':
+#    i = 1
+#    for w in Utilities.getWords(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past,):
+#        print i, w
+#        i+=1
+#    Utilities.getDocuments(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs)

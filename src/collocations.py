@@ -6,7 +6,7 @@ Created on Apr 15, 2011
 import nltk
 from nltk.collocations import BigramCollocationFinder
 from settings import Settings
-from datasets import DocumentType
+from datasets import DocumentType, DataDirection
 from utilities import Utilities
 
 def iterateWordsFromTweetsFile():
@@ -26,12 +26,16 @@ class Collocations:
     
     def discoverAndWrite(self):
         finder = BigramCollocationFinder.from_words(iterateWordsFromTweetsFile())
-        print Utilities.getTrainingFile(**self.kwargs)
+#        print Utilities.getTrainingFile(**self.kwargs)
+        i = 1
+        for w in Utilities.getDocuments(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs):
+            print i, w
+            i+=1
         exit()
         ###### FILTER IT #####
         scored = finder.score_ngrams(self.getMeasure())
         for i in scored:
             print i
 
-Collocations(Collocations.measureTypeRawFrequency, currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram).discoverAndWrite()
+Collocations(Collocations.measureTypeRawFrequency, currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).discoverAndWrite()
     
