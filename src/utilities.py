@@ -77,6 +77,8 @@ class Utilities:
         fileNameMethod=kwargs['fileNameMethod']
         del kwargs['currentTime']
         for i in range(kwargs['noOfDays']):
+            print  ' dfdsfsd  ', fileNameMethod(currentTime=currentTime, **kwargs)
+            exit()
             for tweet in Utilities.iterateTweetsFromFile(fileNameMethod(currentTime=currentTime, **kwargs)): yield (tweet['document'], tweet['class'])
             currentTime=currentTime+kwargs['dataDirection']*timedelta(days=1)
     @staticmethod
