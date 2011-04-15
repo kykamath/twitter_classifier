@@ -16,9 +16,10 @@ class DataDirection: future = 1; past=-1
 
 class DocumentType(object):
     typeRaw = 'raw' # Original file
-    typeRuuslUnigram = 'removed_url_users_specialcharaters_and_lemmatized'
-    typeRuuslBigram = 'removed_url_users_specialcharaters_and_lemmatized_bigram'
-    typeRuuslTrigram = 'removed_url_users_specialcharaters_and_lemmatized_trigram'
+    typeRuuslUnigram = 'removed_url_users_specialcharaters_and_lemmatized' # removed_url_users_specialcharaters_and_lemmatized
+    typeRuuslBigram = 'ruusl_bigram'
+    typeRuuslTrigram = 'ruusl_trigram'
+    typeRuuslSparseBigram = 'ruusl_sparse_bigram'
     
     keys = ['class', 'text', 'created_at', 'id']
 
@@ -69,6 +70,11 @@ class DocumentTypeRuuslTrigram(DocumentType):
         super(DocumentTypeRuuslTrigram, self).__init__(currentTime, DocumentType.typeRuuslTrigram, numberOfExperts)
     def modifyDocument(self, text): return kgram(3, self.getUnigrams(text))
 
+class DocumentTypeRuuslSparseBigram(DocumentType):
+    def __init__(self, currentTime, numberOfExperts): 
+        super(DocumentTypeRuuslSparseBigram, self).__init__(currentTime, DocumentType.typeRuuslSparseBigram, numberOfExperts)
+    def modifyDocument(self, text): return ['sdfsdfdfsdf']+self.getUnigrams(text)
+
 class CreateTrainingAndTestSets:
     @staticmethod
     def getTweetsFromExperts(expertsList, file):
@@ -111,4 +117,4 @@ class CreateTrainingAndTestSets:
   
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
-    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslTrigram])
+    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslSparseBigram])
