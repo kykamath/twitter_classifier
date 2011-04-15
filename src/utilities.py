@@ -34,10 +34,7 @@ class Utilities:
         for line in open(file): 
             try:
                 data = cjson.decode(line)
-                if 'text' in data: 
-                    print data
-                    exit()
-                    yield data
+                if 'text' in data: yield data
             except: pass
     @staticmethod
     def iterateJsonFromFile(file):
