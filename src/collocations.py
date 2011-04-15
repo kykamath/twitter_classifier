@@ -26,18 +26,12 @@ class Collocations:
                 }[self.measureType]
     
     def discoverAndWrite(self):
-        i = 1
-        for w in Utilities.getWords(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs):
-            print i, w
-            i+=1
-        print self.collocationsFile
-        exit()
 #        self.collocationsFile = '/tmp/collocations/file'
-        finder = BigramCollocationFinder.from_words(iterateWordsFromTweetsFile())
+        finder = BigramCollocationFinder.from_words(Utilities.getWords(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs))
         ###### FILTER IT #####
         
         scored = finder.score_ngrams(self.getMeasure())
-        for i in scored:         print i
+        for i in scored: print i
 
 Collocations(Collocations.measureTypeRawFrequency, currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=8).discoverAndWrite()
     
