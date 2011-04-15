@@ -16,8 +16,8 @@ class DataDirection: future = 1; past=-1
 
 class DocumentType(object):
     typeRaw = 'raw' # Original file
-#    typeRuuslUnigram = 'removed_url_users_specialcharaters_and_lemmatized' # removed_url_users_specialcharaters_and_lemmatized
-    typeRuuslUnigram = 'ruusl_unigram' # removed_url_users_specialcharaters_and_lemmatized
+    typeRuuslUnigram = 'removed_url_users_specialcharaters_and_lemmatized' # removed_url_users_specialcharaters_and_lemmatized
+#    typeRuuslUnigram = 'ruusl_unigram' # removed_url_users_specialcharaters_and_lemmatized
     typeRuuslBigram = 'ruusl_bigram'
     typeRuuslTrigram = 'ruusl_trigram'
     typeRuuslSparseBigram = 'ruusl_sparse_bigram'
