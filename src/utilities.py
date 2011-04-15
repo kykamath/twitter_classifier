@@ -34,7 +34,10 @@ class Utilities:
         for line in open(file): 
             try:
                 data = cjson.decode(line)
-                if 'text' in data: yield data
+                if 'text' in data: 
+                    print data
+                    exit()
+                    yield data
             except: pass
     @staticmethod
     def iterateJsonFromFile(file):
@@ -74,8 +77,6 @@ class Utilities:
         fileNameMethod=kwargs['fileNameMethod']
         del kwargs['currentTime']
         for i in range(kwargs['noOfDays']):
-            print fileNameMethod(currentTime=currentTime, **kwargs)
-            exit()
             for tweet in Utilities.iterateTweetsFromFile(fileNameMethod(currentTime=currentTime, **kwargs)): yield (tweet['document'], tweet['class'])
             currentTime=currentTime+kwargs['dataDirection']*timedelta(days=1)
     @staticmethod
