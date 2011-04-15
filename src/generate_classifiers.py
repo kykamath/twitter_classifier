@@ -25,8 +25,8 @@ class GenerateClassifiers:
             dataTypes = [DocumentType.typeRuuslBigram, DocumentType.typeRuuslSparseBigram, DocumentType.typeRuuslTrigram]
             noOfDaysList = list(set([8]).intersection(set(Utilities.getClassifierLengthsByDay(currentDay, maxLength))))
             print currentDay, noOfDaysList
-#            for noOfDays in noOfDaysList: 
-#                for dataType in dataTypes: FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=dataType, noOfDays=noOfDays).trainAndSave()
+            for noOfDays in noOfDaysList: 
+                for dataType in dataTypes: FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=dataType, noOfDays=noOfDays).trainAndSave()
             currentDay+=timedelta(days=1)
 
 class AnalyzeClassifiers:
