@@ -10,7 +10,7 @@ from datetime import timedelta
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk import pos_tag, word_tokenize
 
-def kgram(k, text): return [' '.join(l[i:i+k]) for i in range(len(l)) if len(l[i:i+k])==k]
+def kgram(k, text): return [' '.join(text[i:i+k]) for i in range(len(text)) if len(text[i:i+k])==k]
 
 class DataDirection: future = 1; past=-1
 
