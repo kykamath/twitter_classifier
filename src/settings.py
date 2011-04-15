@@ -24,6 +24,8 @@ class Settings:
     numberOfExperts = 125
     expertListSizes = xrange(50,550,50)
     
+    #Collocations
+    percentage_of_collocations_to_output = 0.01
     
     # Experiments
     stats_folder = 'stats/'
