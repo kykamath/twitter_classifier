@@ -28,8 +28,7 @@ class Collocations:
     def discoverAndWrite(self):
 #        self.collocationsFile = '/tmp/collocations/file'
         finder = BigramCollocationFinder.from_words(Utilities.getWords(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs))
-        ###### FILTER IT #####
-        
+        finder.apply_word_filter(lambda w: w in Utilities.stopwords)
         scored = finder.score_ngrams(self.getMeasure())
         for i in scored[:10]: print i
 

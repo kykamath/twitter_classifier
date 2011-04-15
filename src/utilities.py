@@ -22,6 +22,8 @@ class ExpertUsers:
                 for user in v[-self.number:]: self.list[user[1]] = {'screen_name': user[0], 'class':k}
             
 class Utilities:
+    stopwords = [l.strip() for l in open('stopwords')]
+    
     @staticmethod
     def iterateTweetsFromGzip(file):
         for line in gzip.open(file, 'rb'): 
