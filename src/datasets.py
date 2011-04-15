@@ -10,6 +10,8 @@ from datetime import timedelta
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk import pos_tag, word_tokenize
 
+def kgram(k, text): return [' '.join(l[i:i+k]) for i in range(len(l)) if len(l[i:i+k])==k]
+
 class DataDirection: future = 1; past=-1
 
 class DocumentType(object):
@@ -58,8 +60,7 @@ class DocumentTypeRuuslUnigram(DocumentType):
 class DocumentTypeRuuslBigram(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
         super(DocumentTypeRuuslBigram, self).__init__(currentTime, DocumentType.typeRuuslBigram, numberOfExperts)
-    def modifyDocument(self, text): 
-        return ['sdfs']+self.getUnigrams(text)
+    def modifyDocument(self, text): return kgram(2, self.getUnigrams(text))
 
 class CreateTrainingAndTestSets:
     @staticmethod
@@ -99,7 +100,10 @@ class CreateTrainingAndTestSets:
         while currentTime <= Settings.endTime:
             for dataType in dataTypes: dataType(currentTime, Settings.numberOfExperts).convert()
             currentTime+=timedelta(days=1)
-            
+
+  
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
-    CreateTrainingAndTestSets.createModifiedData1([DocumentTypeRuuslBigram])
+#    CreateTrainingAndTestSets.createModifiedData1([DocumentTypeRuuslBigram])
+    l = ['htc', 'designer', 'talk', 'verizon', 'thunderbolt', 'video']
+    print kgram(3, l)
