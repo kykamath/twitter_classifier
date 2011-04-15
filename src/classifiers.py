@@ -95,7 +95,7 @@ class Classifier(object):
         return ClassificationEvaluationMetrics.F(predicted, labels)
     def getMI(self, documents):
         predicted, labels = self._getPredictedAndLabeled(documents)
-        return ClassificationEvaluationMetrics.mi(predicted, labels)
+        return ClassificationEvaluationMetrics.mutual_info(predicted, labels)
     def _getPredictedAndLabeled(self, documents):
         from nltk.classify import apply_features
         documents = list(documents)
