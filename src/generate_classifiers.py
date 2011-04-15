@@ -31,7 +31,8 @@ class AnalyzeClassifiers:
                 classifier.load()
 #                print currentDay, noOfDays, 'accuracy', classifier.getAccuracy(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
 #                print currentDay, noOfDays, 'aucm', classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
-                print currentDay, noOfDays, 'F', classifier.getF(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
+#                print currentDay, noOfDays, 'F', classifier.getF(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
+                print currentDay, noOfDays, 'F', classifier.getMI(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
             currentDay+=timedelta(days=1)
 
 if __name__ == '__main__':
