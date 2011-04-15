@@ -16,9 +16,14 @@ class Settings:
     
     twitter_api_time_format = '%a %b %d %H:%M:%S +0000 %Y'
     
-    # Classifier data
+    # Time data
     startTime=datetime(2011,3,19)
     endTime=datetime(2011,4,12)
     
     numberOfExperts = 125
     expertListSizes = xrange(50,550,50)
+    
+    
+    # Experiments
+    stats_folder = 'stats/'
+    stats_to_determine_fixed_window_length = stats_folder+'stats_to_determine_fixed_window_length'

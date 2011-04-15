@@ -37,7 +37,7 @@ class AnalyzeClassifiers:
                 classifier.load()
                 data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'classifier_length': noOfDays, 'metric': 'aucm', 'number_of_experts': Settings.numberOfExperts, 'data_type': DocumentType.typeRuuslUnigram, 'test_data_days': 1}
                 data['value'] = classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
-                cjson.encode(data)
+                Utilities.writeAsJsonToFile(data, Settings.stats_to_determine_fixed_window_length)
             currentDay+=timedelta(days=1)
 
 if __name__ == '__main__':
