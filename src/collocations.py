@@ -31,7 +31,7 @@ class Collocations:
         ###### FILTER IT #####
         
         scored = finder.score_ngrams(self.getMeasure())
-        for i in scored: print i
+        for i in scored[:10]: print i
 
 Collocations(Collocations.measureTypeRawFrequency, currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).discoverAndWrite()
     
