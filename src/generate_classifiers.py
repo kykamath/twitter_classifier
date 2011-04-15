@@ -13,11 +13,16 @@ maxLength=16
 
 class GenerateClassifiers:
     @staticmethod
-    def fixedWindowOfDifferentLengths():
+    def fixedWindowOfDifferentLengthsAndDataTypes():
         global maxLength
         currentDay = Settings.startTime
         while currentDay<=Settings.endTime:
-            for noOfDays in Utilities.getClassifierLengthsByDay(currentDay, maxLength): FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDays).trainAndSave()
+#            dataTypes = [DocumentType.typeRuuslUnigram]
+#            noOfDaysList = Utilities.getClassifierLengthsByDay(currentDay, maxLength)
+            dataTypes = [DocumentType.typeRuuslBigram, DocumentType.typeRuuslSparseBigram, DocumentType.typeRuuslTrigram]
+            noOfDaysList = [125]
+            for noOfDays in noOfDaysList: 
+                for dataType in dataTypes: FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=dataType, noOfDays=noOfDays).trainAndSave()
             currentDay+=timedelta(days=1)
 
 class AnalyzeClassifiers:
@@ -30,9 +35,9 @@ class AnalyzeClassifiers:
                 classifier = FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDays)
                 classifier.load()
 #                print currentDay, noOfDays, 'accuracy', classifier.getAccuracy(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
-#                print currentDay, noOfDays, 'aucm', classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
+                print currentDay, noOfDays, 'aucm', classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
 #                print currentDay, noOfDays, 'F', classifier.getF(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
-                print currentDay, noOfDays, 'MI', classifier.getMI(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
+#                print currentDay, noOfDays, 'MI', classifier.getMI(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
             currentDay+=timedelta(days=1)
 
 if __name__ == '__main__':
