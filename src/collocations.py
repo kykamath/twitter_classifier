@@ -37,7 +37,7 @@ class Collocations:
     def discoverAndWrite(self):
 #        self.collocationsFile = '/tmp/collocations/file'
         i = 1
-        for i in Utilities.getWords(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs):
+        for j in Utilities.getWords(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs):
             i+=1
         print i
         exit()
