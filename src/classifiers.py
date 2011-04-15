@@ -90,6 +90,7 @@ class Classifier(object):
             i+=1
         return MultiClassAUC(classifiedDocuments).getMRevised()
     def getF(self, documents):
+        from nltk.classify import apply_features
         def P(predicted,labels):
             K=unique(predicted)
             p=0
@@ -111,7 +112,8 @@ class Classifier(object):
             return double(ccount)/predicted.shape[0]
         documents = list(documents)
         labels = [l for (fs,l) in documents]
-        predicted = self.classifier.batch_classify([fs for (fs,l) in documents])
+        testSet = apply_features(Classifier.extractFeatures, list(documents))
+        predicted = self.classifier.batch_classify([fs for (fs,l) in testSet])
         p=P(predicted,labels)
         r=R(predicted,labels)
         return 2*p*r/(p+r),p,r
