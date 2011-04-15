@@ -104,6 +104,4 @@ class CreateTrainingAndTestSets:
   
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
-#    CreateTrainingAndTestSets.createModifiedData1([DocumentTypeRuuslBigram])
-    l = ['htc', 'designer', 'talk', 'verizon', 'thunderbolt', 'video']
-    print kgram(3, l)
+    CreateTrainingAndTestSets.createModifiedData1([DocumentTypeRuuslBigram])
