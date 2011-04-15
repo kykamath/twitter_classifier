@@ -64,13 +64,17 @@ class AnalyzeClassifiers:
     @staticmethod
     def analyzeStatsToDetermineFixedWindowLength():
         classifierLengthToScore=defaultdict(list)
-        for data in Utilities.iterateJsonFromFile(Settings.stats_to_determine_fixed_window_length):
-            classifierLength, value = data['classifier_length'], data['value']
-            classifierLengthToScore[classifierLength].append(value)
+        for data in Utilities.iterateJsonFromFile(Settings.stats_to_determine_fixed_window_length): classifierLengthToScore[data['classifier_length']].append(data['value'])
         dataX, dataY = [], []
         for classifierLength in classifierLengthToScore: dataX.append(classifierLength), dataY.append(numpy.mean(classifierLengthToScore[classifierLength]))
         plt.plot(dataX, dataY)
         plt.show()
+    
+    @staticmethod
+    def analyzeStatsToCompareLanguageModels():
+        languageModelToScore=defaultdict(list)
+        for data in Utilities.iterateJsonFromFile(Settings.stats_to_compare_language_models): languageModelToScore[data['data_type']].append(data['value'])
+        for languageModel in languageModelToScore: print languageModel, numpy.mean(languageModelToScore[languageModel])
         
 if __name__ == '__main__':
 #    FixedWindowClassifier(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuusl, noOfDays=1).trainAndSave()
@@ -81,5 +85,7 @@ if __name__ == '__main__':
 
 #    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
 #    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
-    AnalyzeClassifiers.generateStatsToCompareLanguageModels()
+#    AnalyzeClassifiers.generateStatsToCompareLanguageModels()
+
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
+    AnalyzeClassifiers.analyzeStatsToCompareLanguageModels()
