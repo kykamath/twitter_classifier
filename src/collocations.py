@@ -8,6 +8,7 @@ from nltk.collocations import BigramCollocationFinder
 from settings import Settings
 from datasets import DocumentType, DataDirection
 from utilities import Utilities
+from datetime import timedelta
 
 def iterateWordsFromTweetsFile():
     for i in ['sd', 'asd', 'asds', 'asd', 'asds', 'asd']: yield i
@@ -35,10 +36,15 @@ class Collocations:
     
     def discoverAndWrite(self):
 #        self.collocationsFile = '/tmp/collocations/file'
+        i = 1
+        for i in Utilities.getWords(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs):
+            i+=1
+        print i
+        exit()
         finder = BigramCollocationFinder.from_words(Utilities.getWords(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs))
         finder.apply_word_filter(lambda w: w in Utilities.stopwords)
         scored = finder.score_ngrams(self.getMeasure())
         for i in scored[:10]: print i
 
-Collocations(Collocations.measureTypeChiSquare, currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).discoverAndWrite()
+Collocations(Collocations.measureTypeChiSquare, currentTime=Settings.startTime+timedelta(days=8), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=8).discoverAndWrite()
     
