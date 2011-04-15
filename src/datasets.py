@@ -73,7 +73,12 @@ class DocumentTypeRuuslTrigram(DocumentType):
 class DocumentTypeRuuslSparseBigram(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
         super(DocumentTypeRuuslSparseBigram, self).__init__(currentTime, DocumentType.typeRuuslSparseBigram, numberOfExperts)
-    def modifyDocument(self, text): return ['sdfsdfdfsdf']+self.getUnigrams(text)
+    def modifyDocument(self, text):
+        returnData, data = [], self.getUnigrams(text)
+        for i in range(len(data)-1):
+            for j in range(1, 4):
+                if (i+j) < len(data): returnData.append('%s %s'%(data[i], data[i+j]))
+        return returnData
 
 class CreateTrainingAndTestSets:
     @staticmethod
@@ -99,14 +104,6 @@ class CreateTrainingAndTestSets:
                     else: Utilities.writeAsJsonToFile(tweet, testFile)
             currentTime+=timedelta(days=1)
     
-#    @staticmethod
-#    def createModifiedData():
-#        currentTime = Settings.startTime
-#        while currentTime <= Settings.endTime:
-#            print currentTime
-#            DocumentTypeRuuslUnigram(currentTime, Settings.numberOfExperts).convert()
-#            currentTime+=timedelta(days=1)
-            
     @staticmethod
     def createModifiedData(dataTypes):
         currentTime = Settings.startTime
