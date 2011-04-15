@@ -93,6 +93,9 @@ class Classifier(object):
     def getF(self, documents):
         predicted, labels = self._getPredictedAndLabeled(documents)
         return ClassificationEvaluationMetrics.F(predicted, labels)
+    def getMI(self, documents):
+        predicted, labels = self._getPredictedAndLabeled(documents)
+        return ClassificationEvaluationMetrics.mi(predicted, labels)
     def _getPredictedAndLabeled(self, documents):
         from nltk.classify import apply_features
         documents = list(documents)
