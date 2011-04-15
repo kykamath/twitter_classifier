@@ -7,6 +7,11 @@ from collections import defaultdict
 from settings import Settings
 from utilities import Utilities
 from nltk.classify.maxent import MaxentClassifier
+import numpy
+from numpy import *
+from scipy import *
+from scipy.stats import mode
+from scipy.misc.common import factorial
 import cPickle
 from datasets import DataDirection
 
@@ -84,6 +89,33 @@ class Classifier(object):
             classifiedDocuments.append((i, classToIntMap[d[1]], result))
             i+=1
         return MultiClassAUC(classifiedDocuments).getMRevised()
+    def getF(self, documents):
+        def P(predicted,labels):
+            K=unique(predicted)
+            p=0
+            for cls in K:
+                cls_members=nonzero(predicted==cls)[0]
+                if cls_members.shape[0]<=1:
+                    continue
+                real_label=mode(labels[cls_members])[0][0]
+                correctCount=nonzero(labels[cls_members]==real_label)[0].shape[0]
+                p+=double(correctCount)/cls_members.shape[0]
+            return p/K.shape[0]
+        def R(predicted,labels):
+            K=unique(predicted)
+            ccount=0
+            for cls in K:
+                cls_members=nonzero(predicted==cls)[0]
+                real_label=mode(labels[cls_members])[0][0]
+                ccount+=nonzero(labels[cls_members]==real_label)[0].shape[0]
+            return double(ccount)/predicted.shape[0]
+        documents = list(documents)
+        labels = [l for (fs,l) in documents]
+        predicted = self.classifier.batch_classify([fs for (fs,l) in documents])
+        p=P(predicted,labels)
+        r=R(predicted,labels)
+        return 2*p*r/(p+r),p,r
+    
     def evaluate(self, documents, methodology=None):
         if methodology==None: return {Evaluation.accuracy: self.getAccuracy(documents), Evaluation.aucm: self.getAUCM(documents)}
         elif methodology==Evaluation.accuracy: return {Evaluation.accuracy: self.getAccuracy(documents)}
