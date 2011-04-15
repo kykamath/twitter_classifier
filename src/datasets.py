@@ -108,10 +108,12 @@ class CreateTrainingAndTestSets:
     def createModifiedData(dataTypes):
         currentTime = Settings.startTime
         while currentTime <= Settings.endTime:
-            for dataType in dataTypes: dataType(currentTime, Settings.numberOfExperts).convert()
+            for dataType in dataTypes: 
+                print currentTime, dataType
+                dataType(currentTime, Settings.numberOfExperts).convert()
             currentTime+=timedelta(days=1)
 
   
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
-    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslSparseBigram])
+    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslBigram, DocumentTypeRuuslTrigram, DocumentTypeRuuslSparseBigram])
