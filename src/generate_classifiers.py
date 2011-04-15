@@ -14,16 +14,18 @@ from collections import defaultdict
 
 maxLength=16
 
+idealModelLength = 8
+
 class GenerateClassifiers:
     @staticmethod
     def fixedWindowOfDifferentLengthsAndDataTypes():
-        global maxLength
+        global maxLength, idealModelLength
+        dataTypes = [DocumentType.typeRuuslBigram, DocumentType.typeRuuslSparseBigram, DocumentType.typeRuuslTrigram]
         currentDay = Settings.startTime
         while currentDay<=Settings.endTime:
 #            dataTypes = [DocumentType.typeRuuslUnigram]
 #            noOfDaysList = Utilities.getClassifierLengthsByDay(currentDay, maxLength)
-            dataTypes = [DocumentType.typeRuuslBigram, DocumentType.typeRuuslSparseBigram, DocumentType.typeRuuslTrigram]
-            noOfDaysList = list(set([8]).intersection(set(Utilities.getClassifierLengthsByDay(currentDay, maxLength))))
+            noOfDaysList = list(set([idealModelLength]).intersection(set(Utilities.getClassifierLengthsByDay(currentDay, maxLength))))
             print currentDay, noOfDaysList
             for noOfDays in noOfDaysList: 
                 for dataType in dataTypes: FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=dataType, noOfDays=noOfDays).trainAndSave()
@@ -42,6 +44,24 @@ class AnalyzeClassifiers:
                 data['value'] = classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
                 Utilities.writeAsJsonToFile(data, Settings.stats_to_determine_fixed_window_length)
             currentDay+=timedelta(days=1)
+    
+    @staticmethod
+    def generateStatsToCompareLanguageModels():
+        global maxLength, idealModelLength
+        dataTypes = [DocumentType.typeRuuslBigram, DocumentType.typeRuuslSparseBigram, DocumentType.typeRuuslTrigram]
+        currentDay = Settings.startTime
+        while currentDay<=Settings.endTime:
+            noOfDaysList = list(set([idealModelLength]).intersection(set(Utilities.getClassifierLengthsByDay(currentDay, maxLength))))
+            for noOfDays in noOfDaysList: 
+                for dataType in dataTypes:
+                    classifier = FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=dataType, noOfDays=noOfDays)
+                    classifier.load()
+                    data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'classifier_length': noOfDays, 'metric': 'aucm', 'number_of_experts': Settings.numberOfExperts, 'data_type': dataType, 'test_data_days': 1}
+                    data['value'] = classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
+                    print data
+#                    Utilities.writeAsJsonToFile(data, Settings.stats_to_determine_fixed_window_length)
+            currentDay+=timedelta(days=1)
+            
     @staticmethod
     def analyzeStatsToDetermineFixedWindowLength():
         classifierLengthToScore=defaultdict(list)
@@ -60,6 +80,7 @@ if __name__ == '__main__':
 #    print 'today:', classifier.getAUCM(TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuusl, noOfDays=1).iterator())
 #    print 'future:', classifier.getAUCM(TestDocuments(currentTime=Settings.startTime+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuusl, noOfDays=1).iterator())
 
-    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
+#    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
 #    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
+    AnalyzeClassifiers.generateStatsToCompareLanguageModels()
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
