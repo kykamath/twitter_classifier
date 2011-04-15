@@ -42,6 +42,11 @@ class Utilities:
             try:
                 yield cjson.decode(line)
             except: pass
+    @staticmethod
+    def iterateWordsFromTrainingFile(file):
+        for tweet in Utilities.iterateTweetsFromFile(file):
+            for word in tweet['document']: yield word
+            
     @staticmethod        
     def getDataFile(currentTime): return '_'.join([str(currentTime.year), str(currentTime.month), str(currentTime.day)])
     @staticmethod
@@ -77,5 +82,7 @@ class Utilities:
 #    def getCombinedFile(currentTime, dataType): return Settings.twitterClassifierCombinedSetsFolder+'%s/%s'%(dataType, Utilities.getDataFile(currentTime))
 
 if __name__ == '__main__':
-    for f in Utilities.getFiles(fileNameMethod=Utilities.getTrainingFile, dataDirection=-1, currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType='removed_url_users_specialcharaters_and_lemmatized', historyLength=10):
-        print f
+    i = 1
+    for w in Utilities.iterateWordsFromTrainingFile('/mnt/chevron/kykamath/data/twitter/classifier/training_sets/125/removed_url_users_specialcharaters_and_lemmatized/2011_3_19'):
+        print i, w
+        i+=1
