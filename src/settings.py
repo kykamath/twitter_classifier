@@ -10,6 +10,7 @@ class Settings:
     twitterClassifierTrainingSetsFolder = '%sclassifier/training_sets/'%twitterDataFolder
     twitterClassifierTestSetsFolder = '%sclassifier/test_sets/'%twitterDataFolder
     twitterClassifierTrainedModelsFolder = '%sclassifier/trained_models/'%twitterDataFolder
+    twitterClassifierCollocationsFolder = '%sclassifier/collocations/'%twitterDataFolder
 #    twitterClassifierCombinedSetsFolder = '%sclassifier/combined_sets/'%twitterDataFolder
     
     usersToCrawl = '%susers/crawl/users_to_crawl'%twitterDataFolder

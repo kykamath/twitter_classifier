@@ -18,6 +18,7 @@ class Collocations:
     def __init__(self, measureType, **kwargs):
         self.measureType = measureType
         self.kwargs = kwargs
+        self.collocationsFile = Utilities.getCollocationsFile(measureType=self.measureType, **self.kwargs)
     def getMeasure(self):
         bigram_measures = nltk.collocations.BigramAssocMeasures()
         return {
@@ -25,16 +26,16 @@ class Collocations:
                 }[self.measureType]
     
     def discoverAndWrite(self):
+#        i = 1
+#        for w in Utilities.getDocuments(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs):
+#            print i, w
+#            i+=1
+        self.collocationsFile = '/tmp/collocations/file'
         finder = BigramCollocationFinder.from_words(iterateWordsFromTweetsFile())
-        i = 1
-        for w in Utilities.getDocuments(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs):
-            print i, w
-            i+=1
-        exit()
         ###### FILTER IT #####
+        
         scored = finder.score_ngrams(self.getMeasure())
-        for i in scored:
-            print i
+        for i in scored:         print i
 
-Collocations(Collocations.measureTypeRawFrequency, currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).discoverAndWrite()
+Collocations(Collocations.measureTypeRawFrequency, currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=8).discoverAndWrite()
     

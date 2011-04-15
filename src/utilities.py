@@ -62,6 +62,11 @@ class Utilities:
         f.write(cjson.encode(data)+'\n')
         f.close()
     @staticmethod
+    def writeDataToFile(data, file):
+        f = open(file, 'a')
+        f.write(data+'\n')
+        f.close()
+    @staticmethod
     def getTrainingFile(currentTime, dataType, numberOfExperts, **kwargs): 
         return Settings.twitterClassifierTrainingSetsFolder+'%s/%s/%s'%(numberOfExperts, dataType, Utilities.getDataFile(currentTime))
     @staticmethod
@@ -72,13 +77,14 @@ class Utilities:
     def getTrainedClassifierFile(classifierType, currentTime, dataType, numberOfExperts, noOfDays, **kwargs):
         return Settings.twitterClassifierTrainedModelsFolder +'%s/%s/%s/%s/%s'%(classifierType, numberOfExperts, dataType, Utilities.getDataFile(currentTime), noOfDays)
     @staticmethod
+    def getCollocationsFile(measureType, currentTime, dataType, numberOfExperts, noOfDays, **kwargs):
+        return Settings.twitterClassifierCollocationsFolder +'%s/%s/%s/%s/%s'%(measureType, numberOfExperts, dataType, Utilities.getDataFile(currentTime), noOfDays)
+    @staticmethod
     def getDocuments(**kwargs):
         currentTime=kwargs['currentTime']
         fileNameMethod=kwargs['fileNameMethod']
         del kwargs['currentTime']
         for i in range(kwargs['noOfDays']):
-            print  ' dfdsfsd  ', fileNameMethod(currentTime=currentTime, **kwargs)
-            exit()
             for tweet in Utilities.iterateTweetsFromFile(fileNameMethod(currentTime=currentTime, **kwargs)): yield (tweet['document'], tweet['class'])
             currentTime=currentTime+kwargs['dataDirection']*timedelta(days=1)
     @staticmethod
