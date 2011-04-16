@@ -145,7 +145,9 @@ class TestDocuments:
         return Utilities.getDocuments(fileNameMethod=Utilities.getTestFile, dataDirection=DataDirection.future, bottom=True, **self.kwargs)
 
 class TestDocumentsWithCollocations:
-    def __init__(self, collocationMeasure, **kwargs): self.kwargs=kwargs
+    def __init__(self, collocationMeasure, **kwargs): 
+        self.collocationMeasure = collocationMeasure
+        self.kwargs=kwargs
     def iterator(self):
         collocations = Collocations(self.collocationMeasure, **self.kwargs)
         collocations.load()
