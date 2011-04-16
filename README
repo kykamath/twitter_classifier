@@ -1,3 +1,7 @@
 A classifier for twitter users.
 
 1. Use a small percentage of users to predict other user tweets.
+
+TO DO:
+
+1. Check the performance of different collocations methods to classification.
