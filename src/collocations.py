@@ -49,7 +49,6 @@ class GenerateCollocations:
         collocationMeasures = [Collocations.measureTypeRawFrequency, Collocations.measureTypeChiSquare, Collocations.measureTypeLikelihoodRatio, Collocations.measureTypePMI, Collocations.measureTypeStudentT]
         while currentDay<=Settings.endTime:
             noOfDaysList = list(set([idealModelLength]).intersection(set(Utilities.getClassifierLengthsByDay(currentDay, maxLength))))
-            print currentDay, noOfDaysList
             for noOfDays in noOfDaysList: 
                 for collocationMeasure in collocationMeasures:  
                     print currentDay, collocationMeasure, noOfDays
