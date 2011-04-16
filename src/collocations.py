@@ -10,8 +10,8 @@ from datasets import DocumentType, DataDirection
 from utilities import Utilities
 from datetime import timedelta
 
-def iterateWordsFromTweetsFile():
-    for i in ['sd', 'asd', 'asds', 'asd', 'asds', 'asd']: yield i
+maxLength=16
+idealModelLength = 8
 
 class Collocations:
     measureTypeRawFrequency = 'frequency'
@@ -39,9 +39,23 @@ class Collocations:
         finder = BigramCollocationFinder.from_words(Utilities.getWords(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs))
         finder.apply_word_filter(lambda w: w in Utilities.stopwords)
         scored = finder.score_ngrams(self.getMeasure())
-        for s in scored[:10]: print s
-        exit()
         for ((u,v),s) in scored[:int(len(scored)*Settings.collocations_percentage_of_collocations_to_output)]: Utilities.writeDataToFile(' '.join([u,v,str(s)]), self.collocationsFile)
 
-Collocations(Collocations.measureTypeChiSquare, currentTime=Settings.startTime+timedelta(days=8), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=8).discoverAndWrite()
-    
+class GenerateCollocations:
+    @staticmethod
+    def generate():
+        global maxLength, idealModelLength
+        currentDay = Settings.startTime
+        collocationMeasures = [Collocations.measureTypeRawFrequency, Collocations.measureTypeChiSquare, Collocations.measureTypeLikelihoodRatio, Collocations.measureTypePMI, Collocations.measureTypeStudentT]
+        while currentDay<=Settings.endTime:
+            noOfDaysList = list(set([idealModelLength]).intersection(set(Utilities.getClassifierLengthsByDay(currentDay, maxLength))))
+            print currentDay, noOfDaysList
+            for noOfDays in noOfDaysList: 
+                for collocationMeasure in collocationMeasures:  
+                    print currentDay, collocationMeasure, noOfDays
+                    Collocations(collocationMeasure, currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDays).discoverAndWrite()
+            currentDay+=timedelta(days=1)
+            
+
+if __name__ == '__main__':
+    GenerateCollocations.generate()    
