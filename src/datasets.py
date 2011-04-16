@@ -3,7 +3,7 @@ Created on Mar 18, 2011
 
 @author: kykamath
 '''
-import cjson, re
+import cjson, re, urllib2
 from utilities import ExpertUsers, Utilities
 from settings import Settings
 from datetime import timedelta
@@ -21,6 +21,7 @@ class DocumentType(object):
     typeRuuslBigram = 'ruusl_bigram'
     typeRuuslTrigram = 'ruusl_trigram'
     typeRuuslSparseBigram = 'ruusl_sparse_bigram'
+    typeRuuslUnigramWithMeta = 'ruusl_unigram_with_meta'
     
     keys = ['class', 'text', 'created_at', 'id']
 
@@ -81,6 +82,28 @@ class DocumentTypeRuuslSparseBigram(DocumentType):
                 if (i+j) < len(data): returnData.append('%s %s'%(data[i], data[i+j]))
         return returnData
 
+class DocumentTypeRuuslUnigramWithMeta(DocumentType):
+    def __init__(self, currentTime, numberOfExperts): 
+        super(DocumentTypeRuuslUnigramWithMeta, self).__init__(currentTime, DocumentType.typeRuuslUnigramWithMeta, numberOfExperts)
+    def modifyDocument(self, text): 
+        return self.getUnigrams(text)+DocumentTypeRuuslUnigramWithMeta.getUrlMeta(text)
+    @staticmethod
+    def getUrlMeta(message):
+        try:
+            urls = filter(lambda term: term.find('http:') >= 0, message.split())
+            if len(urls) > 0:
+                result = urllib2.urlopen(urls[0])
+                url, meta = result.geturl(), []
+                tempMeta = filter(lambda x: x.isalpha() or '-' in x or '_' in x >= 0, url.split('/'))
+                for m in tempMeta:
+                    if '-' in m: meta+=m.split('-')
+                    elif '_' in m: meta+=m.split('_')
+                    else: meta.append(m)
+                return meta
+            else: return []
+        except : return []
+
+
 class CreateTrainingAndTestSets:
     @staticmethod
     def getTweetsFromExperts(expertsList, file):
@@ -117,4 +140,4 @@ class CreateTrainingAndTestSets:
   
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
-    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslBigram, DocumentTypeRuuslTrigram, DocumentTypeRuuslSparseBigram])
+    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigramWithMeta])

@@ -72,6 +72,10 @@ class AnalyzeClassifiers:
                     data['value'] = classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=dataType, noOfDays=1).iterator())
                     Utilities.writeAsJsonToFile(data, Settings.stats_to_compare_language_models)
             currentDay+=timedelta(days=1)
+    
+#    @staticmethod
+#    def generateStatsToCompareCollocations():
+#        
             
     @staticmethod
     def analyzeStatsToDetermineFixedWindowLength():
