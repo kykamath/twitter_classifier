@@ -34,7 +34,7 @@ class GenerateClassifiers:
     def fixedWindowWithCollocationsForDifferentCollocations():
         global maxLength, idealModelLength
         dataType = DocumentType.typeRuuslUnigram
-        collocationMeasures = [Collocations.measureTypeChiSquare]
+        collocationMeasures = [Collocations.measureTypeLikelihoodRatio, Collocations.measureTypeRawFrequency, Collocations.measureTypePMI]
         currentDay = Settings.startTime
         while currentDay<=Settings.endTime:
             noOfDaysList = list(set([idealModelLength]).intersection(set(Utilities.getClassifierLengthsByDay(currentDay, maxLength))))
