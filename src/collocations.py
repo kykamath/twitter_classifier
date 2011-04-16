@@ -9,6 +9,7 @@ from settings import Settings
 from datasets import DocumentType, DataDirection
 from utilities import Utilities
 from datetime import timedelta
+from collections import defaultdict
 
 maxLength=16
 idealModelLength = 8
@@ -40,7 +41,13 @@ class Collocations:
         finder.apply_word_filter(lambda w: w in Utilities.stopwords)
         scored = finder.score_ngrams(self.getMeasure())
         for ((u,v),s) in scored[:int(len(scored)*Settings.collocations_percentage_of_collocations_to_output)]: Utilities.writeDataToFile(' '.join([u,v,str(s)]), self.collocationsFile)
-
+        
+    def load(self):
+        self.collocatedTerms = defaultdict(set)
+        for line in open(self.collocationsFile):
+            u, v = line.strip().split()[:2]
+            self.collocatedTerms[u].add(v), self.collocatedTerms[v].add(u) 
+            
 class GenerateCollocations:
     @staticmethod
     def generate():
@@ -54,7 +61,9 @@ class GenerateCollocations:
                     print currentDay, collocationMeasure, noOfDays
                     Collocations(collocationMeasure, currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDays).discoverAndWrite()
             currentDay+=timedelta(days=1)
-            
 
 if __name__ == '__main__':
-    GenerateCollocations.generate()    
+    collocation = Collocations(Collocations.measureTypeChiSquare, currentTime=Settings.startTime+timedelta(days=8), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=8)
+    collocation.load()
+    for k, v in collocation.collocatedTerms.iteritems():
+        print k, v
