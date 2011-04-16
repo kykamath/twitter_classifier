@@ -35,12 +35,11 @@ class Collocations:
                 }[self.measureType]
     
     def discoverAndWrite(self):
+        Utilities.createDirectory(self.collocationsFile)
         finder = BigramCollocationFinder.from_words(Utilities.getWords(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs))
         finder.apply_word_filter(lambda w: w in Utilities.stopwords)
         scored = finder.score_ngrams(self.getMeasure())
-        print len(scored), Settings.percentage_of_collocations_to_output*len(scored)
-        for ((u,v),s) in scored[:10]: print ' '.join([u,v,str(s)])
-        print self.collocationsFile
+        for ((u,v),s) in scored[:10]: Utilities.writeDataToFile(' '.join([u,v,str(s)]), self.collocationsFile)
 
 Collocations(Collocations.measureTypeChiSquare, currentTime=Settings.startTime+timedelta(days=8), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=8).discoverAndWrite()
     
