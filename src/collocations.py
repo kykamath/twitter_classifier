@@ -39,6 +39,8 @@ class Collocations:
         finder = BigramCollocationFinder.from_words(Utilities.getWords(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs))
         finder.apply_word_filter(lambda w: w in Utilities.stopwords)
         scored = finder.score_ngrams(self.getMeasure())
+        for s in scored: print s
+        exit()
         for ((u,v),s) in scored[:int(len(scored)*Settings.collocations_percentage_of_collocations_to_output)]: Utilities.writeDataToFile(' '.join([u,v,str(s)]), self.collocationsFile)
 
 Collocations(Collocations.measureTypeChiSquare, currentTime=Settings.startTime+timedelta(days=8), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=8).discoverAndWrite()
