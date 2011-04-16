@@ -8,7 +8,8 @@ import matplotlib.pyplot as plt
 from settings import Settings
 from datasets import DocumentType
 from datetime import timedelta, datetime
-from classifiers import FixedWindowClassifier, FixedWindowWithCollocationsClassifier, TestDocuments
+from classifiers import FixedWindowClassifier, FixedWindowWithCollocationsClassifier, TestDocuments,\
+    TestDocumentsWithCollocations
 from utilities import Utilities
 from collections import defaultdict
 from collocations import Collocations
@@ -23,8 +24,6 @@ class GenerateClassifiers:
         dataTypes = [DocumentType.typeRuuslBigram, DocumentType.typeRuuslSparseBigram, DocumentType.typeRuuslTrigram]
         currentDay = Settings.startTime
         while currentDay<=Settings.endTime:
-#            dataTypes = [DocumentType.typeRuuslUnigram]
-#            noOfDaysList = Utilities.getClassifierLengthsByDay(currentDay, maxLength)
             noOfDaysList = list(set([idealModelLength]).intersection(set(Utilities.getClassifierLengthsByDay(currentDay, maxLength))))
             print currentDay, noOfDaysList
             for noOfDays in noOfDaysList: 
@@ -73,9 +72,23 @@ class AnalyzeClassifiers:
                     Utilities.writeAsJsonToFile(data, Settings.stats_to_compare_language_models)
             currentDay+=timedelta(days=1)
     
-#    @staticmethod
-#    def generateStatsToCompareCollocations():
-#        
+    @staticmethod
+    def generateStatsToCompareCollocations():
+        global maxLength, idealModelLength
+        dataType = DocumentType.typeRuuslUnigram
+        collocationMeasures = [Collocations.measureTypeChiSquare, Collocations.measureTypeLikelihoodRatio, Collocations.measureTypeRawFrequency, Collocations.measureTypePMI]
+        currentDay = Settings.startTime
+        while currentDay<=Settings.endTime:
+            noOfDaysList = list(set([idealModelLength]).intersection(set(Utilities.getClassifierLengthsByDay(currentDay, maxLength))))
+            print currentDay, noOfDaysList
+            for noOfDays in noOfDaysList: 
+                for collocationMeasure in collocationMeasures: 
+                    classifier = FixedWindowWithCollocationsClassifier(collocationMeasure=collocationMeasure, currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=dataType, noOfDays=noOfDays)
+                    classifier.load()
+                    data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'classifier_length': noOfDays, 'metric': 'aucm', 'number_of_experts': Settings.numberOfExperts, 'data_type': dataType, 'collocation_measure': collocationMeasure, 'test_data_days': 1}
+                    data['value'] = classifier.getAUCM(TestDocumentsWithCollocations(collocationMeasure, currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=dataType, noOfDays=1).iterator())
+                    print data
+            currentDay+=timedelta(days=1)
             
     @staticmethod
     def analyzeStatsToDetermineFixedWindowLength():
@@ -100,10 +113,11 @@ if __name__ == '__main__':
 #    print 'future:', classifier.getAUCM(TestDocuments(currentTime=Settings.startTime+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuusl, noOfDays=1).iterator())
 
 #    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
-    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations()
+#    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations()
     
 #    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.generateStatsToCompareLanguageModels()
+    AnalyzeClassifiers.generateStatsToCompareCollocations()
 
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.analyzeStatsToCompareLanguageModels()
