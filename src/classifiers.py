@@ -135,9 +135,6 @@ class FixedWindowWithCollocationsClassifier(FixedWindowClassifier):
         Utilities.createDirectory(self.trainedClassifierFile)
         collocations = Collocations(self.collocationMeasure, **self.kwargs)
         collocations.load()
-        for k, v in collocations.collocatedTerms.iteritems():
-            print k, v
-        exit()
         self.trainClassifier(Utilities.getDocumentsWithCollocations(collocations, fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs))
         Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
 
