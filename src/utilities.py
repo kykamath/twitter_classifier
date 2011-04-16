@@ -96,9 +96,8 @@ class Utilities:
             terms = set(tweet[0])
             for term in tweet[0]: 
                 if term in collocations.collocatedTerms: terms = terms.union(collocations.collocatedTerms[term])
-            if len(terms)!= len(set(tweet[0])): print len(terms), len(tweet[0]), sorted(list(terms)), sorted(set(tweet[0]))
-#            yield (list(terms), tweet[1])
-        exit()
+#            if len(terms)!= len(set(tweet[0])): print len(terms), len(tweet[0]), sorted(list(terms)), sorted(set(tweet[0]))
+            yield (list(terms), tweet[1])
     @staticmethod
     def getClassifierLengthsByDay(currentDay, maxLength): return [1]+range(2,min([maxLength, (currentDay-Settings.startTime).days+2]),2)
 #    @staticmethod
