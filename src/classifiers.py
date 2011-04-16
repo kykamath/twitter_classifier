@@ -15,6 +15,7 @@ from scipy.misc.common import factorial
 import cPickle
 from datasets import DataDirection
 from classification_evaluation_metrics import ClassificationEvaluationMetrics
+from collocations import Collocations
 
 classToIntMap = {'sports': 1, 'politics': 2, 'entertainment': 3, 'technology': 4}
 
@@ -47,6 +48,7 @@ class MultiClassAUC:
 
 class Classifier(object):
     typeFixedWindow = 'fixed_window'
+    typeFixedWindowWithCollocations = 'fixed_window_with_collocations'
     
     def __init__(self): 
         self.nltkClassifier = MaxentClassifier
@@ -113,7 +115,7 @@ class Classifier(object):
     def loadClassifier(fileName): return cPickle.load(open(fileName))
 
 class FixedWindowClassifier(Classifier):
-#        FixedWindowClassifier(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=1)
+#        FixedWindowClassifier(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, noOfDays=1)
     def __init__(self, **kwargs):
         super(FixedWindowClassifier, self).__init__()
         self.kwargs=kwargs
@@ -123,6 +125,19 @@ class FixedWindowClassifier(Classifier):
         self.trainClassifier(Utilities.getDocuments(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs))
         Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
     def load(self): self.classifier = Classifier.loadClassifier(self.trainedClassifierFile)
+
+class FixedWindowWithCollocationsClassifier(FixedWindowClassifier):
+    def __init__(self, collocationMeasure, **kwargs):
+        super(FixedWindowWithCollocationsClassifier, self).__init__(**kwargs)
+        self.collocationMeasure = collocationMeasure
+        self.trainedClassifierFile = Utilities.getTrainedClassifierFile(classifierType=Classifier.typeFixedWindowWithCollocations+'_%s'%collocationMeasure, **kwargs)
+    def trainAndSave(self):
+        print self.trainedClassifierFile
+        exit()
+        Utilities.createDirectory(self.trainedClassifierFile)
+        collocations = Collocations(self.collocationMeasure, **self.kwargs)
+        self.trainClassifier(Utilities.getDocumentsWithCollocations(collocations, fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs))
+        Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
 
 class TestDocuments:
 #    TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=4)

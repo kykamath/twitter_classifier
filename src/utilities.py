@@ -91,6 +91,13 @@ class Utilities:
         for document in Utilities.getDocuments(**kwargs):
             for word in document[0]: yield word
     @staticmethod
+    def getDocumentsWithCollocations(collocations, **kwargs):
+        for tweet in Utilities.getDocuments(**kwargs):
+            terms = set(tweet[0])
+            for term in tweet[0]: 
+                if term in collocations.collocatedTerms: terms = terms.union(collocations.collocatedTerms[term])
+            yield (list(terms), tweet[1])
+    @staticmethod
     def getClassifierLengthsByDay(currentDay, maxLength): return [1]+range(2,min([maxLength, (currentDay-Settings.startTime).days+2]),2)
 #    @staticmethod
 #    def getCombinedFile(currentTime, dataType): return Settings.twitterClassifierCombinedSetsFolder+'%s/%s'%(dataType, Utilities.getDataFile(currentTime))

@@ -8,12 +8,12 @@ import matplotlib.pyplot as plt
 from settings import Settings
 from datasets import DocumentType
 from datetime import timedelta, datetime
-from classifiers import FixedWindowClassifier, TestDocuments
+from classifiers import FixedWindowClassifier, FixedWindowWithCollocationsClassifier, TestDocuments
 from utilities import Utilities
 from collections import defaultdict
+from collocations import Collocations
 
 maxLength=16
-
 idealModelLength = 8
 
 class GenerateClassifiers:
@@ -29,6 +29,18 @@ class GenerateClassifiers:
             print currentDay, noOfDaysList
             for noOfDays in noOfDaysList: 
                 for dataType in dataTypes: FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=dataType, noOfDays=noOfDays).trainAndSave()
+            currentDay+=timedelta(days=1)
+    @staticmethod
+    def fixedWindowWithCollocationsForDifferentCollocations():
+        global maxLength, idealModelLength
+        dataType = DocumentType.typeRuuslUnigram
+        collocationMeasures = [Collocations.measureTypeChiSquare]
+        currentDay = Settings.startTime
+        while currentDay<=Settings.endTime:
+            noOfDaysList = list(set([idealModelLength]).intersection(set(Utilities.getClassifierLengthsByDay(currentDay, maxLength))))
+            print currentDay, noOfDaysList
+            for noOfDays in noOfDaysList: 
+                for collocationMeasure in collocationMeasures: FixedWindowWithCollocationsClassifier(collocationMeasure=collocationMeasure, currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=dataType, noOfDays=noOfDays).trainAndSave()
             currentDay+=timedelta(days=1)
 
 class AnalyzeClassifiers:
@@ -84,8 +96,10 @@ if __name__ == '__main__':
 #    print 'future:', classifier.getAUCM(TestDocuments(currentTime=Settings.startTime+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuusl, noOfDays=1).iterator())
 
 #    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
+    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations()
+    
 #    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.generateStatsToCompareLanguageModels()
 
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
-    AnalyzeClassifiers.analyzeStatsToCompareLanguageModels()
+#    AnalyzeClassifiers.analyzeStatsToCompareLanguageModels()
