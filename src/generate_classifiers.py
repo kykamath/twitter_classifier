@@ -87,7 +87,7 @@ class AnalyzeClassifiers:
                     classifier.load()
                     data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'classifier_length': noOfDays, 'metric': 'aucm', 'number_of_experts': Settings.numberOfExperts, 'data_type': dataType, 'collocation_measure': collocationMeasure, 'test_data_days': 1}
                     data['value'] = classifier.getAUCM(TestDocumentsWithCollocations(collocationMeasure, currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=dataType, noOfDays=1).iterator())
-                    print data
+                    Utilities.writeAsJsonToFile(data, Settings.stats_to_compare_collocations)
             currentDay+=timedelta(days=1)
             
     @staticmethod
