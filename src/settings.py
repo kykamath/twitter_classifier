@@ -18,8 +18,8 @@ class Settings:
     twitter_api_time_format = '%a %b %d %H:%M:%S +0000 %Y'
     
     # Time data
-    startTime=datetime(2011,3,19)
-    endTime=datetime(2011,4,12)
+    startTime=datetime(2011,3,20)
+    endTime=datetime(2011,4,1)
     
     numberOfExperts = 125
     expertListSizes = xrange(50,550,50)

@@ -40,9 +40,6 @@ class DocumentType(object):
                 for k in DocumentType.keys: data[k]=tweet[k]
                 data['screen_name'] = tweet['user']['screen_name']; data['user_id'] = tweet['user']['id_str']
                 data['document'] = self.modifyDocument(data['text'])
-#                print outputFile
-#                print data['document']
-#                exit()
                 Utilities.writeAsJsonToFile(data, outputFile)
     def getUnigrams(self, text): 
         pattern = re.compile('[\W_]+')
@@ -85,8 +82,18 @@ class DocumentTypeRuuslSparseBigram(DocumentType):
 class DocumentTypeRuuslUnigramWithMeta(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
         super(DocumentTypeRuuslUnigramWithMeta, self).__init__(currentTime, DocumentType.typeRuuslUnigramWithMeta, numberOfExperts)
-    def modifyDocument(self, text): 
-        return self.getUnigrams(text)+DocumentTypeRuuslUnigramWithMeta.getUrlMeta(text)
+        self.inputTrainingSetFile = Utilities.getTrainingFile(currentTime, DocumentType.typeRuuslUnigram, self.numberOfExperts)
+        self.inputTestSetFile = Utilities.getTestFile(currentTime, DocumentType.typeRuuslUnigram, self.numberOfExperts, bottom=True)
+#    def modifyDocument(self, text): 
+#        return self.getUnigrams(text)+DocumentTypeRuuslUnigramWithMeta.getUrlMeta(text)
+    def convert(self):
+        for inputFile, outputFile in [(self.inputTrainingSetFile, self.outputTrainingSetFile), (self.inputTestSetFile, self.outputTestSetFile)]:
+            for tweet in Utilities.iterateTweetsFromFile(inputFile):
+                data = {}
+                for k in DocumentType.keys: data[k]=tweet[k]
+                data['screen_name'] = tweet['screen_name']; data['user_id'] = tweet['user_id']
+                data['document'] = tweet['document']+DocumentTypeRuuslUnigramWithMeta.getUrlMeta(data['text'])
+                Utilities.writeAsJsonToFile(data, outputFile)
     @staticmethod
     def getUrlMeta(message):
         try:
