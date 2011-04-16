@@ -104,20 +104,21 @@ class AnalyzeClassifiers:
         languageModelToScore=defaultdict(list)
         for data in Utilities.iterateJsonFromFile(Settings.stats_to_compare_language_models): languageModelToScore[data['data_type']].append(data['value'])
         for languageModel in languageModelToScore: print languageModel, numpy.mean(languageModelToScore[languageModel])
+    
+    @staticmethod
+    def analyzeStatsToCompareCollocations():
+        languageModelToScore=defaultdict(list)
+        for data in Utilities.iterateJsonFromFile(Settings.stats_to_compare_collocations): languageModelToScore[data['collocation_measure']].append(data['value'])
+        for languageModel in languageModelToScore: print languageModel, numpy.mean(languageModelToScore[languageModel])
         
 if __name__ == '__main__':
-#    FixedWindowClassifier(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuusl, noOfDays=1).trainAndSave()
-#    classifier = FixedWindowClassifier(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuusl, noOfDays=1)
-#    classifier.load()
-#    print 'today:', classifier.getAUCM(TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuusl, noOfDays=1).iterator())
-#    print 'future:', classifier.getAUCM(TestDocuments(currentTime=Settings.startTime+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuusl, noOfDays=1).iterator())
-
 #    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
 #    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations()
     
 #    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.generateStatsToCompareLanguageModels()
-    AnalyzeClassifiers.generateStatsToCompareCollocations()
+#    AnalyzeClassifiers.generateStatsToCompareCollocations()
 
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
-#    AnalyzeClassifiers.analyzeStatsToCompareLanguageModels()
+    AnalyzeClassifiers.analyzeStatsToCompareLanguageModels()
+    AnalyzeClassifiers.analyzeStatsToCompareCollocations()
