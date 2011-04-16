@@ -149,6 +149,10 @@ class TestDocumentsWithCollocations:
         self.collocationMeasure = collocationMeasure
         self.kwargs=kwargs
     def iterator(self):
+        testNoOfDays = self.kwargs['noOfDays']
+        self.kwargs['noOfDays'] = 8
         collocations = Collocations(self.collocationMeasure, **self.kwargs)
+        print collocations.collocationsFile
         collocations.load()
+        self.kwargs['noOfDays'] = testNoOfDays
         return Utilities.getDocumentsWithCollocations(collocations, fileNameMethod=Utilities.getTestFile, dataDirection=DataDirection.future, bottom=True, **self.kwargs)
