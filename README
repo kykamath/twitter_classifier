@@ -5,3 +5,8 @@ A classifier for twitter users.
 TO DO:
 
 1. Check the performance of different collocations methods to classification.
+
+Processed running:
+1. Meta generator (sarge)
+2. Chi square classifier (sid)
+3. General classifier (lenny)
