@@ -21,9 +21,8 @@ class GenerateClassifiers:
     @staticmethod
     def fixedWindowOfDifferentLengthsAndDataTypes():
         global maxLength, idealModelLength
-        dataTypes = [DocumentType.typeRuuslUnigramWithMeta]
-#        currentDay = Settings.startTime
-        currentDay = datetime(2011,4,2)
+        dataTypes = [DocumentType.typeRuuslUnigramNouns]
+        currentDay = Settings.startTime
         while currentDay<=Settings.endTime:
             noOfDaysList = list(set([idealModelLength]).intersection(set(Utilities.getClassifierLengthsByDay(currentDay, maxLength))))
             print currentDay, noOfDaysList
@@ -114,11 +113,11 @@ class AnalyzeClassifiers:
         for languageModel in languageModelToScore: print languageModel, numpy.mean(languageModelToScore[languageModel])
         
 if __name__ == '__main__':
-#    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
+    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
 #    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations()
     
 #    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
-    AnalyzeClassifiers.generateStatsToCompareLanguageModels()
+#    AnalyzeClassifiers.generateStatsToCompareLanguageModels()
 #    AnalyzeClassifiers.generateStatsToCompareCollocations()
 
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
