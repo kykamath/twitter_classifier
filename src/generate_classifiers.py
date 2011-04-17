@@ -23,7 +23,6 @@ class GenerateClassifiers:
         global maxLength, idealModelLength
         dataTypes = [DocumentType.typeRuuslUnigramWithMeta]
         currentDay = Settings.startTime
-        Settings.endTime = datetime(2011,3,21)
         while currentDay<=Settings.endTime:
             noOfDaysList = list(set([idealModelLength]).intersection(set(Utilities.getClassifierLengthsByDay(currentDay, maxLength))))
             print currentDay, noOfDaysList
