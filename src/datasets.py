@@ -22,6 +22,7 @@ class DocumentType(object):
     typeRuuslTrigram = 'ruusl_trigram'
     typeRuuslSparseBigram = 'ruusl_sparse_bigram'
     typeRuuslUnigramWithMeta = 'ruusl_unigram_with_meta'
+    typeRuuslUnigramNouns = 'ruusl_unigram_nouns'
     
     keys = ['class', 'text', 'created_at', 'id']
 
@@ -40,7 +41,10 @@ class DocumentType(object):
                 for k in DocumentType.keys: data[k]=tweet[k]
                 data['screen_name'] = tweet['user']['screen_name']; data['user_id'] = tweet['user']['id_str']
                 data['document'] = self.modifyDocument(data['text'])
-                Utilities.writeAsJsonToFile(data, outputFile)
+                print data['text']
+                print data['document']
+                exit()
+#                Utilities.writeAsJsonToFile(data, outputFile)
     def getUnigrams(self, text): 
         pattern = re.compile('[\W_]+')
         def removeHTTP(s): return' '.join(filter(lambda x:x.find('http') == -1, s.lower().split()))
@@ -53,11 +57,33 @@ class DocumentType(object):
         returnWords = [pattern.sub('', word) for word, tag in pos_tag(word_tokenize(sentance))]
         returnWords = filter(lambda w: w!='' and len(w)>2, lemmatizeWords(returnWords))
         return returnWords
+    def getUnigramsNouns(self, text):
+        pattern = re.compile('[\W_]+')
+        def removeHTTP(s): return' '.join(filter(lambda x:x.find('http') == -1, s.lower().split()))
+        def isNoun(tag): 
+            if tag == 'N' or tag[:2] in ['NN', 'NP', 'NR']: return True
+        def lemmatizeWords(terms):
+            lmtzr = WordNetLemmatizer()
+            return [lmtzr.lemmatize(term) for term in terms]
+#                    def isNotUserOrStopList(word):
+#                        if word not in stoplist and not word.startswith('@'): return True
+        def removeUsers(sentance):
+            return ' '.join(filter(lambda term: not term.startswith('@'), sentance.split()))
+        sentance = removeHTTP(text.lower())
+        sentance = removeUsers(sentance)
+        returnWords = [pattern.sub('', word) for word, tag in pos_tag(word_tokenize(sentance)) if isNoun(tag)]
+        returnWords = filter(lambda w: w!='' and len(w)>2, lemmatizeWords(returnWords))
+        return returnWords
 
 class DocumentTypeRuuslUnigram(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
         super(DocumentTypeRuuslUnigram, self).__init__(currentTime, DocumentType.typeRuuslUnigram, numberOfExperts)
     def modifyDocument(self, text): return self.getUnigrams(text)
+
+class DocumentTypeRuuslUnigramNouns(DocumentType):
+    def __init__(self, currentTime, numberOfExperts): 
+        super(DocumentTypeRuuslUnigram, self).__init__(currentTime, DocumentType.typeRuuslUnigramNouns, numberOfExperts)
+    def modifyDocument(self, text): return self.getUnigramsNouns(text)
     
 class DocumentTypeRuuslBigram(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
@@ -147,4 +173,4 @@ class CreateTrainingAndTestSets:
   
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
-    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigramWithMeta])
+    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigramNouns])
