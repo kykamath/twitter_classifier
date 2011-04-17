@@ -142,7 +142,7 @@ class TestDocuments:
 #    TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=4)
     def __init__(self, **kwargs): self.kwargs=kwargs
     def iterator(self):
-        return Utilities.getDocuments(fileNameMethod=Utilities.getTestFile, dataDirection=DataDirection.future, bottom=True, **self.kwargs)
+        return Utilities.getDocuments(fileNameMethod=Utilities.getTestFile, dataDirection=DataDirection.past, bottom=True, **self.kwargs)
 
 class TestDocumentsWithCollocations:
     def __init__(self, collocationMeasure, **kwargs): 
