@@ -82,7 +82,7 @@ class DocumentTypeRuuslUnigram(DocumentType):
 
 class DocumentTypeRuuslUnigramNouns(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
-        super(DocumentTypeRuuslUnigram, self).__init__(currentTime, DocumentType.typeRuuslUnigramNouns, numberOfExperts)
+        super(DocumentTypeRuuslUnigramNouns, self).__init__(currentTime, DocumentType.typeRuuslUnigramNouns, numberOfExperts)
     def modifyDocument(self, text): return self.getUnigramsNouns(text)
     
 class DocumentTypeRuuslBigram(DocumentType):
