@@ -59,7 +59,7 @@ class AnalyzeClassifiers:
     @staticmethod
     def generateStatsToCompareLanguageModels():
         global maxLength, idealModelLength
-        dataTypes = [DocumentType.typeRuuslUnigram, DocumentType.typeRuuslBigram, DocumentType.typeRuuslSparseBigram, DocumentType.typeRuuslTrigram]
+        dataTypes = [DocumentType.typeRuuslUnigram, DocumentType.typeRuuslUnigramWithMeta]
         currentDay = Settings.startTime
         while currentDay<=Settings.endTime:
             noOfDaysList = list(set([idealModelLength]).intersection(set(Utilities.getClassifierLengthsByDay(currentDay, maxLength))))
@@ -69,7 +69,8 @@ class AnalyzeClassifiers:
                     classifier.load()
                     data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'classifier_length': noOfDays, 'metric': 'aucm', 'number_of_experts': Settings.numberOfExperts, 'data_type': dataType, 'test_data_days': 1}
                     data['value'] = classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=dataType, noOfDays=1).iterator())
-                    Utilities.writeAsJsonToFile(data, Settings.stats_to_compare_language_models)
+                    print data
+#                    Utilities.writeAsJsonToFile(data, Settings.stats_to_compare_language_models)
             currentDay+=timedelta(days=1)
     
     @staticmethod
@@ -112,11 +113,11 @@ class AnalyzeClassifiers:
         for languageModel in languageModelToScore: print languageModel, numpy.mean(languageModelToScore[languageModel])
         
 if __name__ == '__main__':
-    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
+#    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
 #    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations()
     
 #    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
-#    AnalyzeClassifiers.generateStatsToCompareLanguageModels()
+    AnalyzeClassifiers.generateStatsToCompareLanguageModels()
 #    AnalyzeClassifiers.generateStatsToCompareCollocations()
 
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
