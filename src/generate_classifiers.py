@@ -113,11 +113,11 @@ class AnalyzeClassifiers:
         for languageModel in languageModelToScore: print languageModel, numpy.mean(languageModelToScore[languageModel])
         
 if __name__ == '__main__':
-#    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
+    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
 #    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations()
     
 #    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
-    AnalyzeClassifiers.generateStatsToCompareLanguageModels()
+#    AnalyzeClassifiers.generateStatsToCompareLanguageModels()
 #    AnalyzeClassifiers.generateStatsToCompareCollocations()
 
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
