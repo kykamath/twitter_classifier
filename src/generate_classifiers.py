@@ -22,7 +22,8 @@ class GenerateClassifiers:
     def fixedWindowOfDifferentLengthsAndDataTypes():
         global maxLength, idealModelLength
         dataTypes = [DocumentType.typeRuuslUnigramWithMeta]
-        currentDay = Settings.startTime
+#        currentDay = Settings.startTime
+        currentDay = datetime(2011,4,2)
         while currentDay<=Settings.endTime:
             noOfDaysList = list(set([idealModelLength]).intersection(set(Utilities.getClassifierLengthsByDay(currentDay, maxLength))))
             print currentDay, noOfDaysList
