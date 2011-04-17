@@ -41,10 +41,7 @@ class DocumentType(object):
                 for k in DocumentType.keys: data[k]=tweet[k]
                 data['screen_name'] = tweet['user']['screen_name']; data['user_id'] = tweet['user']['id_str']
                 data['document'] = self.modifyDocument(data['text'])
-                print data['text']
-                print data['document']
-                exit()
-#                Utilities.writeAsJsonToFile(data, outputFile)
+                Utilities.writeAsJsonToFile(data, outputFile)
     def getUnigrams(self, text): 
         pattern = re.compile('[\W_]+')
         def removeHTTP(s): return' '.join(filter(lambda x:x.find('http') == -1, s.lower().split()))
