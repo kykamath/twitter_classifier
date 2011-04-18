@@ -14,11 +14,13 @@ from collections import defaultdict
 featureMap = {}
 
 def learnFromTweet(tweet):
+    global featureMap
     classLabel = tweet['class']
     for feature in tweet['document']:
         if feature not in featureMap: featureMap = {'stats': {}, 'class': defaultdict(int)}
         featureMap[feature]['class'][classLabel]+=1
 def classifyTweet(tweet):
+    global featureMap
     print tweet
     flag = False
     for feature in tweet['document']:
