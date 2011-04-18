@@ -13,56 +13,6 @@ from collections import defaultdict
 from operator import itemgetter
 from classifiers import classToIntMap, MultiClassAUC
 
-#featureMap = {}
-#notClassified = 'not_classified'
-#numberOfClasses = 4
-
-#def learnFromTweet(tweet):
-#    global featureMap
-#    classLabel = tweet['class']
-#    for feature in extractFeatures(tweet['document']):
-#        if feature not in featureMap: featureMap[feature] = {'stats': {}, 'class': defaultdict(int)}
-#        featureMap[feature]['class'][classLabel]+=1
-#def getFeatureProbabilites(feature):
-#    mapToReturn = {}
-#    totalScore = sum(v for v in feature['class'].itervalues())
-#    for classLabel, score in feature['class'].iteritems(): mapToReturn[classLabel] = float(score)/totalScore
-#    return mapToReturn
-#def classifyTweet(tweet):
-#    global featureMap, notClassified, numberOfClasses
-##    print tweet
-##    print tweet['document']
-#    tweetFeatureMap = {}
-#    for feature in extractFeatures(tweet['document']):
-#        if feature in featureMap: 
-##            print feature, featureMap[feature]
-#            tweetFeatureMap[feature]=getFeatureProbabilites(featureMap[feature])
-#    perClassScores = defaultdict(float)
-#    for k, v in tweetFeatureMap.iteritems(): 
-#        featureScore = float(numberOfClasses)/len(v)
-##        print featureScore, v
-#        if featureScore!=0:
-#            for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
-#    sortedScores = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
-#    if sortedScores:
-#        classLabel, score = sortedScores[0]
-##        print score
-##        if score > math.log(Settings.stream_classifier_class_probability_threshold): 
-#        return classLabel
-#    return notClassified
-
-#def stream_classifier(**kwargs):
-#    i=1
-#    firstDay = Settings.startTime+timedelta(days=2)
-#    for tweet in Utilities.getTweets(fileNameMethod=Utilities.getStreamingSetsFile, dataDirection=DataDirection.future, completeTweets=True, **kwargs):
-#        tweetTimeStamp = datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format)
-#        if tweet['tweet_type'] == TweetType.train: learnFromTweet(tweet)
-#        else:
-#            if firstDay<tweetTimeStamp: 
-#                print i, classifyTweet(tweet), tweet['class'], tweet['text']
-#                if i==25: exit()
-#                i+=1
-                
 class StreamClassifier(object):
     typeDefault='stream_classifier_default'
     
@@ -137,6 +87,7 @@ class StreamClassifierDefault(StreamClassifier):
             if featureScore!=0:
                 for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
         return perClassScores
+    
 if __name__ == '__main__':
     streamClassifier = StreamClassifierDefault(currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=25)
     streamClassifier.classifyingMethod = streamClassifier.classifyForAUCM

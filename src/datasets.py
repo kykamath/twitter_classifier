@@ -10,7 +10,7 @@ from datetime import timedelta, datetime
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk import pos_tag, word_tokenize
 
-def kgram(k, text): return [' '.join(text[i:i+k]) for i in range(len(text)) if len(text[i:i+k])==k]
+def kgram(k, text, combiningText=' '): return [combiningText.join(text[i:i+k]) for i in range(len(text)) if len(text[i:i+k])==k]
 
 class DataDirection: future = 1; past=-1
 class TweetType: train = 'train'; test='test'
@@ -24,6 +24,7 @@ class DocumentType(object):
     typeRuuslSparseBigram = 'ruusl_sparse_bigram'
     typeRuuslUnigramWithMeta = 'ruusl_unigram_with_meta'
     typeRuuslUnigramNouns = 'ruusl_unigram_nouns'
+    typeCharBigram = 'char_bigram'
     
     keys = ['class', 'text', 'created_at', 'id']
 
@@ -92,6 +93,11 @@ class DocumentTypeRuuslTrigram(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
         super(DocumentTypeRuuslTrigram, self).__init__(currentTime, DocumentType.typeRuuslTrigram, numberOfExperts)
     def modifyDocument(self, text): return kgram(3, self.getUnigrams(text))
+
+class DocumentTypeCharBigram(DocumentType):
+    def __init__(self, currentTime, numberOfExperts): 
+        super(DocumentTypeCharBigram, self).__init__(currentTime, DocumentType.typeCharBigram, numberOfExperts)
+    def modifyDocument(self, text): return kgram(2, text, '')
 
 class DocumentTypeRuuslSparseBigram(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
@@ -206,6 +212,5 @@ class CreateTrainingAndTestSets:
 
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
-#    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigramNouns])
-    CreateTrainingAndTestSets.createStreamingData([DocumentType.typeRuuslUnigram])
-#    StreamingSets(Settings.startTime, DocumentType.typeRuuslUnigram, Settings.numberOfExperts).generate()
+    CreateTrainingAndTestSets.createModifiedData([DocumentTypeCharBigram])
+#    CreateTrainingAndTestSets.createStreamingData([DocumentType.typeRuuslUnigram])
