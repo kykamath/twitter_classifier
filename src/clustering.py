@@ -32,19 +32,18 @@ class GibbsLDA(object):
             self.distribution[i] = dist.index(sorted(dist, reverse = True)[0])
             i+=1
     
-    def _getTopWords(self, directory):
-        currentTopic = None
-        for line in map(lambda l: l.strip().split(), open(directory+'/model-final.twords')):
-            if line[0] == 'Topic': currentTopic = line[1][:-3]
-            else: self.topWords[currentTopic].append(line[0])
-#        for k, v in self.topWords.iteritems(): print k, str(v)
+#    def _getTopWords(self, directory):
+#        currentTopic = None
+#        for line in map(lambda l: l.strip().split(), open(directory+'/model-final.twords')):
+#            if line[0] == 'Topic': currentTopic = line[1][:-3]
+#            else: self.topWords[currentTopic].append(line[0])
     
     def getDistributionAcrossTopics(self):
         directory = '/tmp/' + commands.getoutput('dd if=/dev/urandom count=128 bs=1 2>&1 | md5sum | cut -b-20')
         fileName = self._createDataFile(directory)
         os.system('lda -est -alpha 0.1 -beta 0.1 -ntopics %s -niters 1000 -twords 20 -savestep 2001 -dfile %s' % (str(self.numberOfTopics), fileName))
         self._getDocumentDistribution(directory)
-        self._getTopWords(directory)
+#        self._getTopWords(directory)
         os.system('rm -rf %s' % directory)
         return self.distribution
         
