@@ -42,7 +42,7 @@ def classifyTweet(tweet):
             tweetFeatureMap[feature]=getFeatureProbabilites(featureMap[feature])
     perClassScores = defaultdict(float)
     for k, v in tweetFeatureMap.iteritems(): 
-        featureScore = math.log(float(numberOfClasses)/len(v))
+        featureScore = float(numberOfClasses)/len(v)
 #        print featureScore, v
         if featureScore!=0:
             for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
