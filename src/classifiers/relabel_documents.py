@@ -51,7 +51,7 @@ class ReLabelTrainingDocuments:
     numberOfTopics = 4
     def __init__(self, documents):
 #        self.originalDocuments = list(documents)
-        for d in documents: print d
+        for d in documents: print (' '.join(d[0]), d[1])
         exit()
     def getRelabeledDocuments(self):
         def getClusterLabelsToOriginalLabelsMap(clusteredDocuments, clusterLabelsToOriginalLabelMap):
