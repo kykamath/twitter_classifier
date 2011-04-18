@@ -44,7 +44,8 @@ def classifyTweet(tweet):
     for k, v in tweetFeatureMap.iteritems(): 
         featureScore = math.log(float(numberOfClasses)/len(v))
 #        print featureScore, v
-        for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
+        if featureScore!=0:
+            for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
     sortedScores = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
     if sortedScores:
         classLabel, score = sortedScores[0]
