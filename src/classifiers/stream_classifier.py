@@ -58,4 +58,4 @@ def stream_classifier(**kwargs):
                 if i==25: exit()
                 i+=1
 if __name__ == '__main__':
-    stream_classifier(currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=1)
+    stream_classifier(currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=3)
