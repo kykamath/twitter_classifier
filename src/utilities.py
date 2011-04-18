@@ -38,6 +38,7 @@ class Utilities:
                 data = cjson.decode(line)
                 if 'text' in data: yield data
             except: pass
+        yield None
     @staticmethod
     def iterateJsonFromFile(file):
         for line in open(file): 

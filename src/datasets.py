@@ -144,12 +144,11 @@ class StreamingSets:
 #        Utilities.createDirectory(self.outputTrainingSetFile), Utilities.createDirectory(self.outputTestSetFile) 
     
     def generate(self):
-        data = ''
-        i=1
+        trainingFileIterator = Utilities.iterateTweetsFromFile(self.inputTrainingSetFile)
+        data = trainingFileIterator.next()
         while data!=None:
-            data = Utilities.iterateTweetsFromFile(self.inputTrainingSetFile)
             print data
-            i+=1
+            data = trainingFileIterator.next()
 
 
 class CreateTrainingAndTestSets:
@@ -185,8 +184,19 @@ class CreateTrainingAndTestSets:
                 dataType(currentTime, Settings.numberOfExperts).generate()
             currentTime+=timedelta(days=1)
 
-  
+def gen():
+        for i in range(5): 
+            yield i
+        yield None
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
 #    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigramNouns])
     StreamingSets(Settings.startTime, DocumentType.typeRuuslUnigram, Settings.numberOfExperts).generate()
+#    for i in gen(): print i
+#    n = gen()
+#    data = n.next()
+#    while data!=None:
+#        print data
+#        data = n.next()
+#    try:
+#    except StopIteration: print None 
