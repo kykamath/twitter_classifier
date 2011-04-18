@@ -38,10 +38,11 @@ def classifyTweet(tweet):
     perClassScores = defaultdict(float)
     for k, v in tweetFeatureMap.iteritems(): 
         for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(score)
-    print perClassScores
-    classLabel, score = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)[0]
-    if score > math.log(Settings.stream_classifier_class_probability_threshold): return classLabel
-    else: return notClassified
+    sortedScores = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
+    if sortedScores:
+        classLabel, score = sortedScores[0]
+        if score > math.log(Settings.stream_classifier_class_probability_threshold): return classLabel
+    return notClassified
 
 def stream_classifier(**kwargs):
     i=1
