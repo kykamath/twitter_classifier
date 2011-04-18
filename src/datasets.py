@@ -161,7 +161,7 @@ class DocumentTypeRuuslUnigramNounsWithMeta(DocumentType):
             unigramIterator, unigramWithMetaIterator = Utilities.iterateTweetsFromFileWithTerminatingNone(inputUnigramFile), Utilities.iterateTweetsFromFileWithTerminatingNone(inputUnigramWithMetaFile)
             unigramTweet, unigramWithMetaTweet = unigramIterator.next(), unigramWithMetaIterator.next()
             while unigramTweet!=None and unigramWithMetaTweet!=None:
-                print unigramTweet['document'], unigramWithMetaTweet['document']
+                print unigramTweet['document'], unigramWithMetaTweet['document'], unigramWithMetaTweet['document'][len(unigramTweet['document']):]
                 unigramTweet, unigramWithMetaTweet = unigramIterator.next(), unigramWithMetaIterator.next()
                 
 #            for tweet in Utilities.iterateTweetsFromFile(inputFile):
