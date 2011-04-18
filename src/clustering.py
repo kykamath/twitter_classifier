@@ -5,7 +5,7 @@ Created on Apr 18, 2011
 '''
 from collections import defaultdict
 from operator import itemgetter
-import commands, os
+import commands, os, pprint
 
 
 class GibbsLDA(object):
@@ -73,10 +73,11 @@ class ReLabelTrainingDocuments:
         for ((document, originalLabel), clusterLabel) in zip(self.originalDocuments, clusteredDocuments.values()):
             if clusterLabel not in clusterLabelsToOriginalLabelsDistribution: clusterLabelsToOriginalLabelsDistribution[clusterLabel] = defaultdict(int)
             clusterLabelsToOriginalLabelsDistribution[clusterLabel][originalLabel]+=1
+        pprint.pprint(clusterLabelsToOriginalLabelsDistribution)
         clusterLabelsToOriginalLabelMap = {}
         for clusterLabel, distribution in clusterLabelsToOriginalLabelsDistribution.iteritems():
             clusterLabelsToOriginalLabelMap[clusterLabel] = sorted(distribution.iteritems(), key=itemgetter(1), reverse=True)[0][0]
-        print clusterLabelsToOriginalLabelMap
+        pprint.pprint(clusterLabelsToOriginalLabelMap)
         for ((document, originalLabel), clusterLabel) in zip(self.originalDocuments, clusteredDocuments.values()):
             relabeledDocuments.append((document, clusterLabelsToOriginalLabelMap[clusterLabel]))
             print ((document, originalLabel), clusterLabel)
