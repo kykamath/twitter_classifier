@@ -27,16 +27,18 @@ def learnFromTweet(tweet):
         featureMap[feature]['class'][classLabel]+=1
 def getFeatureProbabilites(feature):
     mapToReturn = {}
-    print feature
     totalScore = sum(v for v in feature['class'].itervalues())
     for classLabel, score in feature['class'].iteritems(): mapToReturn[classLabel] = float(score)/totalScore
     return mapToReturn
 def classifyTweet(tweet):
     global featureMap, notClassified
     print tweet
+    print tweet['document']
     tweetFeatureMap = {}
     for feature in extractFeatures(tweet['document']):
-        if feature in featureMap: tweetFeatureMap[feature]=getFeatureProbabilites(featureMap[feature])
+        if feature in featureMap: 
+            print feature, featureMap[feature]
+            tweetFeatureMap[feature]=getFeatureProbabilites(featureMap[feature])
     exit()
     perClassScores = defaultdict(float)
     for k, v in tweetFeatureMap.iteritems(): 
