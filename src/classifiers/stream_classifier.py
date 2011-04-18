@@ -27,14 +27,17 @@ def learnFromTweet(tweet):
         featureMap[feature]['class'][classLabel]+=1
 def getFeatureProbabilites(feature):
     mapToReturn = {}
+    print feature
     totalScore = sum(v for v in feature['class'].itervalues())
     for classLabel, score in feature['class'].iteritems(): mapToReturn[classLabel] = float(score)/totalScore
     return mapToReturn
 def classifyTweet(tweet):
     global featureMap, notClassified
+    print tweet
     tweetFeatureMap = {}
     for feature in extractFeatures(tweet['document']):
         if feature in featureMap: tweetFeatureMap[feature]=getFeatureProbabilites(featureMap[feature])
+    exit()
     perClassScores = defaultdict(float)
     for k, v in tweetFeatureMap.iteritems(): 
         for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(score)
@@ -42,7 +45,6 @@ def classifyTweet(tweet):
     if sortedScores:
         classLabel, score = sortedScores[0]
         print score
-        print featureMap['eyecon']
 #        if score > math.log(Settings.stream_classifier_class_probability_threshold): 
         return classLabel
     return notClassified
