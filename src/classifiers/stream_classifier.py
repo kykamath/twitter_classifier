@@ -68,10 +68,12 @@ class StreamClassifier(object):
     notClassified = 'not_classified'
     numberOfClasses = 4
     
-    def __init__(self, numberOfInitialBufferDays=1, **kwargs):
-        self.kwargs = kwargs
+    def __init__(self, numberOfInitialBufferDays=1, classifyingMethod=None, **kwargs):
         self.featureMap = {}
         self.numberOfInitialBufferDays = numberOfInitialBufferDays
+        self.classifyingMethod = classifyingMethod
+        if self.classifyingMethod==None: self.classifyingMethod = self.classify
+        self.kwargs = kwargs
     def start(self):
         i=1
         firstDay = Settings.startTime+timedelta(days=self.numberOfInitialBufferDays)
@@ -80,14 +82,16 @@ class StreamClassifier(object):
             if tweet['tweet_type'] == TweetType.train: self.learnFromTweet(tweet)
             else:
                 if firstDay<tweetTimeStamp: 
-                    print i, self.classify(tweet), tweet['class'], tweet['text']
+                    self.classifyTweet(tweet)
+                    print i, self.classifyingMethod(self.classifyTweet(tweet)), tweet['class'], tweet['text']
                     if i==25: exit()
                     i+=1
-    def classify(self, tweet):
-        perClassScores = self.classifyTweet(tweet)
+    def classify(self, perClassScores):
         sortedScores = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
         if sortedScores: return sortedScores[0][0]
         return StreamClassifier.notClassified
+    def getAUCM(self, perClassScores):
+        pass
     @staticmethod
     def getFeatureProbabilites(feature):
         mapToReturn = {}
