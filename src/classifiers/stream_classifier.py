@@ -71,9 +71,10 @@ class StreamClassifier(object):
     def __init__(self, numberOfInitialBufferDays=1, **kwargs):
         self.kwargs = kwargs
         self.featureMap = {}
+        self.numberOfInitialBufferDays = numberOfInitialBufferDays
     def start(self):
         i=1
-        firstDay = Settings.startTime+timedelta(days=2)
+        firstDay = Settings.startTime+timedelta(days=self.numberOfInitialBufferDays)
         for tweet in Utilities.getTweets(fileNameMethod=Utilities.getStreamingSetsFile, dataDirection=DataDirection.future, completeTweets=True, **self.kwargs):
             tweetTimeStamp = datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format)
             if tweet['tweet_type'] == TweetType.train: self.learnFromTweet(tweet)
