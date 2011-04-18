@@ -48,7 +48,7 @@ def classifyTweet(tweet):
 
 def stream_classifier(**kwargs):
     i=1
-    firstDay = Settings.startTime+timedelta(days=1)
+    firstDay = Settings.startTime+timedelta(days=2)
     for tweet in Utilities.getTweets(fileNameMethod=Utilities.getStreamingSetsFile, dataDirection=DataDirection.future, completeTweets=True, **kwargs):
         tweetTimeStamp = datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format)
         if tweet['tweet_type'] == TweetType.train: learnFromTweet(tweet)
