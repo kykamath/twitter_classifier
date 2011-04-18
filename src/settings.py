@@ -32,6 +32,9 @@ class Settings:
     #Collocations
     collocations_percentage_of_collocations_to_output = 0.01
     
+    #Stream classifier.
+    stream_classifier_class_probability_threshold = 0.40
+    
     # Experiments
     stats_folder = 'stats/'
     stats_to_determine_fixed_window_length = stats_folder+'stats_to_determine_fixed_window_length'

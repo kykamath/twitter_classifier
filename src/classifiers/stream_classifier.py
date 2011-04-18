@@ -10,6 +10,7 @@ from utilities import Utilities
 from settings import Settings
 from datetime import datetime, timedelta
 from collections import defaultdict
+from operator import itemgetter
 
 featureMap = {}
 
@@ -41,7 +42,7 @@ def classifyTweet(tweet):
         perClassScores = defaultdict(float)
         for k, v in tweetFeatureMap.iteritems(): 
             for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(score)
-        for k, v in perClassScores.iteritems(): print k, v
+        print sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
         exit()
 
 def stream_classifier(**kwargs):
