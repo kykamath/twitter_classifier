@@ -5,6 +5,8 @@ Created on Apr 18, 2011
 '''
 from collections import defaultdict
 import commands, os
+
+
 class GibbsLDA(object):
     def __init__(self, documents, numberOfTopics):
         self.documents = documents
@@ -45,17 +47,33 @@ class GibbsLDA(object):
         os.system('rm -rf %s' % directory)
         return self.distribution
     
-    @staticmethod
-    def demo():
-        documents = ["Human machine interface for lab abc computer applications",
-                  "A survey of user opinion of computer system response time",
-                  "The EPS user interface management system",
-                  "System and human system engineering testing of EPS",
-                  "Relation of user perceived response time to error measurement",
-                  "The generation of random binary unordered trees",
-                  "The intersection graph of paths in trees",
-                  "Graph minors IV Widths of trees and well quasi ordering",
-                  "Graph minors A survey"]
-        numberOfTopics = 6
-        print GibbsLDA(documents, numberOfTopics).getDistributionAcrossTopics()
-GibbsLDA.demo()
+#    @staticmethod
+#    def demo():
+#        documents = ["Human machine interface for lab abc computer applications",
+#                  "A survey of user opinion of computer system response time",
+#                  "The EPS user interface management system",
+#                  "System and human system engineering testing of EPS",
+#                  "Relation of user perceived response time to error measurement",
+#                  "The generation of random binary unordered trees",
+#                  "The intersection graph of paths in trees",
+#                  "Graph minors IV Widths of trees and well quasi ordering",
+#                  "Graph minors A survey"]
+#        numberOfTopics = 6
+#        print GibbsLDA(documents, numberOfTopics).getDistributionAcrossTopics()
+        
+class ReLabelTrainingDocuments:
+    numberOfTopics = 4
+    def __init__(self, documents):
+        self.originalDocuments = list(documents)
+    def reLabel(self):
+        clusteredLabels = GibbsLDA([d[0] for d in self.originalDocuments], ReLabelTrainingDocuments.numberOfTopics).getDistributionAcrossTopics()
+        print clusteredLabels
+        
+
+documents = [("Human machine interface for lab abc computer applications", 'politics'),
+                  ("A survey of user opinion of computer system response time", 'politics'),
+                  ("The EPS user interface management system", 'sports'),
+                  ("System and human system engineering testing of EPS", 'entertainment'),
+                  ("Relation of user perceived response time to error measurement", 'technology'),
+                   ("Graph minors A survey", 'technology')]
+ReLabelTrainingDocuments(documents).reLabel()
