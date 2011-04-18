@@ -18,4 +18,4 @@ def stream_classifier(**kwargs):
         else:
             if firstDay<tweetTimeStamp: print 'test'
 if __name__ == '__main__':
-    stream_classifier(currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=1)
+    stream_classifier(currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=10)
