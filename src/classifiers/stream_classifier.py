@@ -131,5 +131,6 @@ class StreamClassifierDefault(StreamClassifier):
                 for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
         return perClassScores
 if __name__ == '__main__':
-    streamClassifier = StreamClassifierDefault(classifyingMethod=StreamClassifier.classify, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=3)
+    streamClassifier = StreamClassifierDefault(currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=3)
+    streamClassifier.classifyingMethod = streamClassifier.classify
     streamClassifier.start()
