@@ -37,7 +37,7 @@ class Collocations:
     
     def discoverAndWrite(self):
         Utilities.createDirectory(self.collocationsFile)
-        finder = BigramCollocationFinder.from_words(Utilities.getWords(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs))
+        finder = BigramCollocationFinder.from_words(Utilities.getWordsFromTweets(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs))
         finder.apply_word_filter(lambda w: w in Utilities.stopwords)
         scored = finder.score_ngrams(self.getMeasure())
         for ((u,v),s) in scored[:int(len(scored)*Settings.collocations_percentage_of_collocations_to_output)]: Utilities.writeDataToFile(' '.join([u,v,str(s)]), self.collocationsFile)

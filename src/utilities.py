@@ -86,7 +86,7 @@ class Utilities:
     def getStreamingSetsFile(currentTime, dataType, numberOfExperts): 
         return Settings.twitterClassifierStreamingSetsFolder+'%s/%s/%s'%(numberOfExperts, dataType, Utilities.getDataFile(currentTime))
     @staticmethod
-    def getDocuments(**kwargs):
+    def getTweets(**kwargs):
         currentTime=kwargs['currentTime']
         fileNameMethod=kwargs['fileNameMethod']
         del kwargs['currentTime']
@@ -94,12 +94,12 @@ class Utilities:
             for tweet in Utilities.iterateTweetsFromFile(fileNameMethod(currentTime=currentTime, **kwargs)): yield (tweet['document'], tweet['class'])
             currentTime=currentTime+kwargs['dataDirection']*timedelta(days=1)
     @staticmethod
-    def getWords(**kwargs):
-        for document in Utilities.getDocuments(**kwargs):
+    def getWordsFromTweets(**kwargs):
+        for document in Utilities.getTweets(**kwargs):
             for word in document[0]: yield word
     @staticmethod
-    def getDocumentsWithCollocations(collocations, **kwargs):
-        for tweet in Utilities.getDocuments(**kwargs):
+    def getTweetsWithCollocations(collocations, **kwargs):
+        for tweet in Utilities.getTweets(**kwargs):
             terms = set(tweet[0])
             for term in tweet[0]: 
                 if term in collocations.collocatedTerms: terms = terms.union(collocations.collocatedTerms[term])
@@ -110,7 +110,7 @@ class Utilities:
 
 #if __name__ == '__main__':
 #    i = 1
-#    for w in Utilities.getWords(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past,):
+#    for w in Utilities.getWordsFromTweets(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past,):
 #        print i, w
 #        i+=1
-#    Utilities.getDocuments(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs)
+#    Utilities.getTweets(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs)

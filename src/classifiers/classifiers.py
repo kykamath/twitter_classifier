@@ -124,7 +124,7 @@ class FixedWindowClassifier(Classifier):
         self.trainedClassifierFile = Utilities.getTrainedClassifierFile(classifierType=Classifier.typeFixedWindow, **kwargs)
     def trainAndSave(self):
         Utilities.createDirectory(self.trainedClassifierFile)
-        self.trainClassifier(Utilities.getDocuments(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs))
+        self.trainClassifier(Utilities.getTweets(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs))
         Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
     def load(self): self.classifier = Classifier.loadClassifier(self.trainedClassifierFile)
 
@@ -137,14 +137,14 @@ class FixedWindowWithCollocationsClassifier(FixedWindowClassifier):
         Utilities.createDirectory(self.trainedClassifierFile)
         collocations = Collocations(self.collocationMeasure, **self.kwargs)
         collocations.load()
-        self.trainClassifier(Utilities.getDocumentsWithCollocations(collocations, fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs))
+        self.trainClassifier(Utilities.getTweetsWithCollocations(collocations, fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs))
         Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
 
 class TestDocuments:
 #    TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=4)
     def __init__(self, **kwargs): self.kwargs=kwargs
     def iterator(self):
-        return Utilities.getDocuments(fileNameMethod=Utilities.getTestFile, dataDirection=DataDirection.future, bottom=True, **self.kwargs)
+        return Utilities.getTweets(fileNameMethod=Utilities.getTestFile, dataDirection=DataDirection.future, bottom=True, **self.kwargs)
 
 class TestDocumentsWithCollocations:
     def __init__(self, collocationMeasure, **kwargs): 
@@ -156,4 +156,4 @@ class TestDocumentsWithCollocations:
         collocations = Collocations(self.collocationMeasure, **self.kwargs)
         collocations.load()
         self.kwargs['noOfDays'] = testNoOfDays
-        return Utilities.getDocumentsWithCollocations(collocations, fileNameMethod=Utilities.getTestFile, dataDirection=DataDirection.future, bottom=True, **self.kwargs)
+        return Utilities.getTweetsWithCollocations(collocations, fileNameMethod=Utilities.getTestFile, dataDirection=DataDirection.future, bottom=True, **self.kwargs)
