@@ -61,7 +61,7 @@ class ReLabelTrainingDocuments:
         clusterLabelsToOriginalLabelMap = {}
         clusteredDocuments = GibbsLDA([d[0] for d in self.originalDocuments], ReLabelTrainingDocuments.numberOfTopics).getDistributionAcrossTopics()
         getClusterLabelsToOriginalLabelsMap(clusteredDocuments, clusterLabelsToOriginalLabelMap)
-        for ((document, originalLabel), clusterLabel) in zip(self.originalDocuments, clusteredDocuments.values()): yield (document, clusterLabelsToOriginalLabelMap[clusterLabel])
+        for ((document, originalLabel), clusterLabel) in zip(self.originalDocuments, clusteredDocuments.values()): yield (document.split(), clusterLabelsToOriginalLabelMap[clusterLabel])
 
 if __name__ == '__main__':
     documents = [("Human machine interface for lab abc computer applications".split(), 'politics'),
