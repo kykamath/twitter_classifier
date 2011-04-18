@@ -141,4 +141,5 @@ if __name__ == '__main__':
     streamClassifier = StreamClassifierDefault(currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=5)
     streamClassifier.classifyingMethod = streamClassifier.classifyForAUCM
     streamClassifier.start()
+    print len(streamClassifier.classifiedDocuments)
     print streamClassifier.getAUCM()
