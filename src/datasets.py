@@ -104,7 +104,7 @@ class DocumentTypeCharBigram(DocumentType):
 class DocumentTypeCharTrigram(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
         super(DocumentTypeCharTrigram, self).__init__(currentTime, DocumentType.typeCharTrigram, numberOfExperts)
-    def modifyDocument(self, text): return kgram(2, self.removeUsersAndLower(text), '')
+    def modifyDocument(self, text): return kgram(3, self.removeUsersAndLower(text), '')
 
 class DocumentTypeRuuslSparseBigram(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
