@@ -157,11 +157,13 @@ class DocumentTypeRuuslUnigramNounsWithMeta(DocumentType):
         self.inputUnigramWithMetaTestSetFile = Utilities.getTestFile(currentTime, DocumentType.typeRuuslUnigramWithMeta, self.numberOfExperts, bottom=True)
     def generate(self):
         for inputUnigramFile, inputUnigramWithMetaFile, outputFile in [(self.inputUnigramTrainingSetFile, self.inputUnigramWithMetaTrainingSetFile, self.outputTrainingSetFile), (self.inputUnigramTestSetFile, self.inputUnigramWithMetaTestSetFile, self.outputTestSetFile)]:
+#            Utilities.createDirectory(outputFile)
             unigramIterator, unigramWithMetaIterator = Utilities.iterateTweetsFromFileWithTerminatingNone(inputUnigramFile), Utilities.iterateTweetsFromFileWithTerminatingNone(inputUnigramWithMetaFile)
             unigramTweet, unigramWithMetaTweet = unigramIterator.next(), unigramWithMetaIterator.next()
             while unigramTweet!=None and unigramWithMetaTweet!=None:
-                print unigramTweet['id'], unigramWithMetaTweet['id']
+                print unigramTweet['document'], unigramWithMetaTweet['document']
                 unigramTweet, unigramWithMetaTweet = unigramIterator.next(), unigramWithMetaIterator.next()
+                
 #            for tweet in Utilities.iterateTweetsFromFile(inputFile):
 #                data = {}
 #                for k in DocumentType.keys: data[k]=tweet[k]
