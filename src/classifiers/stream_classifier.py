@@ -4,7 +4,6 @@ Created on Apr 17, 2011
 @author: kykamath
 '''
 import sys, math
-from classifiers.classifiers import MultiClassAUC
 sys.path.append('../')
 from datasets import DataDirection, DocumentType, TweetType
 from utilities import Utilities
@@ -12,7 +11,7 @@ from settings import Settings
 from datetime import datetime, timedelta
 from collections import defaultdict
 from operator import itemgetter
-from classifiers import classToIntMap
+from classifiers import classToIntMap, MultiClassAUC
 
 #featureMap = {}
 #notClassified = 'not_classified'
