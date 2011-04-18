@@ -148,9 +148,6 @@ class FixedWindowWithRelabeledDocumentsClassifier(FixedWindowClassifier):
         self.trainedClassifierFile = Utilities.getTrainedClassifierFile(classifierType=Classifier.typeFixedWindowWithRelabeledDocuments, **kwargs)
     def trainAndSave(self):
         Utilities.createDirectory(self.trainedClassifierFile)
-        for d in ReLabelTrainingDocuments(Utilities.getTweets(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs)).getRelabeledDocuments():
-            print d
-        exit()
         self.trainClassifier(ReLabelTrainingDocuments(Utilities.getTweets(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs)).getRelabeledDocuments())
         Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
         
