@@ -14,6 +14,7 @@ from operator import itemgetter
 
 featureMap = {}
 notClassified = 'not_classified'
+numberOfClasses = 4
 
 def extractFeatures(document):
     for feature in document:
@@ -31,21 +32,23 @@ def getFeatureProbabilites(feature):
     for classLabel, score in feature['class'].iteritems(): mapToReturn[classLabel] = float(score)/totalScore
     return mapToReturn
 def classifyTweet(tweet):
-    global featureMap, notClassified
-    print tweet
-    print tweet['document']
+    global featureMap, notClassified, numberOfClasses
+#    print tweet
+#    print tweet['document']
     tweetFeatureMap = {}
     for feature in extractFeatures(tweet['document']):
         if feature in featureMap: 
-            print feature, featureMap[feature]
+#            print feature, featureMap[feature]
             tweetFeatureMap[feature]=getFeatureProbabilites(featureMap[feature])
     perClassScores = defaultdict(float)
     for k, v in tweetFeatureMap.iteritems(): 
-        for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(score)
+        featureScore = float(numberOfClasses)/len(v)
+        print featureScore, v
+        for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
     sortedScores = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
     if sortedScores:
         classLabel, score = sortedScores[0]
-        print score
+#        print score
 #        if score > math.log(Settings.stream_classifier_class_probability_threshold): 
         return classLabel
     return notClassified
