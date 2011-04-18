@@ -97,6 +97,7 @@ class StreamClassifier(object):
         return StreamClassifier.notClassified
     def classifyForAUCM(self, tweet, perClassScores):
         tempDict = {}
+#        if perClassScores
         for classLabel, classId in classToIntMap.iteritems():
             if classLabel not in perClassScores: tempDict[classId]=None
             else: tempDict[classId]=perClassScores[classLabel]
@@ -135,7 +136,7 @@ class StreamClassifierDefault(StreamClassifier):
                 for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
         return perClassScores
 if __name__ == '__main__':
-    streamClassifier = StreamClassifierDefault(currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=25)
+    streamClassifier = StreamClassifierDefault(currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=5)
     streamClassifier.classifyingMethod = streamClassifier.classifyForAUCM
     streamClassifier.start()
     print streamClassifier.getAUCM()
