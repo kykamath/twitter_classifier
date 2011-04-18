@@ -10,7 +10,7 @@ from utilities import Utilities
 from settings import Settings
 
 def stream_classifier(**kwargs):
-    for t in Utilities.getTweets(fileNameMethod=Utilities.getStreamingSetsFile, dataDirection=DataDirection.past, **kwargs):
+    for t in Utilities.getTweets(fileNameMethod=Utilities.getStreamingSetsFile, dataDirection=DataDirection.past, completeTweets=True, **kwargs):
         print t
     
 if __name__ == '__main__':

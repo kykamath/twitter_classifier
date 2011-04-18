@@ -90,8 +90,13 @@ class Utilities:
         currentTime=kwargs['currentTime']
         fileNameMethod=kwargs['fileNameMethod']
         del kwargs['currentTime']
+        completeTweets = False
+        if 'completeTweets' in kwargs: completeTweets = True
         for i in range(kwargs['noOfDays']):
-            for tweet in Utilities.iterateTweetsFromFile(fileNameMethod(currentTime=currentTime, **kwargs)): yield (tweet['document'], tweet['class'])
+            if not completeTweets:
+                for tweet in Utilities.iterateTweetsFromFile(fileNameMethod(currentTime=currentTime, **kwargs)): yield (tweet['document'], tweet['class'])
+            else:
+                for tweet in Utilities.iterateTweetsFromFile(fileNameMethod(currentTime=currentTime, **kwargs)): yield tweet
             currentTime=currentTime+kwargs['dataDirection']*timedelta(days=1)
     @staticmethod
     def getWordsFromTweets(**kwargs):
