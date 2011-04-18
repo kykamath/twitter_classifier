@@ -148,7 +148,7 @@ class StreamingSets:
         i=1
         while data!=None:
             data = Utilities.iterateTweetsFromFile(self.inputTrainingSetFile)
-            print i
+            print data
             i+=1
 
 
