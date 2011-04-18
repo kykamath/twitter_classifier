@@ -50,7 +50,9 @@ class GibbsLDA(object):
 class ReLabelTrainingDocuments:
     numberOfTopics = 4
     def __init__(self, documents):
-        self.originalDocuments = list(documents)
+#        self.originalDocuments = list(documents)
+        for d in documents: print d
+        exit()
     def getRelabeledDocuments(self):
         def getClusterLabelsToOriginalLabelsMap(clusteredDocuments, clusterLabelsToOriginalLabelMap):
             clusterLabelsToOriginalLabelsDistribution = {}
