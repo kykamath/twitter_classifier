@@ -101,6 +101,21 @@ class AnalyzeClassifiers:
             currentDay+=timedelta(days=1)
             
     @staticmethod
+    def generateStatsObservePerformanceByRelabelingDocuments():
+        global maxLength, idealModelLength
+        currentDay = Settings.startTime
+        while currentDay<=Settings.endTime:
+            noOfDaysList = list(set([idealModelLength]).intersection(set(Utilities.getClassifierLengthsByDay(currentDay, maxLength))))
+            for noOfDays in noOfDaysList: 
+                classifier = FixedWindowWithRelabeledDocumentsClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDays)
+                classifier.load()
+                data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'classifier_length': noOfDays, 'metric': 'aucm', 'number_of_experts': Settings.numberOfExperts, 'data_type': DocumentType.typeRuuslUnigram, 'test_data_days': 1}
+                data['value'] = classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
+                print data
+#                    Utilities.writeAsJsonToFile(data, Settings.stats_to_compare_language_models)
+            currentDay+=timedelta(days=1)
+            
+    @staticmethod
     def analyzeStatsToDetermineFixedWindowLength():
         classifierLengthToScore=defaultdict(list)
         for data in Utilities.iterateJsonFromFile(Settings.stats_to_determine_fixed_window_length): classifierLengthToScore[data['classifier_length']].append(data['value'])
@@ -122,13 +137,14 @@ class AnalyzeClassifiers:
         for languageModel in languageModelToScore: print languageModel, numpy.mean(languageModelToScore[languageModel])
         
 if __name__ == '__main__':
-    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
+#    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
 #    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations()
 #    GenerateClassifiers.fixedWindowByRelabelingDocuments()
    
 #    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.generateStatsToCompareDifferentDocumentTypes()
 #    AnalyzeClassifiers.generateStatsToCompareCollocations()
+    AnalyzeClassifiers.generateStatsObservePerformanceByRelabelingDocuments()
 
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.analyzeStatsToCompareLanguageModels()
