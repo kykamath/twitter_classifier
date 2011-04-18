@@ -67,7 +67,8 @@ class ReLabelTrainingDocuments:
         self.originalDocuments = list(documents)
     def reLabel(self):
         clusteredLabels = GibbsLDA([d[0] for d in self.originalDocuments], ReLabelTrainingDocuments.numberOfTopics).getDistributionAcrossTopics()
-        print clusteredLabels
+        for ((document, originalLabel), reCalculatedLabel) in zip(self.originalDocuments, clusteredLabels.values):
+            print ((document, originalLabel), reCalculatedLabel)
         
 
 documents = [("Human machine interface for lab abc computer applications", 'politics'),
