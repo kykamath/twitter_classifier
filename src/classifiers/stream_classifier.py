@@ -13,6 +13,7 @@ from collections import defaultdict
 from operator import itemgetter
 
 featureMap = {}
+notClassified = 'not_classified'
 
 def extractFeatures(document):
     for feature in document:
@@ -30,20 +31,16 @@ def getFeatureProbabilites(feature):
     for classLabel, score in feature['class'].iteritems(): mapToReturn[classLabel] = float(score)/totalScore
     return mapToReturn
 def classifyTweet(tweet):
-    global featureMap
-    print tweet
-    flag = False
+    global featureMap, notClassified
     tweetFeatureMap = {}
     for feature in extractFeatures(tweet['document']):
-        if feature in featureMap: 
-            flag=True
-            tweetFeatureMap[feature]=getFeatureProbabilites(featureMap[feature])
-    if flag: 
-        perClassScores = defaultdict(float)
-        for k, v in tweetFeatureMap.iteritems(): 
-            for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(score)
-        print sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
-        exit()
+        if feature in featureMap: tweetFeatureMap[feature]=getFeatureProbabilites(featureMap[feature])
+    perClassScores = defaultdict(float)
+    for k, v in tweetFeatureMap.iteritems(): 
+        for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(score)
+    classLabel, score = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)[0]
+    if score > math.log(Settings.stream_classifier_class_probability_threshold): return classLabel
+    else: return notClassified
 
 def stream_classifier(**kwargs):
     firstDay = Settings.startTime+timedelta(days=1)
@@ -51,6 +48,8 @@ def stream_classifier(**kwargs):
         tweetTimeStamp = datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format)
         if tweet['tweet_type'] == TweetType.train: learnFromTweet(tweet)
         else:
-            if firstDay<tweetTimeStamp: classifyTweet(tweet)
+            if firstDay<tweetTimeStamp: 
+                print classifyTweet(tweet), tweet['class'], tweet['text']
+                exit()
 if __name__ == '__main__':
     stream_classifier(currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=1)
