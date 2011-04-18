@@ -74,7 +74,9 @@ class DocumentType(object):
         returnWords = [pattern.sub('', word) for word, tag in pos_tag(word_tokenize(sentance)) if isNoun(tag)]
         returnWords = filter(lambda w: w!='' and len(w)>2, lemmatizeWords(returnWords))
         return returnWords
-    def removeUsersAndLower(self, text): return ' '.join(filter(lambda term: not term.startswith('@'), text.lower().split()))
+    def removeUsersURLAndLower(self, text): 
+        text = ' '.join(filter(lambda x:x.find('http') == -1, text.lower().split()))
+        return ' '.join(filter(lambda term: not term.startswith('@'), text.split()))
 
 class DocumentTypeRuuslUnigram(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
@@ -99,12 +101,12 @@ class DocumentTypeRuuslTrigram(DocumentType):
 class DocumentTypeCharBigram(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
         super(DocumentTypeCharBigram, self).__init__(currentTime, DocumentType.typeCharBigram, numberOfExperts)
-    def modifyDocument(self, text): return kgram(2, self.removeUsersAndLower(text), '')
+    def modifyDocument(self, text): return kgram(2, self.removeUsersURLAndLower(text), '')
 
 class DocumentTypeCharTrigram(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
         super(DocumentTypeCharTrigram, self).__init__(currentTime, DocumentType.typeCharTrigram, numberOfExperts)
-    def modifyDocument(self, text): return kgram(3, self.removeUsersAndLower(text), '')
+    def modifyDocument(self, text): return kgram(3, self.removeUsersURLAndLower(text), '')
 
 class DocumentTypeRuuslSparseBigram(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
@@ -219,5 +221,5 @@ class CreateTrainingAndTestSets:
 
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
-    CreateTrainingAndTestSets.createModifiedData([DocumentTypeCharTrigram])
+    CreateTrainingAndTestSets.createModifiedData([DocumentTypeCharBigram])
 #    CreateTrainingAndTestSets.createStreamingData([DocumentType.typeRuuslUnigram])
