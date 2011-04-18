@@ -4,6 +4,7 @@ Created on Apr 18, 2011
 @author: kykamath
 '''
 from collections import defaultdict
+from operator import itemgetter
 import commands, os
 
 
@@ -66,9 +67,20 @@ class ReLabelTrainingDocuments:
     def __init__(self, documents):
         self.originalDocuments = list(documents)
     def reLabel(self):
-        clusteredLabels = GibbsLDA([d[0] for d in self.originalDocuments], ReLabelTrainingDocuments.numberOfTopics).getDistributionAcrossTopics()
-        for ((document, originalLabel), reCalculatedLabel) in zip(self.originalDocuments, clusteredLabels.values()):
-            print ((document, originalLabel), reCalculatedLabel)
+        relabeledDocuments = []
+        clusteredDocuments = GibbsLDA([d[0] for d in self.originalDocuments], ReLabelTrainingDocuments.numberOfTopics).getDistributionAcrossTopics()
+        clusterLabelsToOriginalLabelsDistribution = {}
+        for ((document, originalLabel), clusterLabel) in zip(self.originalDocuments, clusteredDocuments.values()):
+            if clusterLabel not in clusterLabelsToOriginalLabelsDistribution: clusterLabelsToOriginalLabelsDistribution[clusterLabel] = defaultdict(int)
+            clusterLabelsToOriginalLabelsDistribution[clusterLabel][originalLabel]+=1
+        clusterLabelsToOriginalLabelMap = {}
+        for clusterLabel, distribution in clusterLabelsToOriginalLabelsDistribution.iteritems():
+            clusterLabelsToOriginalLabelMap[clusterLabel] = sorted(distribution.iteritems(), key=itemgetter(1), reverse=True)[0][0]
+        for ((document, originalLabel), clusterLabel) in zip(self.originalDocuments, clusteredDocuments.values()):
+            relabeledDocuments.append((document, clusterLabelsToOriginalLabelMap[clusterLabel]))
+            print (document, originalLabel)
+            print '**', (document, clusterLabelsToOriginalLabelMap[clusterLabel])
+            
         
 
 documents = [("Human machine interface for lab abc computer applications", 'politics'),
