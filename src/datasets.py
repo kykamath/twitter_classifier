@@ -221,5 +221,5 @@ class CreateTrainingAndTestSets:
 
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
-    CreateTrainingAndTestSets.createModifiedData([DocumentTypeCharBigram])
+    CreateTrainingAndTestSets.createModifiedData([DocumentTypeCharTrigram])
 #    CreateTrainingAndTestSets.createStreamingData([DocumentType.typeRuuslUnigram])
