@@ -24,6 +24,7 @@ class DocumentType(object):
     typeRuuslSparseBigram = 'ruusl_sparse_bigram'
     typeRuuslUnigramWithMeta = 'ruusl_unigram_with_meta'
     typeRuuslUnigramNouns = 'ruusl_unigram_nouns'
+    typeRuuslUnigramNounsWithMeta = 'ruusl_unigram_nouns_with_meta'
     typeCharBigram = 'char_bigram'
     typeCharTrigram = 'char_trigram'
     
@@ -123,8 +124,6 @@ class DocumentTypeRuuslUnigramWithMeta(DocumentType):
         super(DocumentTypeRuuslUnigramWithMeta, self).__init__(currentTime, DocumentType.typeRuuslUnigramWithMeta, numberOfExperts)
         self.inputTrainingSetFile = Utilities.getTrainingFile(currentTime, DocumentType.typeRuuslUnigram, self.numberOfExperts)
         self.inputTestSetFile = Utilities.getTestFile(currentTime, DocumentType.typeRuuslUnigram, self.numberOfExperts, bottom=True)
-#    def modifyDocument(self, text): 
-#        return self.getUnigrams(text)+DocumentTypeRuuslUnigramWithMeta.getUrlMeta(text)
     def generate(self):
         for inputFile, outputFile in [(self.inputTrainingSetFile, self.outputTrainingSetFile), (self.inputTestSetFile, self.outputTestSetFile)]:
             for tweet in Utilities.iterateTweetsFromFile(inputFile):
@@ -148,6 +147,27 @@ class DocumentTypeRuuslUnigramWithMeta(DocumentType):
                 return meta
             else: return []
         except : return []
+
+class DocumentTypeRuuslUnigramNounsWithMeta(DocumentType):
+    def __init__(self, currentTime, numberOfExperts): 
+        super(DocumentTypeRuuslUnigramNounsWithMeta, self).__init__(currentTime, DocumentType.typeRuuslUnigramNounsWithMeta, numberOfExperts)
+        self.inputUnigramTrainingSetFile = Utilities.getTrainingFile(currentTime, DocumentType.typeRuuslUnigram, self.numberOfExperts)
+        self.inputUnigramTestSetFile = Utilities.getTestFile(currentTime, DocumentType.typeRuuslUnigram, self.numberOfExperts, bottom=True)
+        self.inputUnigramWithMetaTrainingSetFile = Utilities.getTrainingFile(currentTime, DocumentType.typeRuuslUnigramWithMeta, self.numberOfExperts)
+        self.inputUnigramWithMetaTestSetFile = Utilities.getTestFile(currentTime, DocumentType.typeRuuslUnigramWithMeta, self.numberOfExperts, bottom=True)
+    def generate(self):
+        for inputUnigramFile, inputUnigramWithMetaFile, outputFile in [(self.inputUnigramTrainingSetFile, self.inputUnigramWithMetaTrainingSetFile, self.outputTrainingSetFile), (self.inputUnigramTestSetFile, self.inputUnigramWithMetaTestSetFile, self.outputTestSetFile)]:
+            unigramIterator, unigramWithMetaIterator = Utilities.iterateTweetsFromFileWithTerminatingNone(inputUnigramFile), Utilities.iterateTweetsFromFileWithTerminatingNone(inputUnigramWithMetaFile)
+            unigramTweet, unigramWithMetaTweet = unigramIterator.next(), unigramWithMetaIterator.next()
+            while unigramTweet!=None and unigramWithMetaTweet!=None:
+                print unigramTweet['id'], unigramWithMetaTweet['id']
+                unigramTweet, unigramWithMetaTweet = unigramIterator.next(), unigramWithMetaIterator.next()
+#            for tweet in Utilities.iterateTweetsFromFile(inputFile):
+#                data = {}
+#                for k in DocumentType.keys: data[k]=tweet[k]
+#                data['screen_name'] = tweet['screen_name']; data['user_id'] = tweet['user_id']
+#                data['document'] = tweet['document']+DocumentTypeRuuslUnigramWithMeta.getUrlMeta(data['text'])
+#                Utilities.writeAsJsonToFile(data, outputFile)
         
 class StreamingSets:
     def __init__(self, currentTime, dataType, numberOfExperts):
@@ -209,6 +229,7 @@ class CreateTrainingAndTestSets:
             for dataType in dataTypes: 
                 print currentTime, dataType
                 dataType(currentTime, Settings.numberOfExperts).generate()
+                exit()
             currentTime+=timedelta(days=1)
     @staticmethod
     def createStreamingData(dataTypes):
@@ -221,5 +242,5 @@ class CreateTrainingAndTestSets:
 
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
-    CreateTrainingAndTestSets.createModifiedData([DocumentTypeCharTrigram])
+    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigramNounsWithMeta])
 #    CreateTrainingAndTestSets.createStreamingData([DocumentType.typeRuuslUnigram])
