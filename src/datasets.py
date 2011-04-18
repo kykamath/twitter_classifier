@@ -153,15 +153,17 @@ class DocumentTypeRuuslUnigramNounsWithMeta(DocumentType):
         super(DocumentTypeRuuslUnigramNounsWithMeta, self).__init__(currentTime, DocumentType.typeRuuslUnigramNounsWithMeta, numberOfExperts)
         self.inputUnigramTrainingSetFile = Utilities.getTrainingFile(currentTime, DocumentType.typeRuuslUnigram, self.numberOfExperts)
         self.inputUnigramTestSetFile = Utilities.getTestFile(currentTime, DocumentType.typeRuuslUnigram, self.numberOfExperts, bottom=True)
+        self.inputUnigramNounsTrainingSetFile = Utilities.getTrainingFile(currentTime, DocumentType.typeRuuslUnigramNouns, self.numberOfExperts)
+        self.inputUnigramNounsTestSetFile = Utilities.getTestFile(currentTime, DocumentType.typeRuuslUnigramNouns, self.numberOfExperts, bottom=True)
         self.inputUnigramWithMetaTrainingSetFile = Utilities.getTrainingFile(currentTime, DocumentType.typeRuuslUnigramWithMeta, self.numberOfExperts)
         self.inputUnigramWithMetaTestSetFile = Utilities.getTestFile(currentTime, DocumentType.typeRuuslUnigramWithMeta, self.numberOfExperts, bottom=True)
     def generate(self):
-        for inputUnigramFile, inputUnigramWithMetaFile, outputFile in [(self.inputUnigramTrainingSetFile, self.inputUnigramWithMetaTrainingSetFile, self.outputTrainingSetFile), (self.inputUnigramTestSetFile, self.inputUnigramWithMetaTestSetFile, self.outputTestSetFile)]:
+        for inputUnigramFile, inputUnigramNounsFile, inputUnigramWithMetaFile, outputFile in [(self.inputUnigramTrainingSetFile, self.inputUnigramNounsTrainingSetFile, self.inputUnigramWithMetaTrainingSetFile, self.outputTrainingSetFile), (self.inputUnigramTestSetFile, self.inputUnigramNounsTestSetFile, self.inputUnigramWithMetaTestSetFile, self.outputTestSetFile)]:
 #            Utilities.createDirectory(outputFile)
-            unigramIterator, unigramWithMetaIterator = Utilities.iterateTweetsFromFileWithTerminatingNone(inputUnigramFile), Utilities.iterateTweetsFromFileWithTerminatingNone(inputUnigramWithMetaFile)
-            unigramTweet, unigramWithMetaTweet = unigramIterator.next(), unigramWithMetaIterator.next()
+            unigramIterator, unigramNounsIterator, unigramWithMetaIterator = Utilities.iterateTweetsFromFileWithTerminatingNone(inputUnigramFile), Utilities.iterateTweetsFromFileWithTerminatingNone(inputUnigramNounsFile), Utilities.iterateTweetsFromFileWithTerminatingNone(inputUnigramWithMetaFile)
+            unigramTweet, unigramNounTweet, unigramWithMetaTweet = unigramIterator.next(), unigramNounsIterator.next(), unigramWithMetaIterator.next()
             while unigramTweet!=None and unigramWithMetaTweet!=None:
-                print unigramTweet['document'], unigramWithMetaTweet['document'], unigramWithMetaTweet['document'][len(unigramTweet['document']):]
+                print unigramNounTweet['document'], unigramWithMetaTweet['document'][len(unigramTweet['document']):]
                 unigramTweet, unigramWithMetaTweet = unigramIterator.next(), unigramWithMetaIterator.next()
                 
 #            for tweet in Utilities.iterateTweetsFromFile(inputFile):
