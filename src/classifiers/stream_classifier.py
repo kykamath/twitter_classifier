@@ -41,6 +41,7 @@ def classifyTweet(tweet):
     sortedScores = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
     if sortedScores:
         classLabel, score = sortedScores[0]
+        print score
 #        if score > math.log(Settings.stream_classifier_class_probability_threshold): 
         return classLabel
     return notClassified
