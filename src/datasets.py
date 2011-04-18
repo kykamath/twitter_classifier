@@ -140,7 +140,8 @@ class StreamingSets:
         self.inputTrainingSetFile = Utilities.getTrainingFile(currentTime, dataType, self.numberOfExperts)
         self.inputTestSetFile = Utilities.getTestFile(currentTime, dataType, self.numberOfExperts, bottom=True)
         self.outputCombinedFile = Utilities.getStreamingSetsFile(currentTime, dataType, numberOfExperts)
-        Utilities.createDirectory(self.outputTrainingSetFile), Utilities.createDirectory(self.outputTestSetFile) 
+        print self.outputCombinedFile
+#        Utilities.createDirectory(self.outputTrainingSetFile), Utilities.createDirectory(self.outputTestSetFile) 
     
     def generate(self):
         data = ''
