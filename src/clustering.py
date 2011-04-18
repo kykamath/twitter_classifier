@@ -73,4 +73,4 @@ documents = [("Human machine interface for lab abc computer applications", 'poli
                   ("System and human system engineering testing of EPS", 'entertainment'),
                   ("Relation of user perceived response time to error measurement", 'technology'),
                    ("Graph minors A survey", 'technology')]
-pprint.pprint(list(ReLabelTrainingDocuments(documents).reLabel()))
+pprint.pprint(list(ReLabelTrainingDocuments(documents).getRelabeledDocuments()))
