@@ -4,6 +4,7 @@ Created on Mar 18, 2011
 @author: kykamath
 '''
 import sys
+from classifiers.relabel_documents import ReLabelTrainingDocuments
 sys.path.append('../')
 from collections import defaultdict
 from settings import Settings
@@ -51,6 +52,7 @@ class MultiClassAUC:
 class Classifier(object):
     typeFixedWindow = 'fixed_window'
     typeFixedWindowWithCollocations = 'fixed_window_with_collocations'
+    typeFixedWindowWithRelabeledDocuments = 'fixed_window_with_relabeled_documents'
     
     def __init__(self): 
         self.nltkClassifier = MaxentClassifier
@@ -139,6 +141,19 @@ class FixedWindowWithCollocationsClassifier(FixedWindowClassifier):
         collocations.load()
         self.trainClassifier(Utilities.getTweetsWithCollocations(collocations, fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs))
         Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
+
+class FixedWindowWithRelabeledDocumentsClassifier(FixedWindowClassifier):
+    def __init__(self, **kwargs): 
+        super(FixedWindowWithRelabeledDocumentsClassifier, self).__init__(**kwargs)
+        self.trainedClassifierFile = Utilities.getTrainedClassifierFile(classifierType=Classifier.typeFixedWindowWithRelabeledDocuments, **kwargs)
+    def trainAndSave(self):
+        Utilities.createDirectory(self.trainedClassifierFile)
+        for d in ReLabelTrainingDocuments(Utilities.getTweets(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs)).getRelabeledDocuments():
+            print d
+        exit()
+        self.trainClassifier(ReLabelTrainingDocuments(Utilities.getTweets(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs)).getRelabeledDocuments())
+        Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
+        
 
 class TestDocuments:
 #    TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=4)

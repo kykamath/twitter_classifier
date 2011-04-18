@@ -9,7 +9,7 @@ from settings import Settings
 from datasets import DocumentType
 from datetime import timedelta, datetime
 from classifiers.classifiers import FixedWindowClassifier, FixedWindowWithCollocationsClassifier, TestDocuments,\
-    TestDocumentsWithCollocations
+    TestDocumentsWithCollocations, FixedWindowWithRelabeledDocumentsClassifier
 from utilities import Utilities
 from collections import defaultdict
 from collocations import Collocations
@@ -40,6 +40,15 @@ class GenerateClassifiers:
             print currentDay, noOfDaysList
             for noOfDays in noOfDaysList: 
                 for collocationMeasure in collocationMeasures: FixedWindowWithCollocationsClassifier(collocationMeasure=collocationMeasure, currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=dataType, noOfDays=noOfDays).trainAndSave()
+            currentDay+=timedelta(days=1)
+    @staticmethod
+    def fixedWindowByRelabelingDocuments():
+        global maxLength, idealModelLength
+        currentDay = Settings.startTime
+        while currentDay<=Settings.endTime:
+            noOfDaysList = list(set([idealModelLength]).intersection(set(Utilities.getClassifierLengthsByDay(currentDay, maxLength))))
+            print currentDay, noOfDaysList
+            for noOfDays in noOfDaysList: FixedWindowWithRelabeledDocumentsClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDays).trainAndSave()
             currentDay+=timedelta(days=1)
 
 class AnalyzeClassifiers:
@@ -113,9 +122,10 @@ class AnalyzeClassifiers:
         for languageModel in languageModelToScore: print languageModel, numpy.mean(languageModelToScore[languageModel])
         
 if __name__ == '__main__':
-    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
+#    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
 #    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations()
-    
+    GenerateClassifiers.fixedWindowByRelabelingDocuments()
+   
 #    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.generateStatsToCompareLanguageModels()
 #    AnalyzeClassifiers.generateStatsToCompareCollocations()
