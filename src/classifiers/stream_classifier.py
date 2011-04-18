@@ -86,10 +86,10 @@ class StreamClassifier(object):
                 if firstDay<tweetTimeStamp: 
                     self.classifyTweet(tweet)
                     print i, self.classifyingMethod(tweet, self.classifyTweet(tweet)), tweet['class'], tweet['text']
-                    if i==25: 
-                        print self.getAUCM()
-                        exit()
-                    i+=1
+#                    if i==25: 
+#                        print self.getAUCM()
+#                        exit()
+#                    i+=1
     def classify(self, tweet, perClassScores):
         sortedScores = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
         if sortedScores: return sortedScores[0][0]
@@ -134,6 +134,7 @@ class StreamClassifierDefault(StreamClassifier):
                 for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
         return perClassScores
 if __name__ == '__main__':
-    streamClassifier = StreamClassifierDefault(currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=3)
+    streamClassifier = StreamClassifierDefault(currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=2)
     streamClassifier.classifyingMethod = streamClassifier.classifyForAUCM
     streamClassifier.start()
+    streamClassifier.getAUCM()
