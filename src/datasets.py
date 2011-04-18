@@ -25,6 +25,7 @@ class DocumentType(object):
     typeRuuslUnigramWithMeta = 'ruusl_unigram_with_meta'
     typeRuuslUnigramNouns = 'ruusl_unigram_nouns'
     typeCharBigram = 'char_bigram'
+    typeCharTrigram = 'char_trigram'
     
     keys = ['class', 'text', 'created_at', 'id']
 
@@ -98,6 +99,11 @@ class DocumentTypeRuuslTrigram(DocumentType):
 class DocumentTypeCharBigram(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
         super(DocumentTypeCharBigram, self).__init__(currentTime, DocumentType.typeCharBigram, numberOfExperts)
+    def modifyDocument(self, text): return kgram(2, self.removeUsersAndLower(text), '')
+
+class DocumentTypeCharTrigram(DocumentType):
+    def __init__(self, currentTime, numberOfExperts): 
+        super(DocumentTypeCharTrigram, self).__init__(currentTime, DocumentType.typeCharTrigram, numberOfExperts)
     def modifyDocument(self, text): return kgram(2, self.removeUsersAndLower(text), '')
 
 class DocumentTypeRuuslSparseBigram(DocumentType):
@@ -213,5 +219,5 @@ class CreateTrainingAndTestSets:
 
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
-    CreateTrainingAndTestSets.createModifiedData([DocumentTypeCharBigram])
+    CreateTrainingAndTestSets.createModifiedData([DocumentTypeCharTrigram])
 #    CreateTrainingAndTestSets.createStreamingData([DocumentType.typeRuuslUnigram])
