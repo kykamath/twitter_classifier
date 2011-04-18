@@ -66,9 +66,9 @@ class AnalyzeClassifiers:
             currentDay+=timedelta(days=1)
     
     @staticmethod
-    def generateStatsToCompareLanguageModels():
+    def generateStatsToCompareDifferentDocumentTypes():
         global maxLength, idealModelLength
-        dataTypes = [DocumentType.typeRuuslUnigram, DocumentType.typeRuuslUnigramNouns]
+        dataTypes = [DocumentType.typeRuuslUnigram, DocumentType.typeCharBigram, DocumentType.typeCharTrigram]
         currentDay = Settings.startTime
         while currentDay<=Settings.endTime:
             noOfDaysList = list(set([idealModelLength]).intersection(set(Utilities.getClassifierLengthsByDay(currentDay, maxLength))))
@@ -124,10 +124,10 @@ class AnalyzeClassifiers:
 if __name__ == '__main__':
 #    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
 #    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations()
-    GenerateClassifiers.fixedWindowByRelabelingDocuments()
+#    GenerateClassifiers.fixedWindowByRelabelingDocuments()
    
 #    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
-#    AnalyzeClassifiers.generateStatsToCompareLanguageModels()
+    AnalyzeClassifiers.generateStatsToCompareDifferentDocumentTypes()
 #    AnalyzeClassifiers.generateStatsToCompareCollocations()
 
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
