@@ -9,6 +9,23 @@ from datasets import DataDirection, DocumentType, TweetType
 from utilities import Utilities
 from settings import Settings
 from datetime import datetime, timedelta
+from collections import defaultdict
+
+featureMap = {}
+
+def learnFromTweet(tweet):
+    classLabel = tweet['class']
+    for feature in tweet['document']:
+        if feature not in featureMap: featureMap = {'stats': {}, 'class': defaultdict(int)}
+        featureMap[feature]['class'][classLabel]+=1
+def classifyTweet(tweet):
+    print tweet
+    flag = False
+    for feature in tweet['document']:
+        if feature in featureMap: 
+            flag=True
+            print feature, featureMap[feature]
+    if flag: exit()
 
 def stream_classifier(**kwargs):
     firstDay = Settings.startTime+timedelta(days=1)
