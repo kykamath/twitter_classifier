@@ -40,7 +40,7 @@ def classifyTweet(tweet):
     if flag: 
         perClassScores = defaultdict(float)
         for k, v in tweetFeatureMap.iteritems(): 
-            for classLabel, score in v: perClassScores[classLabel]+=math.log(score)
+            for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(score)
         for k, v in perClassScores.iteritems(): print k, v
         exit()
 
