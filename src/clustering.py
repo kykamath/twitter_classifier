@@ -67,22 +67,19 @@ class ReLabelTrainingDocuments:
     def __init__(self, documents):
         self.originalDocuments = list(documents)
     def reLabel(self):
-        relabeledDocuments = []
+        def getClusterLabelsToOriginalLabelsMap(clusteredDocuments, clusterLabelsToOriginalLabelMap):
+            clusterLabelsToOriginalLabelsDistribution = {}
+            for ((document, originalLabel), clusterLabel) in zip(self.originalDocuments, clusteredDocuments.values()):
+                if clusterLabel not in clusterLabelsToOriginalLabelsDistribution: clusterLabelsToOriginalLabelsDistribution[clusterLabel] = defaultdict(int)
+                clusterLabelsToOriginalLabelsDistribution[clusterLabel][originalLabel]+=1
+            for clusterLabel, distribution in clusterLabelsToOriginalLabelsDistribution.iteritems():
+                clusterLabelsToOriginalLabelMap[clusterLabel] = sorted(distribution.iteritems(), key=itemgetter(1), reverse=True)[0][0]
+        
+        relabeledDocuments, clusterLabelsToOriginalLabelMap = [], {}
         clusteredDocuments = GibbsLDA([d[0] for d in self.originalDocuments], ReLabelTrainingDocuments.numberOfTopics).getDistributionAcrossTopics()
-        clusterLabelsToOriginalLabelsDistribution = {}
-        for ((document, originalLabel), clusterLabel) in zip(self.originalDocuments, clusteredDocuments.values()):
-            if clusterLabel not in clusterLabelsToOriginalLabelsDistribution: clusterLabelsToOriginalLabelsDistribution[clusterLabel] = defaultdict(int)
-            clusterLabelsToOriginalLabelsDistribution[clusterLabel][originalLabel]+=1
-        pprint.pprint(clusterLabelsToOriginalLabelsDistribution)
-        clusterLabelsToOriginalLabelMap = {}
-        for clusterLabel, distribution in clusterLabelsToOriginalLabelsDistribution.iteritems():
-            clusterLabelsToOriginalLabelMap[clusterLabel] = sorted(distribution.iteritems(), key=itemgetter(1), reverse=True)[0][0]
-        pprint.pprint(clusterLabelsToOriginalLabelMap)
-        for ((document, originalLabel), clusterLabel) in zip(self.originalDocuments, clusteredDocuments.values()):
-            relabeledDocuments.append((document, clusterLabelsToOriginalLabelMap[clusterLabel]))
-            print ((document, originalLabel), clusterLabel)
-            print '**', (document, clusterLabelsToOriginalLabelMap[clusterLabel])
-            
+        getClusterLabelsToOriginalLabelsMap(clusteredDocuments, clusterLabelsToOriginalLabelMap)
+        for ((document, originalLabel), clusterLabel) in zip(self.originalDocuments, clusteredDocuments.values()): relabeledDocuments.append((document, clusterLabelsToOriginalLabelMap[clusterLabel]))
+        pprint.pprint(relabeledDocuments)
         
 
 documents = [("Human machine interface for lab abc computer applications", 'politics'),
