@@ -6,13 +6,14 @@ Created on Mar 18, 2011
 import cjson, re, urllib2
 from utilities import ExpertUsers, Utilities
 from settings import Settings
-from datetime import timedelta
+from datetime import timedelta, datetime
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk import pos_tag, word_tokenize
 
 def kgram(k, text): return [' '.join(text[i:i+k]) for i in range(len(text)) if len(text[i:i+k])==k]
 
 class DataDirection: future = 1; past=-1
+class TweetType: train = 'train'; test='test'
 
 class DocumentType(object):
     typeRaw = 'raw' # Original file
@@ -140,16 +141,27 @@ class StreamingSets:
         self.inputTrainingSetFile = Utilities.getTrainingFile(currentTime, dataType, self.numberOfExperts)
         self.inputTestSetFile = Utilities.getTestFile(currentTime, dataType, self.numberOfExperts, bottom=True)
         self.outputCombinedFile = Utilities.getStreamingSetsFile(currentTime, dataType, numberOfExperts)
-        print self.outputCombinedFile
-#        Utilities.createDirectory(self.outputTrainingSetFile), Utilities.createDirectory(self.outputTestSetFile) 
+        Utilities.createDirectory(self.outputCombinedFile)
     
     def generate(self):
-        trainingFileIterator = Utilities.iterateTweetsFromFile(self.inputTrainingSetFile)
-        data = trainingFileIterator.next()
-        while data!=None:
-            print data
-            data = trainingFileIterator.next()
-
+        def writeTweetAndGetNextTweet(tweet, tweetType, iterator):
+            tweet['tweet_type'] = tweetType
+            Utilities.writeAsJsonToFile(tweet, self.outputCombinedFile)
+            return iterator.next()
+        trainingFileIterator = Utilities.iterateTweetsFromFileWithTerminatingNone(self.inputTrainingSetFile)
+        testFileIterator = Utilities.iterateTweetsFromFileWithTerminatingNone(self.inputTestSetFile)
+        trainingTweet, testTweet = trainingFileIterator.next(), testFileIterator.next()
+        trainingTime, testTime = None, None
+        while trainingTweet!=None or testTweet!=None:
+            if trainingTweet != None: trainingTime = datetime.strptime(trainingTweet['created_at'], Settings.twitter_api_time_format)
+            if testTweet != None: testTime = datetime.strptime(testTweet['created_at'], Settings.twitter_api_time_format)
+            if  trainingTweet!=None and testTweet!=None:
+                if testTime<trainingTime: testTweet = writeTweetAndGetNextTweet(testTweet, TweetType.test, testFileIterator)
+                else: trainingTweet = writeTweetAndGetNextTweet(trainingTweet, TweetType.train, trainingFileIterator)
+            elif trainingTweet==None:
+                while testTweet!=None: testTweet = writeTweetAndGetNextTweet(testTweet, TweetType.test, testFileIterator)
+            else: 
+                while trainingTweet!=None: trainingTweet = writeTweetAndGetNextTweet(trainingTweet, TweetType.train, trainingFileIterator)
 
 class CreateTrainingAndTestSets:
     @staticmethod
@@ -174,7 +186,6 @@ class CreateTrainingAndTestSets:
                     if tweet['user']['id_str'] in allExpertsTop.list: Utilities.writeAsJsonToFile(tweet, trainingFile)
                     else: Utilities.writeAsJsonToFile(tweet, testFile)
             currentTime+=timedelta(days=1)
-    
     @staticmethod
     def createModifiedData(dataTypes):
         currentTime = Settings.startTime
@@ -184,19 +195,7 @@ class CreateTrainingAndTestSets:
                 dataType(currentTime, Settings.numberOfExperts).generate()
             currentTime+=timedelta(days=1)
 
-def gen():
-        for i in range(5): 
-            yield i
-        yield None
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
 #    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigramNouns])
     StreamingSets(Settings.startTime, DocumentType.typeRuuslUnigram, Settings.numberOfExperts).generate()
-#    for i in gen(): print i
-#    n = gen()
-#    data = n.next()
-#    while data!=None:
-#        print data
-#        data = n.next()
-#    try:
-#    except StopIteration: print None 

@@ -38,6 +38,9 @@ class Utilities:
                 data = cjson.decode(line)
                 if 'text' in data: yield data
             except: pass
+    @staticmethod
+    def iterateTweetsFromFileWithTerminatingNone(file):
+        for line in Utilities.iterateTweetsFromFile(file): yield line
         yield None
     @staticmethod
     def iterateJsonFromFile(file):
