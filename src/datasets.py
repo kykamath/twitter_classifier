@@ -159,17 +159,16 @@ class DocumentTypeRuuslUnigramNounsWithMeta(DocumentType):
         self.inputUnigramWithMetaTestSetFile = Utilities.getTestFile(currentTime, DocumentType.typeRuuslUnigramWithMeta, self.numberOfExperts, bottom=True)
     def generate(self):
         for inputUnigramFile, inputUnigramNounsFile, inputUnigramWithMetaFile, outputFile in [(self.inputUnigramTrainingSetFile, self.inputUnigramNounsTrainingSetFile, self.inputUnigramWithMetaTrainingSetFile, self.outputTrainingSetFile), (self.inputUnigramTestSetFile, self.inputUnigramNounsTestSetFile, self.inputUnigramWithMetaTestSetFile, self.outputTestSetFile)]:
-            print outputFile
-#            Utilities.createDirectory(outputFile)
-#            unigramIterator, unigramNounsIterator, unigramWithMetaIterator = Utilities.iterateTweetsFromFileWithTerminatingNone(inputUnigramFile), Utilities.iterateTweetsFromFileWithTerminatingNone(inputUnigramNounsFile), Utilities.iterateTweetsFromFileWithTerminatingNone(inputUnigramWithMetaFile)
-#            unigramTweet, unigramNounTweet, unigramWithMetaTweet = unigramIterator.next(), unigramNounsIterator.next(), unigramWithMetaIterator.next()
-#            while unigramTweet!=None and unigramWithMetaTweet!=None and unigramNounTweet!=None:
-#                data = {}
-#                for k in DocumentType.keys: data[k]=unigramNounTweet[k]
-#                data['screen_name'] = unigramNounTweet['screen_name']; data['user_id'] = unigramNounTweet['user_id']
-#                unigramNounTweet['document'] = unigramNounTweet['document']+unigramWithMetaTweet['document'][len(unigramTweet['document']):]
-#                Utilities.writeAsJsonToFile(data, outputFile)
-#                unigramTweet, unigramNounTweet, unigramWithMetaTweet = unigramIterator.next(), unigramNounsIterator.next(), unigramWithMetaIterator.next()
+            Utilities.createDirectory(outputFile)
+            unigramIterator, unigramNounsIterator, unigramWithMetaIterator = Utilities.iterateTweetsFromFileWithTerminatingNone(inputUnigramFile), Utilities.iterateTweetsFromFileWithTerminatingNone(inputUnigramNounsFile), Utilities.iterateTweetsFromFileWithTerminatingNone(inputUnigramWithMetaFile)
+            unigramTweet, unigramNounTweet, unigramWithMetaTweet = unigramIterator.next(), unigramNounsIterator.next(), unigramWithMetaIterator.next()
+            while unigramTweet!=None and unigramWithMetaTweet!=None and unigramNounTweet!=None:
+                data = {}
+                for k in DocumentType.keys: data[k]=unigramNounTweet[k]
+                data['screen_name'] = unigramNounTweet['screen_name']; data['user_id'] = unigramNounTweet['user_id']
+                unigramNounTweet['document'] = unigramNounTweet['document']+unigramWithMetaTweet['document'][len(unigramTweet['document']):]
+                Utilities.writeAsJsonToFile(data, outputFile)
+                unigramTweet, unigramNounTweet, unigramWithMetaTweet = unigramIterator.next(), unigramNounsIterator.next(), unigramWithMetaIterator.next()
         
 class StreamingSets:
     def __init__(self, currentTime, dataType, numberOfExperts):
@@ -231,7 +230,6 @@ class CreateTrainingAndTestSets:
             for dataType in dataTypes: 
                 print currentTime, dataType
                 dataType(currentTime, Settings.numberOfExperts).generate()
-                exit()
             currentTime+=timedelta(days=1)
     @staticmethod
     def createStreamingData(dataTypes):
