@@ -42,6 +42,7 @@ def classifyTweet(tweet):
     if sortedScores:
         classLabel, score = sortedScores[0]
         print score
+        print featureMap['eyecon']
 #        if score > math.log(Settings.stream_classifier_class_probability_threshold): 
         return classLabel
     return notClassified
