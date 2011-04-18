@@ -73,6 +73,7 @@ class DocumentType(object):
         returnWords = [pattern.sub('', word) for word, tag in pos_tag(word_tokenize(sentance)) if isNoun(tag)]
         returnWords = filter(lambda w: w!='' and len(w)>2, lemmatizeWords(returnWords))
         return returnWords
+    def removeUsersAndLower(self, text): return ' '.join(filter(lambda term: not term.startswith('@'), text.lower().split()))
 
 class DocumentTypeRuuslUnigram(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
@@ -97,7 +98,7 @@ class DocumentTypeRuuslTrigram(DocumentType):
 class DocumentTypeCharBigram(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
         super(DocumentTypeCharBigram, self).__init__(currentTime, DocumentType.typeCharBigram, numberOfExperts)
-    def modifyDocument(self, text): return kgram(2, text, '')
+    def modifyDocument(self, text): return kgram(2, self.removeUsersAndLower(text), '')
 
 class DocumentTypeRuuslSparseBigram(DocumentType):
     def __init__(self, currentTime, numberOfExperts): 
