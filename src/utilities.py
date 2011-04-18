@@ -83,7 +83,7 @@ class Utilities:
     def getCollocationsFile(measureType, currentTime, dataType, numberOfExperts, noOfDays, **kwargs):
         return Settings.twitterClassifierCollocationsFolder +'%s/%s/%s/%s/%s'%(measureType, numberOfExperts, dataType, Utilities.getDataFile(currentTime), noOfDays)
     @staticmethod
-    def getStreamingSetsFile(currentTime, dataType, numberOfExperts): 
+    def getStreamingSetsFile(currentTime, dataType, numberOfExperts, **kwargs): 
         return Settings.twitterClassifierStreamingSetsFolder+'%s/%s/%s'%(numberOfExperts, dataType, Utilities.getDataFile(currentTime))
     @staticmethod
     def getTweets(**kwargs):
