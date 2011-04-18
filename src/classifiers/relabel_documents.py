@@ -41,11 +41,11 @@ class GibbsLDA(object):
     def getDistributionAcrossTopics(self):
         directory = '/tmp/' + commands.getoutput('dd if=/dev/urandom count=128 bs=1 2>&1 | md5sum | cut -b-20')
         fileName = self._createDataFile(directory)
-        print 'lda -est -alpha 0.1 -beta 0.1 -ntopics %s -niters 1000 -twords 20 -savestep 2001 -dfile %s' % (str(self.numberOfTopics), fileName) 
         os.system('lda -est -alpha 0.1 -beta 0.1 -ntopics %s -niters 1000 -twords 20 -savestep 2001 -dfile %s' % (str(self.numberOfTopics), fileName))
         self._getDocumentDistribution(directory)
 #        self._getTopWords(directory)
-        os.system('rm -rf %s' % directory)
+#        os.system('rm -rf %s' % directory)
+        print 'lda -est -alpha 0.1 -beta 0.1 -ntopics %s -niters 1000 -twords 20 -savestep 2001 -dfile %s' % (str(self.numberOfTopics), fileName) 
         return self.distribution
         
 class ReLabelTrainingDocuments:
