@@ -166,7 +166,7 @@ class DocumentTypeRuuslUnigramNounsWithMeta(DocumentType):
                 data = {}
                 for k in DocumentType.keys: data[k]=unigramNounTweet[k]
                 data['screen_name'] = unigramNounTweet['screen_name']; data['user_id'] = unigramNounTweet['user_id']
-                unigramNounTweet['document'] = unigramNounTweet['document']+unigramWithMetaTweet['document'][len(unigramTweet['document']):]
+                data['document'] = unigramNounTweet['document']+unigramWithMetaTweet['document'][len(unigramTweet['document']):]
                 Utilities.writeAsJsonToFile(data, outputFile)
                 unigramTweet, unigramNounTweet, unigramWithMetaTweet = unigramIterator.next(), unigramNounsIterator.next(), unigramWithMetaIterator.next()
         
