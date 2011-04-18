@@ -96,7 +96,10 @@ class StreamClassifier(object):
         return StreamClassifier.notClassified
     def classifyForAUCM(self, tweet, perClassScores):
         tempDict = {}
-        [tempDict.setdefault(classToIntMap[k], v) for k, v in perClassScores.iteritems() ]
+        for classLabel, classId in classToIntMap:
+            if classLabel not in perClassScores: tempDict[classId]=None
+            else: tempDict[classId]=perClassScores[classLabel]
+#        [tempDict.setdefault(classToIntMap[k], v) for k, v in perClassScores.iteritems() ]
         self.classifiedDocuments.append((self.numberOfTestTweets, classToIntMap[tweet['class']], tempDict))
         self.numberOfTestTweets+=1
     def getAUCM(self): return MultiClassAUC(self.classifiedDocuments).getMRevised()
