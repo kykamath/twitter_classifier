@@ -3,8 +3,13 @@ Created on Mar 18, 2011
 
 @author: kykamath
 '''
+import os
 from datetime import datetime
+
 class Settings:
+    applicationSourceDirectory = '/'.join(os.path.realpath(__file__).split('/')[:-1])+'/'
+    applicationCommonFilesFolder = applicationSourceDirectory+'common_files/'
+    
     twitterDataFolder = '/mnt/chevron/kykamath/data/twitter/'
     twitterUsersTweetsFolder = '%susers/tweets/'%twitterDataFolder
     twitterClassifierTrainingSetsFolder = '%sclassifier/training_sets/'%twitterDataFolder
@@ -12,7 +17,6 @@ class Settings:
     twitterClassifierTrainedModelsFolder = '%sclassifier/trained_models/'%twitterDataFolder
     twitterClassifierCollocationsFolder = '%sclassifier/collocations/'%twitterDataFolder
     twitterClassifierStreamingSetsFolder = '%sclassifier/streaming_datasets/'%twitterDataFolder
-#    twitterClassifierCombinedSetsFolder = '%sclassifier/combined_sets/'%twitterDataFolder
     
     usersToCrawl = '%susers/crawl/users_to_crawl'%twitterDataFolder
     

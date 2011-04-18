@@ -22,7 +22,7 @@ class ExpertUsers:
                 for user in v[-self.number:]: self.list[user[1]] = {'screen_name': user[0], 'class':k}
             
 class Utilities:
-    stopwords = [l.strip() for l in open('stopwords')]
+    stopwords = [l.strip() for l in open(Settings.applicationCommonFilesFolder+'stopwords')]
     
     @staticmethod
     def iterateTweetsFromGzip(file):
