@@ -141,17 +141,18 @@ class StreamingSets:
         self.inputTrainingSetFile = Utilities.getTrainingFile(currentTime, dataType, self.numberOfExperts)
         self.inputTestSetFile = Utilities.getTestFile(currentTime, dataType, self.numberOfExperts, bottom=True)
         self.outputCombinedFile = Utilities.getStreamingSetsFile(currentTime, dataType, numberOfExperts)
-        Utilities.createDirectory(self.outputCombinedFile)
+#        Utilities.createDirectory(self.outputCombinedFile)
     
     def generate(self):
+        trainingTime, testTime = None, None
         def writeTweetAndGetNextTweet(tweet, tweetType, iterator):
+            print tweetType, trainingTime, testTime
             tweet['tweet_type'] = tweetType
-            Utilities.writeAsJsonToFile(tweet, self.outputCombinedFile)
+#            Utilities.writeAsJsonToFile(tweet, self.outputCombinedFile)
             return iterator.next()
         trainingFileIterator = Utilities.iterateTweetsFromFileWithTerminatingNone(self.inputTrainingSetFile)
         testFileIterator = Utilities.iterateTweetsFromFileWithTerminatingNone(self.inputTestSetFile)
         trainingTweet, testTweet = trainingFileIterator.next(), testFileIterator.next()
-        trainingTime, testTime = None, None
         while trainingTweet!=None or testTweet!=None:
             if trainingTweet != None: trainingTime = datetime.strptime(trainingTweet['created_at'], Settings.twitter_api_time_format)
             if testTweet != None: testTime = datetime.strptime(testTweet['created_at'], Settings.twitter_api_time_format)
