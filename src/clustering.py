@@ -47,26 +47,12 @@ class GibbsLDA(object):
         self._getTopWords(directory)
         os.system('rm -rf %s' % directory)
         return self.distribution
-    
-#    @staticmethod
-#    def demo():
-#        documents = ["Human machine interface for lab abc computer applications",
-#                  "A survey of user opinion of computer system response time",
-#                  "The EPS user interface management system",
-#                  "System and human system engineering testing of EPS",
-#                  "Relation of user perceived response time to error measurement",
-#                  "The generation of random binary unordered trees",
-#                  "The intersection graph of paths in trees",
-#                  "Graph minors IV Widths of trees and well quasi ordering",
-#                  "Graph minors A survey"]
-#        numberOfTopics = 6
-#        print GibbsLDA(documents, numberOfTopics).getDistributionAcrossTopics()
         
 class ReLabelTrainingDocuments:
     numberOfTopics = 4
     def __init__(self, documents):
         self.originalDocuments = list(documents)
-    def reLabel(self):
+    def getRelabeledDocuments(self):
         def getClusterLabelsToOriginalLabelsMap(clusteredDocuments, clusterLabelsToOriginalLabelMap):
             clusterLabelsToOriginalLabelsDistribution = {}
             for ((document, originalLabel), clusterLabel) in zip(self.originalDocuments, clusteredDocuments.values()):
@@ -74,13 +60,10 @@ class ReLabelTrainingDocuments:
                 clusterLabelsToOriginalLabelsDistribution[clusterLabel][originalLabel]+=1
             for clusterLabel, distribution in clusterLabelsToOriginalLabelsDistribution.iteritems():
                 clusterLabelsToOriginalLabelMap[clusterLabel] = sorted(distribution.iteritems(), key=itemgetter(1), reverse=True)[0][0]
-        
-        relabeledDocuments, clusterLabelsToOriginalLabelMap = [], {}
+        clusterLabelsToOriginalLabelMap = {}
         clusteredDocuments = GibbsLDA([d[0] for d in self.originalDocuments], ReLabelTrainingDocuments.numberOfTopics).getDistributionAcrossTopics()
         getClusterLabelsToOriginalLabelsMap(clusteredDocuments, clusterLabelsToOriginalLabelMap)
-        for ((document, originalLabel), clusterLabel) in zip(self.originalDocuments, clusteredDocuments.values()): relabeledDocuments.append((document, clusterLabelsToOriginalLabelMap[clusterLabel]))
-        pprint.pprint(relabeledDocuments)
-        
+        for ((document, originalLabel), clusterLabel) in zip(self.originalDocuments, clusteredDocuments.values()): yield (document, clusterLabelsToOriginalLabelMap[clusterLabel])
 
 documents = [("Human machine interface for lab abc computer applications", 'politics'),
              ("Human machine interface for lab abc computer applications", 'politics'),
@@ -90,4 +73,4 @@ documents = [("Human machine interface for lab abc computer applications", 'poli
                   ("System and human system engineering testing of EPS", 'entertainment'),
                   ("Relation of user perceived response time to error measurement", 'technology'),
                    ("Graph minors A survey", 'technology')]
-ReLabelTrainingDocuments(documents).reLabel()
+pprint.pprint(list(ReLabelTrainingDocuments(documents).reLabel()))
