@@ -86,6 +86,8 @@ class ReLabelTrainingDocuments:
         
 
 documents = [("Human machine interface for lab abc computer applications", 'politics'),
+             ("Human machine interface for lab abc computer applications", 'politics'),
+             ("Human machine interface for lab abc computer applications", 'politics'),
                   ("A survey of user opinion of computer system response time", 'politics'),
                   ("The EPS user interface management system", 'sports'),
                   ("System and human system engineering testing of EPS", 'entertainment'),
