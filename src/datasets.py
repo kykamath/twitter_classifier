@@ -34,7 +34,7 @@ class DocumentType(object):
         self.outputTrainingSetFile = Utilities.getTrainingFile(currentTime, outputDataType, self.numberOfExperts)
         self.outputTestSetFile = Utilities.getTestFile(currentTime, outputDataType, self.numberOfExperts, bottom=True)
         Utilities.createDirectory(self.outputTrainingSetFile), Utilities.createDirectory(self.outputTestSetFile)
-    def convert(self):
+    def generate(self):
         for inputFile, outputFile in [(self.inputTrainingSetFile, self.outputTrainingSetFile), (self.inputTestSetFile, self.outputTestSetFile)]:
             for tweet in Utilities.iterateTweetsFromFile(inputFile):
                 data = {}
@@ -109,7 +109,7 @@ class DocumentTypeRuuslUnigramWithMeta(DocumentType):
         self.inputTestSetFile = Utilities.getTestFile(currentTime, DocumentType.typeRuuslUnigram, self.numberOfExperts, bottom=True)
 #    def modifyDocument(self, text): 
 #        return self.getUnigrams(text)+DocumentTypeRuuslUnigramWithMeta.getUrlMeta(text)
-    def convert(self):
+    def generate(self):
         for inputFile, outputFile in [(self.inputTrainingSetFile, self.outputTrainingSetFile), (self.inputTestSetFile, self.outputTestSetFile)]:
             for tweet in Utilities.iterateTweetsFromFile(inputFile):
                 data = {}
@@ -132,6 +132,23 @@ class DocumentTypeRuuslUnigramWithMeta(DocumentType):
                 return meta
             else: return []
         except : return []
+        
+class StreamingSets:
+    def __init__(self, currentTime, dataType, numberOfExperts):
+        self.currentTime = currentTime
+        self.numberOfExperts = numberOfExperts
+        self.inputTrainingSetFile = Utilities.getTrainingFile(currentTime, dataType, self.numberOfExperts)
+        self.inputTestSetFile = Utilities.getTestFile(currentTime, dataType, self.numberOfExperts, bottom=True)
+        self.outputCombinedFile = Utilities.getStreamingSetsFile(currentTime, dataType, numberOfExperts)
+        Utilities.createDirectory(self.outputTrainingSetFile), Utilities.createDirectory(self.outputTestSetFile) 
+    
+    def generate(self):
+        data = ''
+        i=1
+        while data!=None:
+            data = Utilities.iterateTweetsFromFile(self.inputTrainingSetFile)
+            print i
+            i+=1
 
 
 class CreateTrainingAndTestSets:
@@ -164,10 +181,11 @@ class CreateTrainingAndTestSets:
         while currentTime <= Settings.endTime:
             for dataType in dataTypes: 
                 print currentTime, dataType
-                dataType(currentTime, Settings.numberOfExperts).convert()
+                dataType(currentTime, Settings.numberOfExperts).generate()
             currentTime+=timedelta(days=1)
 
   
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
-    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigramNouns])
+#    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigramNouns])
+    StreamingSets(Settings.startTime, DocumentType.typeRuuslUnigram, Settings.numberOfExperts).generate()

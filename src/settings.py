@@ -11,6 +11,7 @@ class Settings:
     twitterClassifierTestSetsFolder = '%sclassifier/test_sets/'%twitterDataFolder
     twitterClassifierTrainedModelsFolder = '%sclassifier/trained_models/'%twitterDataFolder
     twitterClassifierCollocationsFolder = '%sclassifier/collocations/'%twitterDataFolder
+    twitterClassifierStreamingSetsFolder = '%sclassifier/streaming_datasets/'%twitterDataFolder
 #    twitterClassifierCombinedSetsFolder = '%sclassifier/combined_sets/'%twitterDataFolder
     
     usersToCrawl = '%susers/crawl/users_to_crawl'%twitterDataFolder

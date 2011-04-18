@@ -79,6 +79,9 @@ class Utilities:
     def getCollocationsFile(measureType, currentTime, dataType, numberOfExperts, noOfDays, **kwargs):
         return Settings.twitterClassifierCollocationsFolder +'%s/%s/%s/%s/%s'%(measureType, numberOfExperts, dataType, Utilities.getDataFile(currentTime), noOfDays)
     @staticmethod
+    def getStreamingSetsFile(currentTime, dataType, numberOfExperts): 
+        return Settings.twitterClassifierStreamingSetsFolder+'%s/%s/%s'%(numberOfExperts, dataType, Utilities.getDataFile(currentTime))
+    @staticmethod
     def getDocuments(**kwargs):
         currentTime=kwargs['currentTime']
         fileNameMethod=kwargs['fileNameMethod']
@@ -100,8 +103,6 @@ class Utilities:
             yield (list(terms), tweet[1])
     @staticmethod
     def getClassifierLengthsByDay(currentDay, maxLength): return [1]+range(2,min([maxLength, (currentDay-Settings.startTime).days+2]),2)
-#    @staticmethod
-#    def getCombinedFile(currentTime, dataType): return Settings.twitterClassifierCombinedSetsFolder+'%s/%s'%(dataType, Utilities.getDataFile(currentTime))
 
 #if __name__ == '__main__':
 #    i = 1
