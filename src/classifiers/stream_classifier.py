@@ -3,7 +3,7 @@ Created on Apr 17, 2011
 
 @author: kykamath
 '''
-import sys
+import sys, math
 sys.path.append('../')
 from datasets import DataDirection, DocumentType, TweetType
 from utilities import Utilities
@@ -38,7 +38,10 @@ def classifyTweet(tweet):
             flag=True
             tweetFeatureMap[feature]=getFeatureProbabilites(featureMap[feature])
     if flag: 
-        for k, v in tweetFeatureMap.iteritems(): print k, v
+        perClassScores = defaultdict(float)
+        for k, v in tweetFeatureMap.iteritems(): 
+            for classLabel, score in v: perClassScores[classLabel]+=math.log(score)
+        for k, v in perClassScores.iteritems(): print k, v
         exit()
 
 def stream_classifier(**kwargs):
