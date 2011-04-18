@@ -76,9 +76,10 @@ class ReLabelTrainingDocuments:
         clusterLabelsToOriginalLabelMap = {}
         for clusterLabel, distribution in clusterLabelsToOriginalLabelsDistribution.iteritems():
             clusterLabelsToOriginalLabelMap[clusterLabel] = sorted(distribution.iteritems(), key=itemgetter(1), reverse=True)[0][0]
+        print clusterLabelsToOriginalLabelMap
         for ((document, originalLabel), clusterLabel) in zip(self.originalDocuments, clusteredDocuments.values()):
             relabeledDocuments.append((document, clusterLabelsToOriginalLabelMap[clusterLabel]))
-            print (document, originalLabel)
+            print ((document, originalLabel), clusterLabel)
             print '**', (document, clusterLabelsToOriginalLabelMap[clusterLabel])
             
         
