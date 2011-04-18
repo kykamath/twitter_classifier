@@ -80,9 +80,14 @@ class StreamClassifier(object):
             if tweet['tweet_type'] == TweetType.train: self.learnFromTweet(tweet)
             else:
                 if firstDay<tweetTimeStamp: 
-                    print i, self.classifyTweet(tweet), tweet['class'], tweet['text']
+                    print i, self.classify(tweet), tweet['class'], tweet['text']
                     if i==25: exit()
                     i+=1
+    def classify(self, tweet):
+        perClassScores = self.classifyTweet(tweet)
+        sortedScores = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
+        if sortedScores: return sortedScores[0][0]
+        return StreamClassifier.notClassified
     @staticmethod
     def getFeatureProbabilites(feature):
         mapToReturn = {}
@@ -111,13 +116,6 @@ class StreamClassifierDefault(StreamClassifier):
             featureScore = float(StreamClassifier.numberOfClasses)/len(v)
             if featureScore!=0:
                 for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
-        sortedScores = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
-        if sortedScores:
-            classLabel, score = sortedScores[0]
-    #        print score
-    #        if score > math.log(Settings.stream_classifier_class_probability_threshold): 
-            return classLabel
-        return StreamClassifier.notClassified
-
+        return perClassScores
 if __name__ == '__main__':
     StreamClassifierDefault(currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=3).start()
