@@ -4,6 +4,7 @@ Created on Apr 17, 2011
 @author: kykamath
 '''
 import sys, math
+from classifiers.classifiers import MultiClassAUC
 sys.path.append('../')
 from datasets import DataDirection, DocumentType, TweetType
 from utilities import Utilities
@@ -11,6 +12,7 @@ from settings import Settings
 from datetime import datetime, timedelta
 from collections import defaultdict
 from operator import itemgetter
+from classifiers import classToIntMap
 
 #featureMap = {}
 #notClassified = 'not_classified'
@@ -83,15 +85,23 @@ class StreamClassifier(object):
             else:
                 if firstDay<tweetTimeStamp: 
                     self.classifyTweet(tweet)
-                    print i, self.classifyingMethod(self.classifyTweet(tweet)), tweet['class'], tweet['text']
+                    print i, self.classifyingMethod(tweet, self.classifyTweet(tweet)), tweet['class'], tweet['text']
                     if i==25: exit()
                     i+=1
-    def classify(self, perClassScores):
+    def classify(self, tweet, perClassScores):
         sortedScores = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
         if sortedScores: return sortedScores[0][0]
         return StreamClassifier.notClassified
-    def getAUCM(self, perClassScores):
-        pass
+    def classifyForAUCM(self, tweet, perClassScores):
+        if self.numberOfTestTweets==None: 
+            self.numberOfTestTweets=0
+            self.classifiedDocuments = []
+        tempDict = {}
+        [tempDict.setdefault(classToIntMap[k], v) for k, v in perClassScores.iteritems() ]
+        self.classifiedDocuments.append((self.numberOfTestTweets, classToIntMap[tweet['class']], tempDict))
+        self.numberOfTestTweets+=1
+    def getAUCM(self): return MultiClassAUC(self.classifiedDocuments).getMRevised()
+        
     @staticmethod
     def getFeatureProbabilites(feature):
         mapToReturn = {}
@@ -122,4 +132,5 @@ class StreamClassifierDefault(StreamClassifier):
                 for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
         return perClassScores
 if __name__ == '__main__':
-    StreamClassifierDefault(currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=3).start()
+    streamClassifier = StreamClassifierDefault(classifyingMethod=StreamClassifier.classify, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=3)
+    streamClassifier.start()
