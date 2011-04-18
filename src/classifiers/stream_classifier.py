@@ -43,13 +43,15 @@ def classifyTweet(tweet):
     else: return notClassified
 
 def stream_classifier(**kwargs):
+    i=1
     firstDay = Settings.startTime+timedelta(days=1)
     for tweet in Utilities.getTweets(fileNameMethod=Utilities.getStreamingSetsFile, dataDirection=DataDirection.future, completeTweets=True, **kwargs):
         tweetTimeStamp = datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format)
         if tweet['tweet_type'] == TweetType.train: learnFromTweet(tweet)
         else:
             if firstDay<tweetTimeStamp: 
-                print classifyTweet(tweet), tweet['class'], tweet['text']
-                exit()
+                print i, classifyTweet(tweet), tweet['class'], tweet['text']
+                if i==25: exit()
+                i+=1
 if __name__ == '__main__':
     stream_classifier(currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=1)
