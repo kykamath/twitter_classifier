@@ -13,17 +13,21 @@ from collections import defaultdict
 
 featureMap = {}
 
+def extractFeatures(document):
+    for feature in document:
+        if feature not in Utilities.stopwords: yield feature
+
 def learnFromTweet(tweet):
     global featureMap
     classLabel = tweet['class']
-    for feature in tweet['document']:
+    for feature in extractFeatures(tweet['document']):
         if feature not in featureMap: featureMap[feature] = {'stats': {}, 'class': defaultdict(int)}
         featureMap[feature]['class'][classLabel]+=1
 def classifyTweet(tweet):
     global featureMap
     print tweet
     flag = False
-    for feature in tweet['document']:
+    for feature in extractFeatures(tweet['document']):
         if feature in featureMap: 
             flag=True
             print feature, featureMap[feature]
