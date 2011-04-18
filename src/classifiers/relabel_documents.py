@@ -44,14 +44,14 @@ class GibbsLDA(object):
         os.system('lda -est -alpha 0.1 -beta 0.1 -ntopics %s -niters 1000 -twords 20 -savestep 2001 -dfile %s' % (str(self.numberOfTopics), fileName))
         self._getDocumentDistribution(directory)
 #        self._getTopWords(directory)
-#        os.system('rm -rf %s' % directory)
-        print 'lda -est -alpha 0.1 -beta 0.1 -ntopics %s -niters 1000 -twords 20 -savestep 2001 -dfile %s' % (str(self.numberOfTopics), fileName) 
+        os.system('rm -rf %s' % directory)
+#        print 'lda -est -alpha 0.1 -beta 0.1 -ntopics %s -niters 1000 -twords 20 -savestep 2001 -dfile %s' % (str(self.numberOfTopics), fileName) 
         return self.distribution
         
 class ReLabelTrainingDocuments:
     numberOfTopics = 4
     def __init__(self, documents):
-        self.originalDocuments = [(' '.join(d[0]), d[1]) for d in documents]
+        self.originalDocuments = [(' '.join(d[0]), d[1]) for d in documents if d[0]]
 #        for d in self.originalDocuments:
 #            print d
 #        exit()
