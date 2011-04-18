@@ -75,6 +75,7 @@ class StreamClassifier(object):
         self.classifyingMethod = classifyingMethod
         if self.classifyingMethod==None: self.classifyingMethod = self.classify
         self.kwargs = kwargs
+        self.numberOfTestTweets, self.classifiedDocuments = 0, []
     def start(self):
         i=1
         firstDay = Settings.startTime+timedelta(days=self.numberOfInitialBufferDays)
@@ -94,9 +95,6 @@ class StreamClassifier(object):
         if sortedScores: return sortedScores[0][0]
         return StreamClassifier.notClassified
     def classifyForAUCM(self, tweet, perClassScores):
-        if self.numberOfTestTweets==None: 
-            self.numberOfTestTweets=0
-            self.classifiedDocuments = []
         tempDict = {}
         [tempDict.setdefault(classToIntMap[k], v) for k, v in perClassScores.iteritems() ]
         self.classifiedDocuments.append((self.numberOfTestTweets, classToIntMap[tweet['class']], tempDict))
