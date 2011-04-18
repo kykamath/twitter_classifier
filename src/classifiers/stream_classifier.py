@@ -27,11 +27,14 @@ def classifyTweet(tweet):
     global featureMap
     print tweet
     flag = False
+    tweetFeatureMap = {}
     for feature in extractFeatures(tweet['document']):
         if feature in featureMap: 
             flag=True
-            print feature, featureMap[feature]
-    if flag: exit()
+            tweetFeatureMap[feature]=featureMap[feature]
+    if flag: 
+        for k, v in tweetFeatureMap.iteritems(): print k, v
+        exit()
 
 def stream_classifier(**kwargs):
     firstDay = Settings.startTime+timedelta(days=1)
