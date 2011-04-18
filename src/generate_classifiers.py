@@ -21,7 +21,7 @@ class GenerateClassifiers:
     @staticmethod
     def fixedWindowOfDifferentLengthsAndDataTypes():
         global maxLength, idealModelLength
-        dataTypes = [DocumentType.typeCharBigram]
+        dataTypes = [DocumentType.typeCharTrigram]
         currentDay = Settings.startTime
         while currentDay<=Settings.endTime:
             noOfDaysList = list(set([idealModelLength]).intersection(set(Utilities.getClassifierLengthsByDay(currentDay, maxLength))))
