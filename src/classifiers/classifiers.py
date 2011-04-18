@@ -3,6 +3,8 @@ Created on Mar 18, 2011
 
 @author: kykamath
 '''
+import sys
+sys.path.append('../')
 from collections import defaultdict
 from settings import Settings
 from utilities import Utilities

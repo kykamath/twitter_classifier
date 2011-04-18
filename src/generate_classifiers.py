@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from settings import Settings
 from datasets import DocumentType
 from datetime import timedelta, datetime
-from classifiers import FixedWindowClassifier, FixedWindowWithCollocationsClassifier, TestDocuments,\
+from classifiers.classifiers import FixedWindowClassifier, FixedWindowWithCollocationsClassifier, TestDocuments,\
     TestDocumentsWithCollocations
 from utilities import Utilities
 from collections import defaultdict
