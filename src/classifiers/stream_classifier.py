@@ -23,11 +23,12 @@ def learnFromTweet(tweet):
     for feature in extractFeatures(tweet['document']):
         if feature not in featureMap: featureMap[feature] = {'stats': {}, 'class': defaultdict(int)}
         featureMap[feature]['class'][classLabel]+=1
+def getFeatureProbabilites(feature):
+    mapToReturn = {}
+    totalScore = sum(v for v in feature['class'].itervalues())
+    for classLabel, score in feature['class'].iteritems(): mapToReturn[classLabel] = float(score)/totalScore
+    return mapToReturn
 def classifyTweet(tweet):
-    def getFeatureProbabilites(feature):
-        mapToReturn = {}
-        totalScore = sum(v for v in feature['class'].itervalues())
-        for classLabel, score in feature['class'].iteritems(): mapToReturn[classLabel] = float(score)/totalScore
     global featureMap
     print tweet
     flag = False
