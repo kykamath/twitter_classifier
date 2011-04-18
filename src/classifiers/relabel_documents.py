@@ -69,12 +69,12 @@ class ReLabelTrainingDocuments:
         for ((document, originalLabel), clusterLabel) in zip(self.originalDocuments, clusteredDocuments.values()): yield (document, clusterLabelsToOriginalLabelMap[clusterLabel])
 
 if __name__ == '__main__':
-    documents = [("Human machine interface for lab abc computer applications", 'politics'),
-                 ("Human machine interface for lab abc computer applications", 'politics'),
-                 ("Human machine interface for lab abc computer applications", 'politics'),
-                      ("A survey of user opinion of computer system response time", 'politics'),
-                      ("The EPS user interface management system", 'sports'),
-                      ("System and human system engineering testing of EPS", 'entertainment'),
-                      ("Relation of user perceived response time to error measurement", 'technology'),
-                       ("Graph minors A survey", 'technology')]
+    documents = [("Human machine interface for lab abc computer applications".split(), 'politics'),
+                 ("Human machine interface for lab abc computer applications".split(), 'politics'),
+                 ("Human machine interface for lab abc computer applications".split(), 'politics'),
+                      ("A survey of user opinion of computer system response time".split(), 'politics'),
+                      ("The EPS user interface management system".split(), 'sports'),
+                      ("System and human system engineering testing of EPS".split(), 'entertainment'),
+                      ("Relation of user perceived response time to error measurement".split(), 'technology'),
+                       ("Graph minors A survey".split(), 'technology')]
     pprint.pprint(list(ReLabelTrainingDocuments(documents).getRelabeledDocuments()))
