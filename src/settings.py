@@ -33,7 +33,7 @@ class Settings:
     collocations_percentage_of_collocations_to_output = 0.01
     
     #Stream classifier.
-    stream_classifier_class_probability_threshold = 0.40
+    stream_classifier_class_probability_threshold = 0.50
     
     # Experiments
     stats_folder = 'stats/'
