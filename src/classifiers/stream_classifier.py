@@ -132,7 +132,7 @@ class StreamClassifierWithDecay(StreamClassifier):
         return mapToReturn
     
 if __name__ == '__main__':
-    streamClassifier = StreamClassifierWithDecay(decayRate=0.75, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=25)
+    streamClassifier = StreamClassifierWithDecay(decayRate=0.95, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=25)
     streamClassifier.classifyingMethod = streamClassifier.classifyForAUCM
     streamClassifier.start()
     print len(streamClassifier.classifiedDocuments)
