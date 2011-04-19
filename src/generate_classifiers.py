@@ -58,10 +58,10 @@ class AnalyzeClassifiers:
         currentDay = Settings.startTime
         while currentDay<=Settings.endTime:
             for noOfDays in Utilities.getClassifierLengthsByDay(currentDay, maxLength): 
-                classifier = FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDays)
+                classifier = FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigramNouns, noOfDays=noOfDays)
                 classifier.load()
-                data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'classifier_length': noOfDays, 'metric': 'aucm', 'number_of_experts': Settings.numberOfExperts, 'data_type': DocumentType.typeRuuslUnigram, 'test_data_days': 1}
-                data['value'] = classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
+                data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'classifier_length': noOfDays, 'metric': 'aucm', 'number_of_experts': Settings.numberOfExperts, 'data_type': DocumentType.typeRuuslUnigramNouns, 'test_data_days': 1}
+                data['value'] = classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigramNouns, noOfDays=1).iterator())
                 Utilities.writeAsJsonToFile(data, Settings.stats_to_determine_fixed_window_length)
             currentDay+=timedelta(days=1)
     
@@ -188,18 +188,28 @@ class AnalyzeClassifiers:
         for data in Utilities.iterateJsonFromFile(Settings.stats_to_compare_collocations): languageModelToScore[data['collocation_measure']].append(data['value'])
         for languageModel in languageModelToScore: print languageModel, '%0.2f'%numpy.mean(languageModelToScore[languageModel]), '%0.2f'%numpy.var(languageModelToScore[languageModel])
         
+    @staticmethod
+    def analyzeStatsToObservePerformanceByRelabelingDocuments():
+        '''
+        0.67 0.00
+        '''
+        perfromanceByRelabeling=[]
+        for data in Utilities.iterateJsonFromFile(Settings.stats_to_observe_performance_by_relabeling_documents): perfromanceByRelabeling.append(data['value'])
+        print '%0.2f'%numpy.mean(perfromanceByRelabeling), '%0.2f'%numpy.var(perfromanceByRelabeling)
+        
 if __name__ == '__main__':
 #    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
 #    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations()
 #    GenerateClassifiers.fixedWindowByRelabelingDocuments()
    
-#    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
+    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.generateStatsToCompareDifferentDocumentTypes()
 #    AnalyzeClassifiers.generateStatsToCompareCollocations()
-    AnalyzeClassifiers.generateStatsObservePerformanceByRelabelingDocuments()
+#    AnalyzeClassifiers.generateStatsObservePerformanceByRelabelingDocuments()
 #    AnalyzeClassifiers.generateStatsForDiminishingAUCM()
 
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.analyzeStatsToCompareDifferentDocumentTypes()
 #    AnalyzeClassifiers.analyzeStatsToCompareCollocations()
 #    AnalyzeClassifiers.analyzeStatsForDimnishingAUCMValues()
+#    AnalyzeClassifiers.analyzeStatsToObservePerformanceByRelabelingDocuments()
