@@ -67,7 +67,7 @@ class AnalyzeClassifiers:
     
     @staticmethod
     def generateStatsForDiminishingAUCM():
-        currentDay = datetime(2011, 3, 26)
+        currentDay = datetime(2011, 4, 1)
         nextDay = currentDay+timedelta(days=1)
         noOfDays = [1, 8, 14]
         for daysInFuture in range(1, 11):
