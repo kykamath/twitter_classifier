@@ -66,17 +66,17 @@ class StreamClassifier(object):
                 for classLabel, classId in classToIntMap.iteritems():
                     if classLabel not in perClassScores: tempDict[classId]=None
                     else: tempDict[classId]=perClassScores[classLabel]
-        #        [tempDict.setdefault(classToIntMap[k], v) for k, v in perClassScores.iteritems() ]
                 self.classifiedDocuments.append((self.numberOfTestTweets, classToIntMap[tweet['class']], tempDict))
                 self.numberOfTestTweets+=1
+    def getFeatureProbabilites(self, feature, tweetTime):
+        mapToReturn = {}
+        totalScore = 0
+        for featureScore in feature['class'].itervalues(): 
+            featureScore.update(self.decayRate, tweetTime, 0)
+            totalScore+=featureScore.score
+        for classLabel, featureScore in feature['class'].iteritems(): mapToReturn[classLabel] = float(featureScore.score)/totalScore
+        return mapToReturn
     def getAUCM(self): return MultiClassAUC(self.classifiedDocuments).getMRevised()
-        
-#    @staticmethod
-#    def getFeatureProbabilites(feature):
-#        mapToReturn = {}
-#        totalScore = sum(v for v in feature['class'].itervalues())
-#        for classLabel, score in feature['class'].iteritems(): mapToReturn[classLabel] = float(score)/totalScore
-#        return mapToReturn
     @staticmethod
     def extractFeatures(document):
         for feature in document:
@@ -100,7 +100,7 @@ class StreamClassifier(object):
 #            if featureScore!=0:
 #                for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
 #        return perClassScores
-    
+
 class StreamClassifierWithDecay(StreamClassifier):
     def __init__(self, decayRate, **kwargs):
         super(StreamClassifierWithDecay, self).__init__(**kwargs)
@@ -122,17 +122,39 @@ class StreamClassifierWithDecay(StreamClassifier):
             if featureScore!=0:
                 for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
         return perClassScores
-    def getFeatureProbabilites(self, feature, tweetTime):
-        mapToReturn = {}
-        totalScore = 0
-        for featureScore in feature['class'].itervalues(): 
-            featureScore.update(self.decayRate, tweetTime, 0)
-            totalScore+=featureScore.score
-        for classLabel, featureScore in feature['class'].iteritems(): mapToReturn[classLabel] = float(featureScore.score)/totalScore
-        return mapToReturn
+   
+class StreamClassifierWithDecayWithFeaturePriorities(StreamClassifier):
+    def __init__(self, decayRate, **kwargs):
+        super(StreamClassifierWithDecay, self).__init__(**kwargs)
+        self.decayRate=decayRate
+    def learnFromTweet(self, tweet):
+        classLabel = tweet['class']
+        tweetTime = datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format)
+        for feature in StreamClassifier.extractFeatures(tweet['document']):
+            if feature not in self.featureMap: self.featureMap[feature] = {'stats': {}, 'class': defaultdict(FeatureScore)}
+            self.featureMap[feature]['class'][classLabel].update(self.decayRate, tweetTime, 1)
+    def classifyTweet(self, tweet):
+        tweetFeatureMap = {}
+        tweetTime = datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format)
+        for feature in StreamClassifier.extractFeatures(tweet['document']):
+            if feature in self.featureMap: tweetFeatureMap[feature]=self.getFeatureProbabilites(self.featureMap[feature], tweetTime)
+        perClassScores = defaultdict(float)
+        for k, v in tweetFeatureMap.iteritems(): 
+            featureScore = float(StreamClassifier.numberOfClasses)/len(v)
+            if featureScore!=0:
+                for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
+        return perClassScores
+#    def getFeatureProbabilites(self, feature, tweetTime):
+#        mapToReturn = {}
+#        totalScore = 0
+#        for featureScore in feature['class'].itervalues(): 
+#            featureScore.update(self.decayRate, tweetTime, 0)
+#            totalScore+=featureScore.score
+#        for classLabel, featureScore in feature['class'].iteritems(): mapToReturn[classLabel] = float(featureScore.score)/totalScore
+#        return mapToReturn
     
 if __name__ == '__main__':
-    streamClassifier = StreamClassifierWithDecay(decayRate=0.95, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=25)
+    streamClassifier = StreamClassifierWithDecay(decayRate=1.0, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=25)
     streamClassifier.classifyingMethod = streamClassifier.classifyForAUCM
     streamClassifier.start()
     print len(streamClassifier.classifiedDocuments)
