@@ -126,10 +126,21 @@ class AnalyzeClassifiers:
         plt.show()
     
     @staticmethod
-    def analyzeStatsToCompareLanguageModels():
+    def analyzeStatsToCompareDifferentDocumentTypes():
+        '''
+        char_bigram 0.67
+        ruusl_unigram_with_meta 0.71
+        ruusl_bigram 0.49
+        ruusl_unigram_nouns_with_meta 0.66
+        ruusl_sparse_bigram 0.54
+        char_trigram 0.71
+        ruusl_trigram 0.00
+        removed_url_users_specialcharaters_and_lemmatized 0.71
+        ruusl_unigram_nouns 0.66
+        '''
         languageModelToScore=defaultdict(list)
         for data in Utilities.iterateJsonFromFile(Settings.stats_to_compare_different_document_types): languageModelToScore[data['data_type']].append(data['value'])
-        for languageModel in languageModelToScore: print languageModel, numpy.mean(languageModelToScore[languageModel])
+        for languageModel in languageModelToScore: print languageModel, '%0.2f'%numpy.mean(languageModelToScore[languageModel])
     
     @staticmethod
     def analyzeStatsToCompareCollocations():
@@ -142,11 +153,11 @@ if __name__ == '__main__':
 #    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations()
 #    GenerateClassifiers.fixedWindowByRelabelingDocuments()
    
-#    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
-    AnalyzeClassifiers.generateStatsToCompareDifferentDocumentTypes()
+    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
+#    AnalyzeClassifiers.generateStatsToCompareDifferentDocumentTypes()
 #    AnalyzeClassifiers.generateStatsToCompareCollocations()
 #    AnalyzeClassifiers.generateStatsObservePerformanceByRelabelingDocuments()
 
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
-#    AnalyzeClassifiers.analyzeStatsToCompareLanguageModels()
+#    AnalyzeClassifiers.analyzeStatsToCompareDifferentDocumentTypes()
 #    AnalyzeClassifiers.analyzeStatsToCompareCollocations()
