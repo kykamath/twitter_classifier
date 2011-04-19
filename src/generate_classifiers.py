@@ -166,25 +166,27 @@ class AnalyzeClassifiers:
     @staticmethod
     def analyzeStatsToCompareDifferentDocumentTypes():
         '''
-        char_bigram 0.67
-        ruusl_unigram_with_meta 0.71
-        ruusl_bigram 0.49
-        ruusl_unigram_nouns_with_meta 0.66
-        ruusl_sparse_bigram 0.54
-        char_trigram 0.71
-        ruusl_trigram 0.00
-        removed_url_users_specialcharaters_and_lemmatized 0.71
-        ruusl_unigram_nouns 0.66
+        char_bigram 0.67 0.00
+        ruusl_unigram_with_meta 0.71 0.00
+        ruusl_bigram 0.49 0.00
+        ruusl_unigram_nouns_with_meta 0.66 0.00
+        ruusl_sparse_bigram 0.54 0.00
+        removed_url_users_specialcharaters_and_lemmatized 0.71 0.00
+        ruusl_unigram_nouns 0.66 0.00
         '''
         languageModelToScore=defaultdict(list)
         for data in Utilities.iterateJsonFromFile(Settings.stats_to_compare_different_document_types): languageModelToScore[data['data_type']].append(data['value'])
-        for languageModel in languageModelToScore: print languageModel, '%0.2f'%numpy.mean(languageModelToScore[languageModel])
+        for languageModel in languageModelToScore: print languageModel, '%0.2f'%numpy.mean(languageModelToScore[languageModel]), '%0.2f'%numpy.var(languageModelToScore[languageModel])
     
     @staticmethod
     def analyzeStatsToCompareCollocations():
+        '''
+        chi_sqare 0.70 0.00
+        likelihood_ratio 0.69 0.00
+        '''
         languageModelToScore=defaultdict(list)
         for data in Utilities.iterateJsonFromFile(Settings.stats_to_compare_collocations): languageModelToScore[data['collocation_measure']].append(data['value'])
-        for languageModel in languageModelToScore: print languageModel, numpy.mean(languageModelToScore[languageModel])
+        for languageModel in languageModelToScore: print languageModel, '%0.2f'%numpy.mean(languageModelToScore[languageModel]), '%0.2f'%numpy.var(languageModelToScore[languageModel])
         
 if __name__ == '__main__':
 #    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
@@ -193,8 +195,8 @@ if __name__ == '__main__':
    
 #    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.generateStatsToCompareDifferentDocumentTypes()
-    AnalyzeClassifiers.generateStatsToCompareCollocations()
-#    AnalyzeClassifiers.generateStatsObservePerformanceByRelabelingDocuments()
+#    AnalyzeClassifiers.generateStatsToCompareCollocations()
+    AnalyzeClassifiers.generateStatsObservePerformanceByRelabelingDocuments()
 #    AnalyzeClassifiers.generateStatsForDiminishingAUCM()
 
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
