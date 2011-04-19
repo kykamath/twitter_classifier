@@ -27,6 +27,7 @@ class Settings:
     endTime=datetime(2011,4,12)
     
     numberOfExperts = 125
+    numberOfExpertsSecondSet = 250
     expertListSizes = xrange(50,550,50)
     
     #Collocations

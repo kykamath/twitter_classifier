@@ -224,6 +224,25 @@ class CreateTrainingAndTestSets:
                     else: Utilities.writeAsJsonToFile(tweet, testFile)
             currentTime+=timedelta(days=1)
     @staticmethod
+    def generateRawDataForSetOfUsers():
+        currentTime = Settings.startTime
+        allExpertsTop = ExpertUsers(Settings.numberOfExperts)
+        allExpertsIntermediate = ExpertUsers(375)
+        allExpertsList={}
+        for k, v in allExpertsTop.list.iteritems(): del allExpertsIntermediate[k]
+        for k, v in allExpertsIntermediate.list.iteritems(): allExpertsList[k]=v
+        print len(allExpertsIntermediate)
+        exit()
+        while currentTime <= Settings.endTime:
+            for numberOfExperts in [375]:
+                trainingFile = Utilities.getTrainingFile(currentTime, DocumentType.typeRaw, numberOfExperts)
+                Utilities.createDirectory(trainingFile)
+                print numberOfExperts, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)
+                for tweet in CreateTrainingAndTestSets.getTweetsFromExperts(allExpertsList, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)):
+                    tweet['class'] = allExpertsList[tweet['user']['id_str']]['class']
+                    Utilities.writeAsJsonToFile(tweet, trainingFile)
+            currentTime+=timedelta(days=1)
+    @staticmethod
     def createModifiedData(dataTypes):
         currentTime = Settings.startTime
         while currentTime <= Settings.endTime:
@@ -242,5 +261,6 @@ class CreateTrainingAndTestSets:
 
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
-    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigramNounsWithMeta])
+    CreateTrainingAndTestSets.generateRawDataForSetOfUsers()
+#    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigramNounsWithMeta])
 #    CreateTrainingAndTestSets.createStreamingData([DocumentType.typeRuuslUnigram])

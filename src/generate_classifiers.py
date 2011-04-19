@@ -58,10 +58,10 @@ class AnalyzeClassifiers:
         currentDay = Settings.startTime
         while currentDay<=Settings.endTime:
             for noOfDays in Utilities.getClassifierLengthsByDay(currentDay, maxLength): 
-                classifier = FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigramNouns, noOfDays=noOfDays)
+                classifier = FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDays)
                 classifier.load()
-                data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'classifier_length': noOfDays, 'metric': 'aucm', 'number_of_experts': Settings.numberOfExperts, 'data_type': DocumentType.typeRuuslUnigramNouns, 'test_data_days': 1}
-                data['value'] = classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigramNouns, noOfDays=1).iterator())
+                data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'classifier_length': noOfDays, 'metric': 'aucm', 'number_of_experts': Settings.numberOfExperts, 'data_type': DocumentType.typeRuuslUnigram, 'test_data_days': 1}
+                data['value'] = classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
                 Utilities.writeAsJsonToFile(data, Settings.stats_to_determine_fixed_window_length)
             currentDay+=timedelta(days=1)
     
@@ -153,13 +153,14 @@ class AnalyzeClassifiers:
         for data in Utilities.iterateJsonFromFile(Settings.stats_for_diminishing_aucm): 
             if data['no_of_days_in_future'] not in daysToScore[data['classifier_length']]: daysToScore[data['classifier_length']][data['no_of_days_in_future']]=[]
             daysToScore[data['classifier_length']][data['no_of_days_in_future']].append(data['value'])
-        for classifierLength in daysToScore:
+        for classifierLength in sorted(daysToScore):
             print classifierLength
             dataX = daysToScore[classifierLength].keys()[4:9]
             dataY = [numpy.mean(daysToScore[classifierLength][x]) for x in dataX]
             plt.plot(dataX, dataY, color[classifierLength], label=str(classifierLength), lw=2)
         plt.legend()
-        plt.xticks([])
+#        plt.xticks([])
+        plt.xticks( range(5,10), range(1,6) )
         plt.ylim( (0.627, 0.735) ) 
         plt.show()
         
@@ -202,14 +203,14 @@ if __name__ == '__main__':
 #    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations()
 #    GenerateClassifiers.fixedWindowByRelabelingDocuments()
    
-    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
+#    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.generateStatsToCompareDifferentDocumentTypes()
 #    AnalyzeClassifiers.generateStatsToCompareCollocations()
 #    AnalyzeClassifiers.generateStatsObservePerformanceByRelabelingDocuments()
 #    AnalyzeClassifiers.generateStatsForDiminishingAUCM()
 
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
+    AnalyzeClassifiers.analyzeStatsForDimnishingAUCMValues()
 #    AnalyzeClassifiers.analyzeStatsToCompareDifferentDocumentTypes()
 #    AnalyzeClassifiers.analyzeStatsToCompareCollocations()
-#    AnalyzeClassifiers.analyzeStatsForDimnishingAUCMValues()
 #    AnalyzeClassifiers.analyzeStatsToObservePerformanceByRelabelingDocuments()
