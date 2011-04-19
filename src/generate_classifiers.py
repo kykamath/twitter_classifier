@@ -67,10 +67,10 @@ class AnalyzeClassifiers:
     
     @staticmethod
     def generateStatsForDiminishingAUCM():
-        currentDay = datetime(2011, 4, 1)
+        currentDay = datetime(2011, 3, 26)
         testDay = currentDay+timedelta(days=1)
-        noOfDays = [1, 8, 14]
-        for daysInFuture in range(1, 15):
+        noOfDays = [1, 4, 8]
+        for daysInFuture in range(1, 20):
             for noOfDay in noOfDays:
                 classifier = FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDay)
                 classifier.load()
@@ -147,7 +147,7 @@ class AnalyzeClassifiers:
         daysToScore = defaultdict(dict)
         for data in Utilities.iterateJsonFromFile(Settings.stats_for_diminishing_aucm): daysToScore[data['classifier_length']][data['no_of_days_in_future']] = data['value']
         for classifierLength in daysToScore:
-            dataX = daysToScore[classifierLength].keys()[:5]
+            dataX = daysToScore[classifierLength].keys()[4:9]
             dataY = [daysToScore[classifierLength][x] for x in dataX]
             plt.plot(dataX, dataY, label=str(classifierLength))
         plt.legend()
