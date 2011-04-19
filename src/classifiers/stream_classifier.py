@@ -102,25 +102,24 @@ class StreamClassifierWithDecay(StreamClassifier):
    
 class StreamClassifierWithDecayWithFeaturePriorities(StreamClassifierWithDecay):
     def __init__(self, decayRate, **kwargs):
-        super(StreamClassifierWithDecayWithFeaturePriorities, self).__init__(**kwargs)
-        self.decayRate=decayRate
-    def learnFromTweet(self, tweet):
-        classLabel = tweet['class']
-        tweetTime = datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format)
-        for feature in StreamClassifier.extractFeatures(tweet['document']):
-            if feature not in self.featureMap: self.featureMap[feature] = {'stats': {}, 'class': defaultdict(FeatureScore)}
-            self.featureMap[feature]['class'][classLabel].update(self.decayRate, tweetTime, 1)
-    def classifyTweet(self, tweet):
-        tweetFeatureMap = {}
-        tweetTime = datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format)
-        for feature in StreamClassifier.extractFeatures(tweet['document']):
-            if feature in self.featureMap: tweetFeatureMap[feature]=self.getFeatureProbabilites(self.featureMap[feature], tweetTime)
-        perClassScores = defaultdict(float)
-        for k, v in tweetFeatureMap.iteritems(): 
-            featureScore = float(StreamClassifier.numberOfClasses)/len(v)
-            if featureScore!=0:
-                for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
-        return perClassScores
+        super(StreamClassifierWithDecayWithFeaturePriorities, self).__init__(decayRate, **kwargs)
+#    def learnFromTweet(self, tweet):
+#        classLabel = tweet['class']
+#        tweetTime = datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format)
+#        for feature in StreamClassifier.extractFeatures(tweet['document']):
+#            if feature not in self.featureMap: self.featureMap[feature] = {'stats': {}, 'class': defaultdict(FeatureScore)}
+#            self.featureMap[feature]['class'][classLabel].update(self.decayRate, tweetTime, 1)
+#    def classifyTweet(self, tweet):
+#        tweetFeatureMap = {}
+#        tweetTime = datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format)
+#        for feature in StreamClassifier.extractFeatures(tweet['document']):
+#            if feature in self.featureMap: tweetFeatureMap[feature]=self.getFeatureProbabilites(self.featureMap[feature], tweetTime)
+#        perClassScores = defaultdict(float)
+#        for k, v in tweetFeatureMap.iteritems(): 
+#            featureScore = float(StreamClassifier.numberOfClasses)/len(v)
+#            if featureScore!=0:
+#                for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
+#        return perClassScores
     
 if __name__ == '__main__':
     streamClassifier = StreamClassifierWithDecayWithFeaturePriorities(decayRate=1.0, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=25)
