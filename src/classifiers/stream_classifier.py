@@ -95,7 +95,7 @@ class StreamClassifierWithDecay(StreamClassifier):
             if feature in self.featureMap: tweetFeatureMap[feature]=self.getFeatureProbabilites(self.featureMap[feature], tweetTime)
         perClassScores = defaultdict(float)
         for k, v in tweetFeatureMap.iteritems(): 
-            featureScore = float(StreamClassifier.numberOfClasses)/len(v)
+            featureScore = math.log(float(StreamClassifier.numberOfClasses)/len(v))
             if featureScore!=0:
                 for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
         return perClassScores
