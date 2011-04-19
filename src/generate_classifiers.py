@@ -68,16 +68,16 @@ class AnalyzeClassifiers:
     @staticmethod
     def generateStatsForDiminishingAUCM():
         currentDay = datetime(2011, 4, 1)
-        nextDay = currentDay+timedelta(days=1)
+        testDay = currentDay+timedelta(days=1)
         noOfDays = [1, 8, 14]
         for daysInFuture in range(1, 11):
             for noOfDay in noOfDays:
                 classifier = FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDay)
                 classifier.load()
-                data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'classifier_length': noOfDays, 'metric': 'aucm', 'number_of_experts': Settings.numberOfExperts, 'data_type': DocumentType.typeRuuslUnigram, 'test_data_days': 1, 'no_of_days_in_future': daysInFuture}
-                data['value'] = classifier.getAUCM(TestDocuments(currentTime=nextDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
+                data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'test_day': datetime.strftime(testDay, Settings.twitter_api_time_format), 'classifier_length': noOfDay, 'metric': 'accuracy', 'number_of_experts': Settings.numberOfExperts, 'data_type': DocumentType.typeRuuslUnigram, 'test_data_days': 1, 'no_of_days_in_future': daysInFuture}
+                data['value'] = classifier.getAccuracy(TestDocuments(currentTime=testDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
                 Utilities.writeAsJsonToFile(data, Settings.stats_for_diminishing_aucm)
-            nextDay+=timedelta(days=1)
+            testDay+=timedelta(days=1)
     
     @staticmethod
     def generateStatsToCompareDifferentDocumentTypes():
