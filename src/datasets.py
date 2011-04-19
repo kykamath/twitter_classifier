@@ -229,7 +229,7 @@ class CreateTrainingAndTestSets:
         allExpertsTop = ExpertUsers(Settings.numberOfExperts)
         allExpertsIntermediate = ExpertUsers(375)
         allExpertsList={}
-        for k, v in allExpertsTop.list.iteritems(): del allExpertsIntermediate[k]
+        for k, v in allExpertsTop.list.iteritems(): del allExpertsIntermediate.list[k]
         for k, v in allExpertsIntermediate.list.iteritems(): allExpertsList[k]=v
         print len(allExpertsIntermediate)
         exit()
