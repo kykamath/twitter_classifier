@@ -227,12 +227,12 @@ class CreateTrainingAndTestSets:
     def generateRawDataForSetOfUsers():
         currentTime = Settings.startTime
         allExpertsTop = ExpertUsers(Settings.numberOfExperts)
-        allExpertsIntermediate = ExpertUsers(375)
+        allExpertsIntermediate = ExpertUsers(Settings.numberOfExpertsSecondSet)
         allExpertsList={}
         for k, v in allExpertsTop.list.iteritems(): del allExpertsIntermediate.list[k]
         for k, v in allExpertsIntermediate.list.iteritems(): allExpertsList[k]=v
         while currentTime <= Settings.endTime:
-            for numberOfExperts in [375]:
+            for numberOfExperts in [Settings.numberOfExpertsSecondSet]:
                 trainingFile = Utilities.getTrainingFile(currentTime, DocumentType.typeRaw, numberOfExperts)
                 Utilities.createDirectory(trainingFile)
                 print numberOfExperts, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)
@@ -240,14 +240,16 @@ class CreateTrainingAndTestSets:
                     tweet['class'] = allExpertsList[tweet['user']['id_str']]['class']
                     Utilities.writeAsJsonToFile(tweet, trainingFile)
             currentTime+=timedelta(days=1)
+            
     @staticmethod
-    def createModifiedData(dataTypes):
+    def createModifiedData(dataTypes, numberOfUsers=Settings.numberOfExperts):
         currentTime = Settings.startTime
         while currentTime <= Settings.endTime:
             for dataType in dataTypes: 
                 print currentTime, dataType
-                dataType(currentTime, Settings.numberOfExperts).generate()
+                dataType(currentTime, numberOfUsers).generate()
             currentTime+=timedelta(days=1)
+            
     @staticmethod
     def createStreamingData(dataTypes):
         currentTime = Settings.startTime
@@ -259,6 +261,6 @@ class CreateTrainingAndTestSets:
 
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
-    CreateTrainingAndTestSets.generateRawDataForSetOfUsers()
-#    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigramNounsWithMeta])
+#    CreateTrainingAndTestSets.generateRawDataForSetOfUsers()
+    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigram], Settings.numberOfExpertsSecondSet)
 #    CreateTrainingAndTestSets.createStreamingData([DocumentType.typeRuuslUnigram])

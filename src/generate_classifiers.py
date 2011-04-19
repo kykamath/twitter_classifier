@@ -140,7 +140,9 @@ class AnalyzeClassifiers:
         for data in Utilities.iterateJsonFromFile(Settings.stats_to_determine_fixed_window_length): classifierLengthToScore[data['classifier_length']].append(data['value'])
         dataX, dataY = [], []
         for classifierLength in classifierLengthToScore: dataX.append(classifierLength), dataY.append(numpy.mean(classifierLengthToScore[classifierLength]))
-        plt.plot(dataX, dataY, 'om-', lw=2)
+        plt.plot(dataX, dataY, 'om-', lw=2, label='Unigram model')
+        plt.legend()
+        plt.title('AUCM at different model window training lengths')
         plt.ylabel('AUCM value')
         plt.xlabel('Length of training window (days)')
         plt.ylim( (0.2, 1) ) 
@@ -159,7 +161,9 @@ class AnalyzeClassifiers:
             dataY = [numpy.mean(daysToScore[classifierLength][x]) for x in dataX]
             plt.plot(dataX, dataY, color[classifierLength], label=str(classifierLength), lw=2)
         plt.legend()
-#        plt.xticks([])
+        plt.ylabel('AUCM value')
+        plt.xlabel('Number of days in future')
+        plt.title('Decay in AUCM with time')
         plt.xticks( range(5,10), range(1,6) )
         plt.ylim( (0.627, 0.735) ) 
         plt.show()
@@ -209,8 +213,8 @@ if __name__ == '__main__':
 #    AnalyzeClassifiers.generateStatsObservePerformanceByRelabelingDocuments()
 #    AnalyzeClassifiers.generateStatsForDiminishingAUCM()
 
-#    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
-    AnalyzeClassifiers.analyzeStatsForDimnishingAUCMValues()
+    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
+#    AnalyzeClassifiers.analyzeStatsForDimnishingAUCMValues()
 #    AnalyzeClassifiers.analyzeStatsToCompareDifferentDocumentTypes()
 #    AnalyzeClassifiers.analyzeStatsToCompareCollocations()
 #    AnalyzeClassifiers.analyzeStatsToObservePerformanceByRelabelingDocuments()
