@@ -66,6 +66,20 @@ class AnalyzeClassifiers:
             currentDay+=timedelta(days=1)
     
     @staticmethod
+    def generateStatsForDiminishingAUCM():
+        currentDay = datetime(2011, 3, 26)
+        nextDay = currentDay+timedelta(days=1)
+        noOfDays = [1, 8, 14]
+        for daysInFuture in range(1, 11):
+            for noOfDay in noOfDays:
+                classifier = FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDay)
+                classifier.load()
+                data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'classifier_length': noOfDays, 'metric': 'aucm', 'number_of_experts': Settings.numberOfExperts, 'data_type': DocumentType.typeRuuslUnigram, 'test_data_days': 1, 'no_of_days_in_future': daysInFuture}
+                data['value'] = classifier.getAUCM(TestDocuments(currentTime=nextDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
+                Utilities.writeAsJsonToFile(data, Settings.stats_for_diminishing_aucm)
+            nextDay+=timedelta(days=1)
+    
+    @staticmethod
     def generateStatsToCompareDifferentDocumentTypes():
         global maxLength, idealModelLength
         dataTypes = [DocumentType.typeRuuslUnigram, DocumentType.typeCharBigram, DocumentType.typeCharTrigram, DocumentType.typeRuuslBigram, DocumentType.typeRuuslTrigram, DocumentType.typeRuuslSparseBigram,
@@ -115,14 +129,17 @@ class AnalyzeClassifiers:
                 print data
 #                    Utilities.writeAsJsonToFile(data, Settings.stats_to_compare_different_document_types)
             currentDay+=timedelta(days=1)
-            
+    
     @staticmethod
     def analyzeStatsToDetermineFixedWindowLength():
         classifierLengthToScore=defaultdict(list)
         for data in Utilities.iterateJsonFromFile(Settings.stats_to_determine_fixed_window_length): classifierLengthToScore[data['classifier_length']].append(data['value'])
         dataX, dataY = [], []
         for classifierLength in classifierLengthToScore: dataX.append(classifierLength), dataY.append(numpy.mean(classifierLengthToScore[classifierLength]))
-        plt.plot(dataX, dataY)
+        plt.plot(dataX, dataY, 'om-', lw=2)
+        plt.ylabel('AUCM value')
+        plt.xlabel('Length of training window (days)')
+        plt.ylim( (0.2, 1) ) 
         plt.show()
     
     @staticmethod
@@ -153,10 +170,11 @@ if __name__ == '__main__':
 #    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations()
 #    GenerateClassifiers.fixedWindowByRelabelingDocuments()
    
-    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
+#    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.generateStatsToCompareDifferentDocumentTypes()
 #    AnalyzeClassifiers.generateStatsToCompareCollocations()
 #    AnalyzeClassifiers.generateStatsObservePerformanceByRelabelingDocuments()
+    AnalyzeClassifiers.generateStatsForDiminishingAUCM()
 
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.analyzeStatsToCompareDifferentDocumentTypes()

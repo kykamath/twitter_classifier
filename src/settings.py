@@ -39,5 +39,6 @@ class Settings:
     # Experiments
     stats_folder = 'stats/'
     stats_to_determine_fixed_window_length = stats_folder+'stats_to_determine_fixed_window_length'
+    stats_for_diminishing_aucm = stats_folder+'stats_for_diminishing_aucm'
     stats_to_compare_different_document_types = stats_folder+'stats_to_compare_different_document_types'
     stats_to_compare_collocations = stats_folder+'stats_to_compare_collocations'
