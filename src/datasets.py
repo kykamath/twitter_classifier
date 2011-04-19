@@ -231,7 +231,7 @@ class CreateTrainingAndTestSets:
         allExpertsList={}
         for k, v in allExpertsTop.list.iteritems(): del allExpertsIntermediate.list[k]
         for k, v in allExpertsIntermediate.list.iteritems(): allExpertsList[k]=v
-        print len(allExpertsIntermediate)
+        print len(allExpertsIntermediate.list), len(allExpertsList)
         exit()
         while currentTime <= Settings.endTime:
             for numberOfExperts in [375]:
