@@ -68,18 +68,19 @@ class AnalyzeClassifiers:
     @staticmethod
     def generateStatsToCompareDifferentDocumentTypes():
         global maxLength, idealModelLength
-        dataTypes = [DocumentType.typeRuuslUnigram, DocumentType.typeCharBigram, DocumentType.typeCharTrigram]
+        dataTypes = [DocumentType.typeRuuslUnigram, DocumentType.typeCharBigram, DocumentType.typeCharTrigram, DocumentType.typeRuuslBigram, DocumentType.typeRuuslTrigram, DocumentType.typeRuuslSparseBigram,
+                     DocumentType.typeRuuslUnigramNouns, DocumentType.typeRuuslUnigramWithMeta, DocumentType.typeRuuslUnigramNounsWithMeta]
         currentDay = Settings.startTime
         while currentDay<=Settings.endTime:
             noOfDaysList = list(set([idealModelLength]).intersection(set(Utilities.getClassifierLengthsByDay(currentDay, maxLength))))
             for noOfDays in noOfDaysList: 
                 for dataType in dataTypes:
+                    print currentDay, noOfDays, dataType
                     classifier = FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=dataType, noOfDays=noOfDays)
                     classifier.load()
                     data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'classifier_length': noOfDays, 'metric': 'aucm', 'number_of_experts': Settings.numberOfExperts, 'data_type': dataType, 'test_data_days': 1}
                     data['value'] = classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=dataType, noOfDays=1).iterator())
-                    print data
-#                    Utilities.writeAsJsonToFile(data, Settings.stats_to_compare_language_models)
+                    Utilities.writeAsJsonToFile(data, Settings.stats_to_compare_different_document_types)
             currentDay+=timedelta(days=1)
     
     @staticmethod
@@ -112,7 +113,7 @@ class AnalyzeClassifiers:
                 data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'classifier_length': noOfDays, 'metric': 'aucm', 'number_of_experts': Settings.numberOfExperts, 'data_type': DocumentType.typeRuuslUnigram, 'test_data_days': 1}
                 data['value'] = classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
                 print data
-#                    Utilities.writeAsJsonToFile(data, Settings.stats_to_compare_language_models)
+#                    Utilities.writeAsJsonToFile(data, Settings.stats_to_compare_different_document_types)
             currentDay+=timedelta(days=1)
             
     @staticmethod
@@ -127,7 +128,7 @@ class AnalyzeClassifiers:
     @staticmethod
     def analyzeStatsToCompareLanguageModels():
         languageModelToScore=defaultdict(list)
-        for data in Utilities.iterateJsonFromFile(Settings.stats_to_compare_language_models): languageModelToScore[data['data_type']].append(data['value'])
+        for data in Utilities.iterateJsonFromFile(Settings.stats_to_compare_different_document_types): languageModelToScore[data['data_type']].append(data['value'])
         for languageModel in languageModelToScore: print languageModel, numpy.mean(languageModelToScore[languageModel])
     
     @staticmethod
@@ -142,9 +143,9 @@ if __name__ == '__main__':
 #    GenerateClassifiers.fixedWindowByRelabelingDocuments()
    
 #    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
-#    AnalyzeClassifiers.generateStatsToCompareDifferentDocumentTypes()
+    AnalyzeClassifiers.generateStatsToCompareDifferentDocumentTypes()
 #    AnalyzeClassifiers.generateStatsToCompareCollocations()
-    AnalyzeClassifiers.generateStatsObservePerformanceByRelabelingDocuments()
+#    AnalyzeClassifiers.generateStatsObservePerformanceByRelabelingDocuments()
 
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.analyzeStatsToCompareLanguageModels()
