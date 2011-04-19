@@ -67,10 +67,10 @@ class AnalyzeClassifiers:
     
     @staticmethod
     def generateStatsForDiminishingAUCM():
-        currentDay = datetime(2011, 4, 1)
+        currentDay = datetime(2011, 3, 26)
         testDay = currentDay+timedelta(days=1)
-        noOfDays = [1, 8, 14]
-        for daysInFuture in range(1, 11):
+        noOfDays = [1, 8]
+        for daysInFuture in range(1, 15):
             for noOfDay in noOfDays:
                 classifier = FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDay)
                 classifier.load()
