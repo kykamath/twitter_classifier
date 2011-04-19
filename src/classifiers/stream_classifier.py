@@ -99,7 +99,7 @@ class StreamClassifierWithDecay(StreamClassifier):
             if featureScore!=0:
                 for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
         return perClassScores
-   
+
 #class StreamClassifierWithDecayWithFeaturePriorities(StreamClassifierWithDecay):
 #    def __init__(self, decayRate, **kwargs):
 #        super(StreamClassifierWithDecayWithFeaturePriorities, self).__init__(decayRate, **kwargs)
