@@ -131,8 +131,7 @@ class AnalyzeClassifiers:
                 classifier.load()
                 data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'classifier_length': noOfDays, 'metric': 'aucm', 'number_of_experts': Settings.numberOfExperts, 'data_type': DocumentType.typeRuuslUnigram, 'test_data_days': 1}
                 data['value'] = classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
-                print data
-#                    Utilities.writeAsJsonToFile(data, Settings.stats_to_compare_different_document_types)
+                Utilities.writeAsJsonToFile(data, Settings.stats_to_observe_performance_by_relabeling_documents)
             currentDay+=timedelta(days=1)
     
     @staticmethod
@@ -150,12 +149,18 @@ class AnalyzeClassifiers:
     @staticmethod
     def analyzeStatsForDimnishingAUCMValues():
         daysToScore = defaultdict(dict)
-        for data in Utilities.iterateJsonFromFile(Settings.stats_for_diminishing_aucm): daysToScore[data['classifier_length']][data['no_of_days_in_future']] = data['value']
+        color = {1: 'rx-', 8: 'g>-', 14: 'bo-'}
+        for data in Utilities.iterateJsonFromFile(Settings.stats_for_diminishing_aucm): 
+            if data['no_of_days_in_future'] not in daysToScore[data['classifier_length']]: daysToScore[data['classifier_length']][data['no_of_days_in_future']]=[]
+            daysToScore[data['classifier_length']][data['no_of_days_in_future']].append(data['value'])
         for classifierLength in daysToScore:
-            dataX = daysToScore[classifierLength].keys()
-            dataY = [daysToScore[classifierLength][x] for x in dataX]
-            plt.plot(dataX, dataY, label=str(classifierLength))
+            print classifierLength
+            dataX = daysToScore[classifierLength].keys()[4:9]
+            dataY = [numpy.mean(daysToScore[classifierLength][x]) for x in dataX]
+            plt.plot(dataX, dataY, color[classifierLength], label=str(classifierLength), lw=2)
         plt.legend()
+        plt.xticks([])
+        plt.ylim( (0.627, 0.735) ) 
         plt.show()
         
     @staticmethod
@@ -188,9 +193,9 @@ if __name__ == '__main__':
    
 #    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.generateStatsToCompareDifferentDocumentTypes()
-#    AnalyzeClassifiers.generateStatsToCompareCollocations()
+    AnalyzeClassifiers.generateStatsToCompareCollocations()
 #    AnalyzeClassifiers.generateStatsObservePerformanceByRelabelingDocuments()
-    AnalyzeClassifiers.generateStatsForDiminishingAUCM()
+#    AnalyzeClassifiers.generateStatsForDiminishingAUCM()
 
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.analyzeStatsToCompareDifferentDocumentTypes()

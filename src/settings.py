@@ -42,3 +42,4 @@ class Settings:
     stats_for_diminishing_aucm = stats_folder+'stats_for_diminishing_aucm'
     stats_to_compare_different_document_types = stats_folder+'stats_to_compare_different_document_types'
     stats_to_compare_collocations = stats_folder+'stats_to_compare_collocations'
+    stats_to_observe_performance_by_relabeling_documents = stats_folder+'stats_to_observe_performance_by_relabeling_documents'
