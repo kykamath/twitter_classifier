@@ -9,6 +9,7 @@ from datetime import datetime
 class Settings:
     applicationSourceDirectory = '/'.join(os.path.realpath(__file__).split('/')[:-1])+'/'
     applicationCommonFilesFolder = applicationSourceDirectory+'common_files/'
+    globalClassifierData = applicationCommonFilesFolder+'gloabl_classifier_data'
     
     twitterDataFolder = '/mnt/chevron/kykamath/data/twitter/'
     twitterUsersTweetsFolder = '%susers/tweets/'%twitterDataFolder

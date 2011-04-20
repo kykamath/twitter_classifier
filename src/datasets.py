@@ -271,7 +271,7 @@ class CreateTrainingAndTestSets:
             try:
                 classType, term = line.strip().split()
                 stringClassType = Utilities.getTopicForIndex(classType)
-                if stringClassType in classToIntMap: print stringClassType, term
+                if stringClassType in classToIntMap: Utilities.writeAsJsonToFile({'class':stringClassType, 'data': [term]}, Settings.globalClassifierData)
             except: pass
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
