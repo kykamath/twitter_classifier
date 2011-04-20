@@ -30,16 +30,16 @@ class GenerateClassifiers:
                 for dataType in dataTypes: FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=dataType, noOfDays=noOfDays).trainAndSave()
             currentDay+=timedelta(days=1)
     @staticmethod
-    def fixedWindowWithCollocationsForDifferentCollocations():
+    def fixedWindowWithCollocationsForDifferentCollocations(numberOfExperts=Settings.numberOfExperts):
         global maxLength, idealModelLength
         dataType = DocumentType.typeRuuslUnigram
-        collocationMeasures = [Collocations.measureTypeLikelihoodRatio, Collocations.measureTypeRawFrequency, Collocations.measureTypePMI]
+        collocationMeasures = [Collocations.measureTypeLikelihoodRatio, Collocations.measureTypeChiSquare]
         currentDay = Settings.startTime
         while currentDay<=Settings.endTime:
             noOfDaysList = list(set([idealModelLength]).intersection(set(Utilities.getClassifierLengthsByDay(currentDay, maxLength))))
             print currentDay, noOfDaysList
             for noOfDays in noOfDaysList: 
-                for collocationMeasure in collocationMeasures: FixedWindowWithCollocationsClassifier(collocationMeasure=collocationMeasure, currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=dataType, noOfDays=noOfDays).trainAndSave()
+                for collocationMeasure in collocationMeasures: FixedWindowWithCollocationsClassifier(collocationMeasure=collocationMeasure, currentTime=currentDay, numberOfExperts=numberOfExperts, dataType=dataType, noOfDays=noOfDays).trainAndSave()
             currentDay+=timedelta(days=1)
     @staticmethod
     def fixedWindowByRelabelingDocuments():
@@ -204,7 +204,7 @@ class AnalyzeClassifiers:
         
 if __name__ == '__main__':
 #    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
-#    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations()
+    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations(numberOfExperts=Settings.numberOfExpertsSecondSet)
 #    GenerateClassifiers.fixedWindowByRelabelingDocuments()
    
 #    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
@@ -213,7 +213,7 @@ if __name__ == '__main__':
 #    AnalyzeClassifiers.generateStatsObservePerformanceByRelabelingDocuments()
 #    AnalyzeClassifiers.generateStatsForDiminishingAUCM()
 
-    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
+#    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.analyzeStatsForDimnishingAUCMValues()
 #    AnalyzeClassifiers.analyzeStatsToCompareDifferentDocumentTypes()
 #    AnalyzeClassifiers.analyzeStatsToCompareCollocations()
