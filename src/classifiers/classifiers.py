@@ -170,8 +170,6 @@ class GlobalClassifier(Classifier):
         self.trainedClassifierFile = Settings.twitterClassifierTrainedModelsFolder+'global_classifier'
     def trainAndSave(self):
         Utilities.createDirectory(self.trainedClassifierFile)
-        for d in Utilities.iterateJsonFromFile(Settings.globalClassifierData): print (d['data'], d['class'])
-        exit()
         self.trainClassifier(((d['data'], d['class'])for d in Utilities.iterateJsonFromFile(Settings.globalClassifierData)))
         Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
 
