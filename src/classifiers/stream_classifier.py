@@ -116,7 +116,7 @@ class StreamClassifierNaiveBayes(StreamClassifier):
         tweetTime = datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format)
         classProbabilities, totalNumberOffUniqueFeatures = defaultdict(float), len(self.featureMap)
         for classLabel, classFeatureScore in self.classStats.iteritems(): 
-            classFeatureScore.update(self.decayRate, tweetTime)
+            classFeatureScore.update(self.decayRate, tweetTime, 0)
             numberOfFeaturesInClass = classFeatureScore.score
             for feature in StreamClassifier.extractFeatures(tweet['document']):
                 featureCountForClass = 0
