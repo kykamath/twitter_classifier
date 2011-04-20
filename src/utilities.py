@@ -112,6 +112,17 @@ class Utilities:
             yield (list(terms), tweet[1])
     @staticmethod
     def getClassifierLengthsByDay(currentDay, maxLength): return [1]+range(2,min([maxLength, (currentDay-Settings.startTime).days+2]),2)
+    @staticmethod
+    def getTopicForIndex(index):
+        if index == '1': return "buisness"
+        elif index == '2' : return "entertainment"
+        elif index == '3' : return "health"
+        elif index == '4' : return "politics"
+        elif index == '5' : return "sports"
+        elif index == '6' : return "technology"
+        elif index == '7' : return "weather"
+        elif index == '8' : return "NotClassified"
+        elif index == '-1': return "Other"
 
 #if __name__ == '__main__':
 #    i = 1
