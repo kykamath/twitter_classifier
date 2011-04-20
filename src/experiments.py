@@ -9,7 +9,8 @@ from settings import Settings
 from datasets import DocumentType, DataDirection
 from datetime import timedelta, datetime
 from classifiers.classifiers import FixedWindowClassifier, FixedWindowWithCollocationsClassifier, TestDocuments,\
-    TestDocumentsWithCollocations, FixedWindowWithRelabeledDocumentsClassifier
+    TestDocumentsWithCollocations, FixedWindowWithRelabeledDocumentsClassifier,\
+    GlobalClassifier
 from utilities import Utilities
 from collections import defaultdict
 from collocations import Collocations
@@ -53,6 +54,12 @@ class GenerateClassifiers:
             print currentDay, noOfDaysList
             for noOfDays in noOfDaysList: FixedWindowWithRelabeledDocumentsClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDays).trainAndSave()
             currentDay+=timedelta(days=1)
+    @staticmethod
+    def globalClassifier():
+        classifier = GlobalClassifier()
+        classifier.trainAndSave()
+        
+    
 
 class AnalyzeClassifiers:
     @staticmethod
@@ -335,7 +342,8 @@ if __name__ == '__main__':
 #    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
 #    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations(numberOfExperts=Settings.numberOfExpertsSecondSet)
 #    GenerateClassifiers.fixedWindowByRelabelingDocuments()
-   
+    GenerateClassifiers.globalClassifier()
+    
 #    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.generateStatsToCompareDifferentDocumentTypes()
 #    AnalyzeClassifiers.generateStatsToCompareCollocations()
@@ -350,5 +358,6 @@ if __name__ == '__main__':
 #    AnalyzeClassifiers.analyzeStatsToCompareCollocations()
 #    AnalyzeClassifiers.analyzeStatsToObservePerformanceByRelabelingDocuments()
 #    AnalyzeClassifiers.analyzeStatsForTopFeaturesFeatureChange()
-    AnalyzeClassifiers.analyzeStatsForConceptDriftExamples()
+#    AnalyzeClassifiers.analyzeStatsForConceptDriftExamples()
 #    AnalyzeClassifiers.analyzeTrainingData()
+    

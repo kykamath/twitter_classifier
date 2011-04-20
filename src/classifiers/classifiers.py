@@ -5,6 +5,7 @@ Created on Mar 18, 2011
 '''
 import sys
 from relabel_documents import ReLabelTrainingDocuments
+from distutils.archive_util import kwargs
 sys.path.append('../')
 from collections import defaultdict
 from settings import Settings
@@ -53,6 +54,7 @@ class Classifier(object):
     typeFixedWindow = 'fixed_window'
     typeFixedWindowWithCollocations = 'fixed_window_with_collocations'
     typeFixedWindowWithRelabeledDocuments = 'fixed_window_with_relabeled_documents'
+    typeGlobalClassifier = 'global_classifier'
     
     def __init__(self): 
         self.nltkClassifier = MaxentClassifier
@@ -163,6 +165,16 @@ class FixedWindowWithRelabeledDocumentsClassifier(FixedWindowClassifier):
         self.trainClassifier(ReLabelTrainingDocuments(Utilities.getTweets(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs)).getRelabeledDocuments())
         Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
         
+class GlobalClassifier(Classifier):
+    def __init__(self, **kwargs):
+        super(GlobalClassifier, self).__init__(**kwargs)
+        self.trainedClassifierFile = Settings.twitterClassifierTrainedModelsFolder+'global_classifier'
+    def trainAndSave(self):
+        Utilities.createDirectory(self.trainedClassifierFile)
+        for d in Utilities.iterateJsonFromFile(Settings.globalClassifierData): print (d['data'], d['class'])
+        exit()
+        self.trainClassifier(((d['data'], d['class'])for d in Utilities.iterateJsonFromFile(Settings.globalClassifierData)))
+        Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
 
 class TestDocuments:
 #    TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=4)
