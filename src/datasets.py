@@ -262,6 +262,12 @@ class CreateTrainingAndTestSets:
                 print currentTime, dataType
                 StreamingSets(currentTime, dataType, Settings.numberOfExperts).generate()
             currentTime+=timedelta(days=1)
+        
+    @staticmethod
+    def generateDataForGlobalClassifier():
+        inputDataFile = '/home/kykamath/projects/Classifiers/src/lda_svm/global_classifier/data'
+        for line in open(inputDataFile):
+            print line.strip().split()
 
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()

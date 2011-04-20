@@ -242,7 +242,7 @@ class AnalyzeClassifiers:
     
     @staticmethod
     def analyzeStatsForTopFeaturesFeatureChange():
-        yticks = ('sports', 'politics', 'entertainment', 'technology')
+        yticks = ('sports', 'technology', 'entertainment', 'politics')
         dataByDay = AnalyzeClassifiers._getFeatureDataByDay()
         changeInFeatures = defaultdict(dict)
         previousDaysData = None
@@ -255,11 +255,20 @@ class AnalyzeClassifiers:
                     previousDaysFeatureSet = set(previousDaysData[classType][:100])
                     changeInFeatures[k][classType]=(len(currentDaysFeatureSet.union(previousDaysFeatureSet))-len(currentDaysFeatureSet.intersection(previousDaysFeatureSet)))/float(len(previousDaysFeatureSet))
         dataToPlot = defaultdict(list)
+        cmap = mpl.cm.Blues
+        fig=plt.figure()
         for k in sorted(changeInFeatures): [dataToPlot[classType].append(changeInFeatures[k][classType])for classType in changeInFeatures[k]]
-        plt.imshow([dataToPlot[k] for k in yticks], cmap = mpl.cm.Blues, interpolation='nearest', aspect=5, alpha=1, vmin=1.4, vmax=1.7)
+        plt.imshow([dataToPlot[k] for k in yticks], cmap = cmap, interpolation='nearest', aspect=5, alpha=1, vmin=1.4, vmax=1.7)
         plt.xticks(())
         plt.yticks(range(len(yticks)), yticks)
         plt.xlabel('March-April 2011')
+        plt.title('Ratio of feature change')
+        ax1 = fig.add_axes([0.85, 0.1, 0.05, 0.8])
+        norm = mpl.colors.Normalize(vmin=1.4, vmax=1.7)
+        cb1 = mpl.colorbar.ColorbarBase(ax1, cmap=cmap,
+                                       norm=norm,
+                                       orientation='vertical',alpha=1)
+        
         plt.show()
     
     @staticmethod
@@ -278,10 +287,48 @@ class AnalyzeClassifiers:
                 if len(featureRankMap[feature])>3:
                     dataToPlot[feature].append(featureRankMap[feature].get(d, 25))
         for f in dataToPlot: print f, dataToPlot[f]
-        plt.imshow([dataToPlot[k] for k in featuresToPlot], cmap = mpl.cm.gray, interpolation='nearest', aspect=5, alpha=2)
+        cmap = mpl.cm.gray
+        fig=plt.figure()
+        plt.imshow([dataToPlot[k] for k in featuresToPlot], cmap = cmap, interpolation='nearest', aspect=5, alpha=2)
         plt.xticks(())
         plt.yticks(range(len(featuresToPlot)), [k for k in featuresToPlot])
         plt.xlabel('March-April 2011')
+        plt.title('Changing concepts in sports')
+        ax1 = fig.add_axes([0.85, 0.1, 0.05, 0.8])
+        norm = mpl.colors.Normalize(vmin=1, vmax=20)
+        cb1 = mpl.colorbar.ColorbarBase(ax1, cmap=cmap,
+                                           norm=norm,
+                                           orientation='vertical',alpha=1)
+        plt.show()
+    
+    @staticmethod
+    def analyzeTrainingData():
+        yticks = ('sports', 'technology', 'entertainment', 'politics')
+        dataByDay = {}
+        for l in Utilities.iterateJsonFromFile(Settings.stats_for_training_data):
+            dataByDay[datetime.strptime(l['day'], Settings.twitter_api_time_format)] = l['class_distribution']
+        dataToPlot = defaultdict(list)
+        previousDaysData = None
+        for d in sorted(dataByDay):
+            if previousDaysData==None: previousDaysData=dataByDay[d]
+            else:
+                currentDaysData = dataByDay[d]
+                for classType in currentDaysData:
+                    dataToPlot[classType].append(numpy.sqrt((currentDaysData[classType]-previousDaysData[classType])**2)/previousDaysData[classType])
+        fig=plt.figure()
+        cmap=mpl.cm.Blues
+        for k in dataToPlot: print k, dataToPlot[k]
+        plt.imshow([dataToPlot[k] for k in yticks], cmap = cmap, interpolation='nearest', aspect=5, alpha=1, vmin=0, vmax=2)
+        plt.xticks(())
+        plt.yticks(range(len(yticks)), [k for k in yticks])
+        plt.xlabel('March-April 2011')
+        plt.title('Ratio of change in training-set size.')
+        ax1 = fig.add_axes([0.85, 0.1, 0.05, 0.8])
+        norm = mpl.colors.Normalize(vmin=0, vmax=2)
+        cb1 = mpl.colorbar.ColorbarBase(ax1, cmap=cmap,
+                                       norm=norm,
+                                       orientation='vertical',alpha=1)
+        
         plt.show()
         
 if __name__ == '__main__':
@@ -295,7 +342,7 @@ if __name__ == '__main__':
 #    AnalyzeClassifiers.generateStatsObservePerformanceByRelabelingDocuments()
 #    AnalyzeClassifiers.generateStatsForDiminishingAUCM()
 #    AnalyzeClassifiers.generateStatsForTopFeatures()
-    AnalyzeClassifiers.generateStatsForTrainingDataPerDay()
+#    AnalyzeClassifiers.generateStatsForTrainingDataPerDay()
 
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.analyzeStatsForDimnishingAUCMValues()
@@ -303,4 +350,5 @@ if __name__ == '__main__':
 #    AnalyzeClassifiers.analyzeStatsToCompareCollocations()
 #    AnalyzeClassifiers.analyzeStatsToObservePerformanceByRelabelingDocuments()
 #    AnalyzeClassifiers.analyzeStatsForTopFeaturesFeatureChange()
-#    AnalyzeClassifiers.analyzeStatsForConceptDriftExamples()
+    AnalyzeClassifiers.analyzeStatsForConceptDriftExamples()
+#    AnalyzeClassifiers.analyzeTrainingData()
