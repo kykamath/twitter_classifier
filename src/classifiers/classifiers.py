@@ -5,7 +5,6 @@ Created on Mar 18, 2011
 '''
 import sys
 from relabel_documents import ReLabelTrainingDocuments
-from distutils.archive_util import kwargs
 sys.path.append('../')
 from collections import defaultdict
 from settings import Settings
