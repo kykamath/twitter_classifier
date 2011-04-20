@@ -120,7 +120,7 @@ class StreamClassifierNaiveBayes(StreamClassifier):
             numberOfFeaturesInClass = classFeatureScore.score
             for feature in StreamClassifier.extractFeatures(tweet['document']):
                 featureCountForClass = 0
-                if classLabel in self.featureMap[feature]['class']:
+                if feature in self.featureMap and classLabel in self.featureMap[feature]['class']:
                     self.featureMap[feature]['class'][classLabel].update(self.decayRate, tweetTime, 0)
                     featureCountForClass = self.featureMap[feature]['class'][classLabel].score
                 classProbabilities[classLabel]+=((featureCountForClass+1)/(numberOfFeaturesInClass+totalNumberOffUniqueFeatures))
