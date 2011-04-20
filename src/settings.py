@@ -48,3 +48,4 @@ class Settings:
     stats_to_observe_performance_by_relabeling_documents = stats_folder+'stats_to_observe_performance_by_relabeling_documents'
     stats_for_most_informative_features = stats_folder+'stats_for_most_informative_features'
     stats_for_training_data = stats_folder+'stats_for_training_data'
+    stats_for_global_classifier = stats_folder+'stats_for_global_classifier'

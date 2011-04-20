@@ -175,9 +175,7 @@ class AnalyzeClassifiers:
         while currentDay<=Settings.endTime:
             data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format),  'metric': 'aucm', 'data_type': DocumentType.typeRuuslUnigram, 'test_data_days': 1}
             data['value'] = classifier.getAUCM(TestDocuments(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
-            print data
-            exit()
-#            Utilities.writeAsJsonToFile(data, Settings.stats_to_determine_fixed_window_length)
+            Utilities.writeAsJsonToFile(data, Settings.stats_for_global_classifier)
             currentDay+=timedelta(days=1)
     
     @staticmethod
