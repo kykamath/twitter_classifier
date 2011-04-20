@@ -17,6 +17,7 @@ from collocations import Collocations
 from itertools import groupby
 from operator import itemgetter
 from matplotlib import mpl
+from matplotlib.dates import drange
 
 maxLength=16
 idealModelLength = 8
@@ -339,6 +340,7 @@ class AnalyzeClassifiers:
         plt.yticks(range(len(yticks)), [k for k in yticks])
         plt.xlabel('March-April 2011')
         plt.title('Ratio of change in training-set size.')
+        
         ax1 = fig.add_axes([0.85, 0.1, 0.05, 0.8])
         norm = mpl.colors.Normalize(vmin=0, vmax=2)
         cb1 = mpl.colorbar.ColorbarBase(ax1, cmap=cmap,
@@ -347,6 +349,27 @@ class AnalyzeClassifiers:
         
         plt.show()
         
+    @staticmethod
+    def analyzeStatsForGlobalClassifier():
+        dataToPlot=dict()
+        for l in Utilities.iterateJsonFromFile(Settings.stats_for_global_classifier): dataToPlot[datetime.strptime(l['day'], Settings.twitter_api_time_format)]=l['value']
+        
+        date1 = Settings.startTime
+        date2 = Settings.endTime
+        dates = drange(date1, date2, timedelta(days=1))
+        
+        print len(dates), len(dataToPlot)
+        fig=plt.figure()
+#        plt.plot_date(dates, [1 for k in dates], '-')
+        plt.plot_date(dates, [dataToPlot[k] for k in sorted(dataToPlot)[:-1]], 'g-', lw=2, label='Global classifier (mean:%0.2f)'%numpy.mean(dataToPlot.values()))
+#        plt.plot_date(dates, [0 for k in dates], '-')
+        plt.ylim((0.4,0.55))
+        plt.ylabel('AUCM value')
+        plt.xlabel('Day')
+        plt.title('AUCM values for global classifier.')
+        plt.legend()
+        fig.autofmt_xdate()
+        plt.show()
 if __name__ == '__main__':
 #    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
 #    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations(numberOfExperts=Settings.numberOfExpertsSecondSet)
@@ -360,7 +383,7 @@ if __name__ == '__main__':
 #    AnalyzeClassifiers.generateStatsForDiminishingAUCM()
 #    AnalyzeClassifiers.generateStatsForTopFeatures()
 #    AnalyzeClassifiers.generateStatsForTrainingDataPerDay()
-    AnalyzeClassifiers.generateStatsForGlobalClassifier()
+#    AnalyzeClassifiers.generateStatsForGlobalClassifier()
     
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.analyzeStatsForDimnishingAUCMValues()
@@ -370,4 +393,4 @@ if __name__ == '__main__':
 #    AnalyzeClassifiers.analyzeStatsForTopFeaturesFeatureChange()
 #    AnalyzeClassifiers.analyzeStatsForConceptDriftExamples()
 #    AnalyzeClassifiers.analyzeTrainingData()
-    
+    AnalyzeClassifiers.analyzeStatsForGlobalClassifier()
