@@ -267,9 +267,10 @@ class CreateTrainingAndTestSets:
     def generateDataForGlobalClassifier():
         inputDataFile = '/home/kykamath/projects/Classifiers/src/lda_svm/global_classifier/data/global_classifier'
         for line in open(inputDataFile):
-            classType, term = line.strip().split()
-            print Utilities.getTopicForIndex(classType), term
-
+            try:
+                classType, term = line.strip().split()
+                print Utilities.getTopicForIndex(classType), term
+            except: pass
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
 #    CreateTrainingAndTestSets.generateRawDataForSetOfUsers()
