@@ -266,10 +266,12 @@ class CreateTrainingAndTestSets:
     @staticmethod
     def generateDataForGlobalClassifier():
         inputDataFile = '/home/kykamath/projects/Classifiers/src/lda_svm/global_classifier/data/global_classifier'
+        classToIntMap = {'sports': 1, 'politics': 2, 'entertainment': 3, 'technology': 4}
         for line in open(inputDataFile):
             try:
                 classType, term = line.strip().split()
-                print Utilities.getTopicForIndex(classType), term
+                stringClassType = Utilities.getTopicForIndex(classType)
+                if stringClassType in classToIntMap: print stringClassType, term
             except: pass
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
