@@ -159,8 +159,7 @@ class AnalyzeClassifiers:
             for d in Utilities.getTweets(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDays):
                 classDistribution[d[1]]+=1
             data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'class_distribution': classDistribution}
-            print data
-            exit()
+            Utilities.writeAsJsonToFile(data, Settings.stats_for_training_data)
             currentDay+=timedelta(days=1)
     
     @staticmethod
