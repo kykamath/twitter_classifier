@@ -246,8 +246,12 @@ class CreateTrainingAndTestSets:
         currentTime = Settings.startTime
         while currentTime <= Settings.endTime:
             for dataType in dataTypes: 
-                print currentTime, dataType
-                dataType(currentTime, numberOfUsers).generate()
+                try:
+                    print currentTime, dataType
+                    dataType(currentTime, numberOfUsers).generate()
+                except Exception as e: 
+                    print str(e)
+                    pass
             currentTime+=timedelta(days=1)
             
     @staticmethod
