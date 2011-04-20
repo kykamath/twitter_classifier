@@ -125,7 +125,7 @@ class StreamClassifierNaiveBayes(StreamClassifier):
                 if feature in self.featureMap and classLabel in self.featureMap[feature]['class']:
                     self.featureMap[feature]['class'][classLabel].update(self.decayRate, tweetTime, 0)
                     featureCountForClass = self.featureMap[feature]['class'][classLabel].score
-                classProbabilities[classLabel]+=((featureCountForClass+1)/(numberOfFeaturesInClass+totalNumberOffUniqueFeatures))
+                classProbabilities[classLabel]+=math.log((featureCountForClass+1)/(numberOfFeaturesInClass+totalNumberOffUniqueFeatures))
         return classProbabilities
                 
 if __name__ == '__main__':
