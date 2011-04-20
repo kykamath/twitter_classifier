@@ -6,13 +6,16 @@ Created on Apr 13, 2011
 import cjson, numpy
 import matplotlib.pyplot as plt
 from settings import Settings
-from datasets import DocumentType
+from datasets import DocumentType, DataDirection
 from datetime import timedelta, datetime
 from classifiers.classifiers import FixedWindowClassifier, FixedWindowWithCollocationsClassifier, TestDocuments,\
     TestDocumentsWithCollocations, FixedWindowWithRelabeledDocumentsClassifier
 from utilities import Utilities
 from collections import defaultdict
 from collocations import Collocations
+from itertools import groupby
+from operator import itemgetter
+from matplotlib import mpl
 
 maxLength=16
 idealModelLength = 8
@@ -148,6 +151,16 @@ class AnalyzeClassifiers:
             currentDay+=timedelta(days=1)
     
     @staticmethod
+    def generateStatsForTrainingDataPerDay():
+        currentDay = Settings.startTime
+        noOfDays = 1
+        while currentDay<=Settings.endTime:
+            for d in Utilities.getTweets(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDays):
+                print d
+            exit()
+            currentDay+=timedelta(days=1)
+    
+    @staticmethod
     def analyzeStatsToDetermineFixedWindowLength():
         classifierLengthToScore=defaultdict(list)
         for data in Utilities.iterateJsonFromFile(Settings.stats_to_determine_fixed_window_length): classifierLengthToScore[data['classifier_length']].append(data['value'])
@@ -216,6 +229,58 @@ class AnalyzeClassifiers:
         perfromanceByRelabeling=[]
         for data in Utilities.iterateJsonFromFile(Settings.stats_to_observe_performance_by_relabeling_documents): perfromanceByRelabeling.append(data['value'])
         print '%0.2f'%numpy.mean(perfromanceByRelabeling), '%0.2f'%numpy.var(perfromanceByRelabeling)
+    
+    @staticmethod
+    def _getFeatureDataByDay():
+        dataByDay = defaultdict(dict)
+        for l in Utilities.iterateJsonFromFile(Settings.stats_for_most_informative_features):
+            day = datetime.strptime(l['day'], Settings.twitter_api_time_format)
+            for k, g in groupby(sorted(l['features'], key=itemgetter(1)), key=itemgetter(1)): dataByDay[day][k] = [i[0] for i in g]
+        return dataByDay
+    
+    @staticmethod
+    def analyzeStatsForTopFeaturesFeatureChange():
+        yticks = ('sports', 'politics', 'entertainment', 'technology')
+        dataByDay = AnalyzeClassifiers._getFeatureDataByDay()
+        changeInFeatures = defaultdict(dict)
+        previousDaysData = None
+        for k in sorted(dataByDay):
+            if previousDaysData==None: previousDaysData=dataByDay[k]
+            else:
+                currentDaysData = dataByDay[k]
+                for classType in currentDaysData:
+                    currentDaysFeatureSet = set(currentDaysData[classType][:100])
+                    previousDaysFeatureSet = set(previousDaysData[classType][:100])
+                    changeInFeatures[k][classType]=(len(currentDaysFeatureSet.union(previousDaysFeatureSet))-len(currentDaysFeatureSet.intersection(previousDaysFeatureSet)))/float(len(previousDaysFeatureSet))
+        dataToPlot = defaultdict(list)
+        for k in sorted(changeInFeatures): [dataToPlot[classType].append(changeInFeatures[k][classType])for classType in changeInFeatures[k]]
+        plt.imshow([dataToPlot[k] for k in yticks], cmap = mpl.cm.Blues, interpolation='nearest', aspect=5, alpha=1, vmin=1.4, vmax=1.7)
+        plt.xticks(())
+        plt.yticks(range(len(yticks)), yticks)
+        plt.xlabel('March-April 2011')
+        plt.show()
+    
+    @staticmethod
+    def analyzeStatsForConceptDriftExamples():
+        featuresToPlot = ['mlb', 'espn', 'sfgiants', 'butler', 'nhl']
+        dataByDay = AnalyzeClassifiers._getFeatureDataByDay()
+        classType = 'sports'
+        featureRankMap = defaultdict(dict)
+        for d in sorted(dataByDay):
+            for feature in dataByDay[d][classType][:20]: featureRankMap[feature][d]=dataByDay[d][classType].index(feature)+1
+#        for feature in featureRankMap:
+#            if len(featureRankMap[feature]) >3: print feature, featureRankMap[feature]
+        dataToPlot = defaultdict(list)
+        for d in sorted(dataByDay):
+            for feature in featureRankMap:
+                if len(featureRankMap[feature])>3:
+                    dataToPlot[feature].append(featureRankMap[feature].get(d, 25))
+        for f in dataToPlot: print f, dataToPlot[f]
+        plt.imshow([dataToPlot[k] for k in featuresToPlot], cmap = mpl.cm.gray, interpolation='nearest', aspect=5, alpha=2)
+        plt.xticks(())
+        plt.yticks(range(len(featuresToPlot)), [k for k in featuresToPlot])
+        plt.xlabel('March-April 2011')
+        plt.show()
         
 if __name__ == '__main__':
 #    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
@@ -227,10 +292,13 @@ if __name__ == '__main__':
 #    AnalyzeClassifiers.generateStatsToCompareCollocations()
 #    AnalyzeClassifiers.generateStatsObservePerformanceByRelabelingDocuments()
 #    AnalyzeClassifiers.generateStatsForDiminishingAUCM()
-    AnalyzeClassifiers.generateStatsForTopFeatures()
+#    AnalyzeClassifiers.generateStatsForTopFeatures()
+    AnalyzeClassifiers.generateStatsForTrainingDataPerDay()
 
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.analyzeStatsForDimnishingAUCMValues()
 #    AnalyzeClassifiers.analyzeStatsToCompareDifferentDocumentTypes()
 #    AnalyzeClassifiers.analyzeStatsToCompareCollocations()
 #    AnalyzeClassifiers.analyzeStatsToObservePerformanceByRelabelingDocuments()
+#    AnalyzeClassifiers.analyzeStatsForTopFeaturesFeatureChange()
+#    AnalyzeClassifiers.analyzeStatsForConceptDriftExamples()
