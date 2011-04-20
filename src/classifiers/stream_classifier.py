@@ -59,6 +59,7 @@ class StreamClassifier(object):
         if perClassScores:
             sortedScores = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
 #            if sortedScores[0][1]>=math.log(Settings.stream_classifier_class_probability_threshold):
+            print sortedScores, -20
             if sortedScores[0][1]>=-20:
                 for classLabel, classId in classToIntMap.iteritems():
                     if classLabel not in perClassScores: tempDict[classId]=None
