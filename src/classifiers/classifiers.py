@@ -111,6 +111,8 @@ class Classifier(object):
 #        if methodology==None: return {Evaluation.accuracy: self.getAccuracy(documents), Evaluation.aucm: self.getAUCM(documents)}
 #        elif methodology==Evaluation.accuracy: return {Evaluation.accuracy: self.getAccuracy(documents)}
 #        elif methodology==Evaluation.aucm: return {Evaluation.aucm: self.getAUCM(documents)}
+    def showMostInformativeFeatures(self, n = 10):
+        self.classifier.show_most_informative_features(n)
     @staticmethod
     def saveClassifier(classifier, fileName): 
         Utilities.createDirectory(fileName)

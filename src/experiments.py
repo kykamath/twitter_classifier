@@ -142,7 +142,7 @@ class AnalyzeClassifiers:
         while currentDay<=Settings.endTime:
             classifier = FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDays)
             classifier.load()
-            classifier.classifier.showMostInformativeFeatures(100)
+            classifier.showMostInformativeFeatures(100)
 #            data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'classifier_length': noOfDays, 'metric': 'aucm', 'number_of_experts': Settings.numberOfExperts, 'data_type': DocumentType.typeRuuslUnigram, 'test_data_days': 1}
 #            data['value'] = classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
 #            Utilities.writeAsJsonToFile(data, Settings.stats_to_determine_fixed_window_length)
