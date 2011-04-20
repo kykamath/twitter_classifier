@@ -155,8 +155,11 @@ class AnalyzeClassifiers:
         currentDay = Settings.startTime
         noOfDays = 1
         while currentDay<=Settings.endTime:
+            classDistribution = defaultdict(int)
             for d in Utilities.getTweets(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDays):
-                print d
+                classDistribution[d[1]]+=1
+            data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'class_distribution': classDistribution}
+            print data
             exit()
             currentDay+=timedelta(days=1)
     
