@@ -265,7 +265,7 @@ class CreateTrainingAndTestSets:
         
     @staticmethod
     def generateDataForGlobalClassifier():
-        inputDataFile = '/home/kykamath/projects/Classifiers/src/lda_svm/global_classifier/data'
+        inputDataFile = '/home/kykamath/projects/Classifiers/src/lda_svm/global_classifier/data/global_classifier'
         for line in open(inputDataFile):
             print line.strip().split()
 
