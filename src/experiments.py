@@ -135,6 +135,20 @@ class AnalyzeClassifiers:
             currentDay+=timedelta(days=1)
     
     @staticmethod
+    def generateStatsForTopFeatures():
+        global maxLength
+        currentDay = Settings.startTime
+        noOfDays = 1
+        while currentDay<=Settings.endTime:
+            classifier = FixedWindowClassifier(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDays)
+            classifier.load()
+            classifier.classifier.showMostInformativeFeatures(100)
+#            data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'classifier_length': noOfDays, 'metric': 'aucm', 'number_of_experts': Settings.numberOfExperts, 'data_type': DocumentType.typeRuuslUnigram, 'test_data_days': 1}
+#            data['value'] = classifier.getAUCM(TestDocuments(currentTime=currentDay+timedelta(days=1), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
+#            Utilities.writeAsJsonToFile(data, Settings.stats_to_determine_fixed_window_length)
+            currentDay+=timedelta(days=1)
+    
+    @staticmethod
     def analyzeStatsToDetermineFixedWindowLength():
         classifierLengthToScore=defaultdict(list)
         for data in Utilities.iterateJsonFromFile(Settings.stats_to_determine_fixed_window_length): classifierLengthToScore[data['classifier_length']].append(data['value'])
@@ -186,11 +200,13 @@ class AnalyzeClassifiers:
     @staticmethod
     def analyzeStatsToCompareCollocations():
         '''
-        chi_sqare 0.70 0.00
-        likelihood_ratio 0.69 0.00
+        125 chi_sqare 0.70 0.00
+        125 likelihood_ratio 0.69 0.00
+        375 chi_sqare 0.74 0.00
+        375 likelihood_ratio 0.69 0.00
         '''
         languageModelToScore=defaultdict(list)
-        for data in Utilities.iterateJsonFromFile(Settings.stats_to_compare_collocations): languageModelToScore[data['collocation_measure']].append(data['value'])
+        for data in Utilities.iterateJsonFromFile(Settings.stats_to_compare_collocations): languageModelToScore['%s %s'%(data['number_of_experts'], data['collocation_measure'])].append(data['value'])
         for languageModel in languageModelToScore: print languageModel, '%0.2f'%numpy.mean(languageModelToScore[languageModel]), '%0.2f'%numpy.var(languageModelToScore[languageModel])
         
     @staticmethod
@@ -209,12 +225,12 @@ if __name__ == '__main__':
    
 #    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.generateStatsToCompareDifferentDocumentTypes()
-    AnalyzeClassifiers.generateStatsToCompareCollocations()
+#    AnalyzeClassifiers.generateStatsToCompareCollocations()
 #    AnalyzeClassifiers.generateStatsObservePerformanceByRelabelingDocuments()
 #    AnalyzeClassifiers.generateStatsForDiminishingAUCM()
 
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.analyzeStatsForDimnishingAUCMValues()
 #    AnalyzeClassifiers.analyzeStatsToCompareDifferentDocumentTypes()
-#    AnalyzeClassifiers.analyzeStatsToCompareCollocations()
+    AnalyzeClassifiers.analyzeStatsToCompareCollocations()
 #    AnalyzeClassifiers.analyzeStatsToObservePerformanceByRelabelingDocuments()
