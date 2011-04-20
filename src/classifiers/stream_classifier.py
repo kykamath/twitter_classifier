@@ -58,7 +58,6 @@ class StreamClassifier(object):
         tempDict = {}
         if perClassScores:
             sortedScores = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
-#            print sortedScores
             if sortedScores[0][1]>=math.log(Settings.stream_classifier_class_probability_threshold):
                 for classLabel, classId in classToIntMap.iteritems():
                     if classLabel not in perClassScores: tempDict[classId]=None
@@ -120,7 +119,6 @@ class StreamClassifierNaiveBayes(StreamClassifier):
             classFeatureScore.update(self.decayRate, tweetTime, 0)
             numberOfFeaturesInClass = classFeatureScore.score
             for feature in StreamClassifier.extractFeatures(tweet['document']):
-#                featureCountForClass = 0
                 if feature in self.featureMap and classLabel in self.featureMap[feature]['class']:
                     self.featureMap[feature]['class'][classLabel].update(self.decayRate, tweetTime, 0)
                     featureCountForClass = self.featureMap[feature]['class'][classLabel].score
