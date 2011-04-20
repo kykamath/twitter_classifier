@@ -58,8 +58,6 @@ class GenerateClassifiers:
     def globalClassifier():
         classifier = GlobalClassifier()
         classifier.trainAndSave()
-        
-    
 
 class AnalyzeClassifiers:
     @staticmethod
@@ -167,6 +165,19 @@ class AnalyzeClassifiers:
                 classDistribution[d[1]]+=1
             data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'class_distribution': classDistribution}
             Utilities.writeAsJsonToFile(data, Settings.stats_for_training_data)
+            currentDay+=timedelta(days=1)
+    
+    @staticmethod
+    def generateStatsForGlobalClassifier():
+        classifier = GlobalClassifier()
+        classifier.load()
+        currentDay = Settings.startTime
+        while currentDay<=Settings.endTime:
+            data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format),  'metric': 'aucm', 'data_type': DocumentType.typeRuuslUnigram, 'test_data_days': 1}
+            data['value'] = classifier.getAUCM(TestDocuments(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
+            print data
+            exit()
+#            Utilities.writeAsJsonToFile(data, Settings.stats_to_determine_fixed_window_length)
             currentDay+=timedelta(days=1)
     
     @staticmethod
@@ -342,7 +353,7 @@ if __name__ == '__main__':
 #    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
 #    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations(numberOfExperts=Settings.numberOfExpertsSecondSet)
 #    GenerateClassifiers.fixedWindowByRelabelingDocuments()
-    GenerateClassifiers.globalClassifier()
+#    GenerateClassifiers.globalClassifier()
     
 #    AnalyzeClassifiers.generateStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.generateStatsToCompareDifferentDocumentTypes()
@@ -351,7 +362,8 @@ if __name__ == '__main__':
 #    AnalyzeClassifiers.generateStatsForDiminishingAUCM()
 #    AnalyzeClassifiers.generateStatsForTopFeatures()
 #    AnalyzeClassifiers.generateStatsForTrainingDataPerDay()
-
+    AnalyzeClassifiers.generateStatsForGlobalClassifier()
+    
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.analyzeStatsForDimnishingAUCMValues()
 #    AnalyzeClassifiers.analyzeStatsToCompareDifferentDocumentTypes()

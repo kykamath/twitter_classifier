@@ -172,6 +172,7 @@ class GlobalClassifier(Classifier):
         Utilities.createDirectory(self.trainedClassifierFile)
         self.trainClassifier(((d['data'], d['class'])for d in Utilities.iterateJsonFromFile(Settings.globalClassifierData)))
         Classifier.saveClassifier(self.classifier, self.trainedClassifierFile)
+    def load(self): self.classifier = Classifier.loadClassifier(self.trainedClassifierFile)
 
 class TestDocuments:
 #    TestDocuments(currentTime=Settings.startTime, numberOfExperts=Settings.numberOfExperts, dataType=DataType.ruusl, historyLength=4)
