@@ -100,23 +100,34 @@ class StreamClassifierWithDecay(StreamClassifier):
                 for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
         return perClassScores
 
-#class StreamClassifierWithDecayWithFeaturePriorities(StreamClassifierWithDecay):
-#    def __init__(self, decayRate, **kwargs):
-#        super(StreamClassifierWithDecayWithFeaturePriorities, self).__init__(decayRate, **kwargs)
-#    def classifyTweet(self, tweet):
-#        tweetFeatureMap = {}
-#        tweetTime = datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format)
-#        for feature in StreamClassifier.extractFeatures(tweet['document']):
-#            if feature in self.featureMap: tweetFeatureMap[feature]=self.getFeatureProbabilites(self.featureMap[feature], tweetTime)
-#        perClassScores = defaultdict(float)
-#        for k, v in tweetFeatureMap.iteritems(): 
-#            featureScore = float(StreamClassifier.numberOfClasses)/len(v)
-#            if featureScore!=0:
-#                for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
-#        return perClassScores
-    
+class StreamClassifierNaiveBayes(StreamClassifier):
+    def __init__(self, decayRate, **kwargs):
+        super(StreamClassifierNaiveBayes, self).__init__(**kwargs)
+        self.decayRate=decayRate
+        self.classStats = defaultdict(FeatureScore)
+    def learnFromTweet(self, tweet):
+        classLabel = tweet['class']
+        tweetTime = datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format)
+        for feature in StreamClassifier.extractFeatures(tweet['document']):
+            if feature not in self.featureMap: self.featureMap[feature] = {'stats': {}, 'class': defaultdict(FeatureScore)}
+            self.featureMap[feature]['class'][classLabel].update(self.decayRate, tweetTime, 1)
+            self.classStats[classLabel].update(self.decayRate, tweetTime, 1)
+    def classifyTweet(self, tweet):
+        tweetTime = datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format)
+        classProbabilities, totalNumberOffUniqueFeatures = defaultdict(float), len(self.featureMap)
+        for classLabel, classFeatureScore in self.classStats.iteritems(): 
+            classFeatureScore.update(self.decayRate, tweetTime)
+            numberOfFeaturesInClass = classFeatureScore.score
+            for feature in StreamClassifier.extractFeatures(tweet['document']):
+                featureCountForClass = 0
+                if classLabel in self.featureMap[feature]['class']:
+                    self.featureMap[feature]['class'][classLabel].update(self.decayRate, tweetTime, 0)
+                    featureCountForClass = self.featureMap[feature]['class'][classLabel].score
+                classProbabilities[classLabel]+=((featureCountForClass+1)/(numberOfFeaturesInClass+totalNumberOffUniqueFeatures))
+        return classProbabilities
+                
 if __name__ == '__main__':
-    streamClassifier = StreamClassifierWithDecay(decayRate=Settings.stream_classifier_decay_rate, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=5)
+    streamClassifier = StreamClassifierNaiveBayes(decayRate=Settings.stream_classifier_decay_rate, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=5)
     streamClassifier.classifyingMethod = streamClassifier.classifyForAUCM
     streamClassifier.start()
     print len(streamClassifier.classifiedDocuments)
