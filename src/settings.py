@@ -35,7 +35,7 @@ class Settings:
     
     #Stream classifier.
     stream_classifier_class_probability_threshold = 0.40
-    stream_classifier_decay_rate = 0.60
+    stream_classifier_decay_rate = 0.75
     
     # Experiments
     stats_folder = 'stats/'
