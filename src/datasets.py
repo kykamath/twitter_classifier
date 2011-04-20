@@ -272,5 +272,6 @@ class CreateTrainingAndTestSets:
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
 #    CreateTrainingAndTestSets.generateRawDataForSetOfUsers()
-    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigram], Settings.numberOfExpertsSecondSet)
+#    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigram], Settings.numberOfExpertsSecondSet)
 #    CreateTrainingAndTestSets.createStreamingData([DocumentType.typeRuuslUnigram])
+    CreateTrainingAndTestSets.generateDataForGlobalClassifier()
