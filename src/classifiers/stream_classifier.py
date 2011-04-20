@@ -58,9 +58,8 @@ class StreamClassifier(object):
         tempDict = {}
         if perClassScores:
             sortedScores = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
-#            if sortedScores[0][1]>=math.log(Settings.stream_classifier_class_probability_threshold):
-            print sortedScores, -50
-            if sortedScores[0][1]>=-50:
+            print sortedScores
+            if sortedScores[0][1]>=math.log(Settings.stream_classifier_class_probability_threshold):
                 for classLabel, classId in classToIntMap.iteritems():
                     if classLabel not in perClassScores: tempDict[classId]=None
                     else: tempDict[classId]=perClassScores[classLabel]
@@ -121,7 +120,7 @@ class StreamClassifierNaiveBayes(StreamClassifier):
             classFeatureScore.update(self.decayRate, tweetTime, 0)
             numberOfFeaturesInClass = classFeatureScore.score
             for feature in StreamClassifier.extractFeatures(tweet['document']):
-                featureCountForClass = 0
+#                featureCountForClass = 0
                 if feature in self.featureMap and classLabel in self.featureMap[feature]['class']:
                     self.featureMap[feature]['class'][classLabel].update(self.decayRate, tweetTime, 0)
                     featureCountForClass = self.featureMap[feature]['class'][classLabel].score
@@ -131,7 +130,7 @@ class StreamClassifierNaiveBayes(StreamClassifier):
         return classProbabilities
                 
 if __name__ == '__main__':
-    streamClassifier = StreamClassifierNaiveBayes(decayRate=Settings.stream_classifier_decay_rate, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=10)
+    streamClassifier = StreamClassifierWithDecay(decayRate=Settings.stream_classifier_decay_rate, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=10)
     streamClassifier.classifyingMethod = streamClassifier.classifyForAUCM
     streamClassifier.start()
     print len(streamClassifier.classifiedDocuments)
