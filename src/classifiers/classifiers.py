@@ -119,9 +119,8 @@ class Classifier(object):
             fids = [fid for fid in fids if self.classifier._weights[fid]>0]
         elif show == 'neg':
             fids = [fid for fid in fids if self.classifier._weights[fid]<0]
-        for fid in fids[:n]:
-            print '%8.3f %s' % (self.classifier._weights[fid],
-                                self.classifier._encoding.describe(fid))
+#        for fid in fids[:n]: print '%8.3f %s' % (self.classifier._weights[fid], self.classifier._encoding.describe(fid))
+        return ['%s'%self.classifier._encoding.describe(fid) for fid in fids[:n]]
 #        self.classifier.show_most_informative_features(n)
     @staticmethod
     def saveClassifier(classifier, fileName): 
