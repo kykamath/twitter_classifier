@@ -127,7 +127,7 @@ class StreamClassifierNaiveBayes(StreamClassifier):
                     featureCountForClass = self.featureMap[feature]['class'][classLabel].score
                 classProbabilities[classLabel]+=math.log((featureCountForClass+1)/(numberOfFeaturesInClass+totalNumberOffUniqueFeatures))
         total = sum(v for v in classProbabilities.itervalues())
-        for k in classProbabilities[:]: classProbabilities[k]/=total
+        for k in classProbabilities: classProbabilities[k]=classProbabilities[k]/total
         return classProbabilities
                 
 if __name__ == '__main__':
