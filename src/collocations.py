@@ -50,7 +50,7 @@ class Collocations:
             
 class GenerateCollocations:
     @staticmethod
-    def generate():
+    def generate(numberOfExperts=Settings.numberOfExperts):
         global maxLength, idealModelLength
         currentDay = Settings.startTime
         collocationMeasures = [Collocations.measureTypeRawFrequency, Collocations.measureTypeChiSquare, Collocations.measureTypeLikelihoodRatio, Collocations.measureTypePMI, Collocations.measureTypeStudentT]
@@ -59,11 +59,13 @@ class GenerateCollocations:
             for noOfDays in noOfDaysList: 
                 for collocationMeasure in collocationMeasures:  
                     print currentDay, collocationMeasure, noOfDays
-                    Collocations(collocationMeasure, currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDays).discoverAndWrite()
+                    Collocations(collocationMeasure, currentTime=currentDay, numberOfExperts=numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=noOfDays).discoverAndWrite()
             currentDay+=timedelta(days=1)
 
 if __name__ == '__main__':
-    collocation = Collocations(Collocations.measureTypeChiSquare, currentTime=Settings.startTime+timedelta(days=8), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=8)
-    collocation.load()
-    for k, v in collocation.collocatedTerms.iteritems():
-        print k, v
+#    collocation = Collocations(Collocations.measureTypeChiSquare, currentTime=Settings.startTime+timedelta(days=8), numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=8)
+#    collocation.load()
+#    for k, v in collocation.collocatedTerms.iteritems():
+#        print k, v
+
+    GenerateCollocations.generate(numberOfExperts=Settings.numberOfExpertsSecondSet)
