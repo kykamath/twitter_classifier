@@ -205,9 +205,9 @@ class AnalyzeClassifiers:
             inputTrainingSetFile = Utilities.getTrainingFile(currentDay, DocumentType.typeRuuslUnigram, Settings.numberOfExperts)
             inputTestSetFile = Utilities.getTestFile(currentDay, DocumentType.typeRuuslUnigram, Settings.numberOfExperts, bottom=True)
             print inputTestSetFile, inputTrainingSetFile
-#            for file, tweetType in [(inputTrainingSetFile, 'training'), (inputTestSetFile, 'test')]:
-#                for tweet in Utilities.iterateTweetsFromFile(file):
-#                    print tweetType, tweet
+            for file, tweetType in [(inputTrainingSetFile, 'training'), (inputTestSetFile, 'test')]:
+                for tweet in Utilities.iterateTweetsFromFile(file):
+                    print tweetType, tweet
             currentDay+=timedelta(days=1)
     
     
