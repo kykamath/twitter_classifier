@@ -55,7 +55,7 @@ class StreamClassifier(object):
         tempDict = {}
         if perClassScores:
 #            total = sum(v for v in perClassScores.itervalues())
-            print perClassScores
+#            print perClassScores
 #            for k in perClassScores: perClassScores[k]=perClassScores[k]/total
 #            sortedScores = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
 #            if sortedScores[0][1]>=Utilities.my_log(Settings.stream_classifier_class_probability_threshold):
