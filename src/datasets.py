@@ -297,7 +297,7 @@ class CreateTrainingAndTestSets:
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
 #    CreateTrainingAndTestSets.generateRawDataForIntermediateSetOfUsers()
-    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigram], [50, 100])
+    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigram], range(150,450,50))
 #    CreateTrainingAndTestSets.createStreamingData([DocumentType.typeRuuslUnigram], range(50,450,50))
 #    CreateTrainingAndTestSets.generateDataForGlobalClassifier()
 #    CreateTrainingAndTestSets.generateRawDataForGivenSetOfUsers(range(50,450,50))
