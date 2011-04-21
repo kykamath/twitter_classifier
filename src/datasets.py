@@ -261,17 +261,18 @@ class CreateTrainingAndTestSets:
                 currentTime+=timedelta(days=1)
             
     @staticmethod
-    def createModifiedData(dataTypes, numberOfUsers=Settings.numberOfExperts):
-        currentTime = Settings.startTime
-        while currentTime <= Settings.endTime:
-            for dataType in dataTypes: 
-                try:
-                    print currentTime, dataType
-                    dataType(currentTime, numberOfUsers).generate()
-                except Exception as e: 
-                    print str(e)
-                    pass
-            currentTime+=timedelta(days=1)
+    def createModifiedData(dataTypes, numberOfUsersList):
+        for numberOfUsers in numberOfUsersList:
+            currentTime = Settings.startTime
+            while currentTime <= Settings.endTime:
+                for dataType in dataTypes: 
+                    try:
+                        print currentTime, dataType
+                        dataType(currentTime, numberOfUsers).generate()
+                    except Exception as e: 
+                        print str(e)
+                        pass
+                currentTime+=timedelta(days=1)
             
     @staticmethod
     def createStreamingData(dataTypes, numberOfExperts):
@@ -296,7 +297,7 @@ class CreateTrainingAndTestSets:
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
 #    CreateTrainingAndTestSets.generateRawDataForIntermediateSetOfUsers()
-#    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigram], Settings.numberOfExpertsSecondSet)
-    CreateTrainingAndTestSets.createStreamingData([DocumentType.typeRuuslUnigram], range(50,450,50))
+    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigram], [50, 100])
+#    CreateTrainingAndTestSets.createStreamingData([DocumentType.typeRuuslUnigram], range(50,450,50))
 #    CreateTrainingAndTestSets.generateDataForGlobalClassifier()
 #    CreateTrainingAndTestSets.generateRawDataForGivenSetOfUsers(range(50,450,50))
