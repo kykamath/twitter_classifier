@@ -97,7 +97,9 @@ class StreamClassifierFeatureScoreDecay(StreamClassifier):
     def getPerClassScore(self, tweetFeatureMap):
         perClassScores = defaultdict(float)
         for k, v in tweetFeatureMap.iteritems(): 
-            for classLabel, score in v.iteritems(): perClassScores[classLabel]*=score
+#            for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(score)
+            for classLabel, score in v.iteritems(): 
+                if score!=0: perClassScores[classLabel]*=score
         return perClassScores
 
 class StreamClassifierFeatureScoreDecayWithInverseClassFrequency(StreamClassifierFeatureScoreDecay):
@@ -109,7 +111,8 @@ class StreamClassifierFeatureScoreDecayWithInverseClassFrequency(StreamClassifie
             featureScore = float(StreamClassifier.numberOfClasses)/len(v)
             if featureScore!=0:
 #                for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
-                for classLabel, score in v.iteritems(): perClassScores[classLabel]*=(featureScore*score)
+                for classLabel, score in v.iteritems(): 
+                    if score!=0: perClassScores[classLabel]*=(featureScore*score)
         return perClassScores
         
 
