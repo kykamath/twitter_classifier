@@ -6,12 +6,12 @@ Created on Apr 13, 2011
 import cjson, numpy
 import matplotlib.pyplot as plt
 from settings import Settings
-from datasets import DocumentType, DataDirection
+from datasets import DocumentType, DataDirection, CreateTrainingAndTestSets
 from datetime import timedelta, datetime
 from classifiers.classifiers import FixedWindowClassifier, FixedWindowWithCollocationsClassifier, TestDocuments,\
     TestDocumentsWithCollocations, FixedWindowWithRelabeledDocumentsClassifier,\
     GlobalClassifier
-from utilities import Utilities
+from utilities import Utilities, ExpertUsers
 from collections import defaultdict
 from collocations import Collocations
 from itertools import groupby
@@ -177,6 +177,23 @@ class AnalyzeClassifiers:
             data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format),  'metric': 'aucm', 'data_type': DocumentType.typeRuuslUnigram, 'test_data_days': 1}
             data['value'] = classifier.getAUCM(TestDocuments(currentTime=currentDay, numberOfExperts=Settings.numberOfExperts, dataType=DocumentType.typeRuuslUnigram, noOfDays=1).iterator())
             Utilities.writeAsJsonToFile(data, Settings.stats_for_global_classifier)
+            currentDay+=timedelta(days=1)
+        
+    @staticmethod
+    def generateDataSetStats():
+        currentDay = Settings.startTime
+        expertUsers = ExpertUsers()
+        allExpertsList={}
+        for k, v in expertUsers.list.iteritems(): allExpertsList[k]=v
+        while currentDay<=Settings.endTime:
+            data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'classes': defaultdict(int), 'total_tweets': 0}
+            for tweet in CreateTrainingAndTestSets.getTweetsFromExperts(allExpertsList, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentDay)):
+                if tweet['user']['id_str'] in expertUsers.list: 
+                    classType = allExpertsList[tweet['user']['id_str']]['class']
+                    data['classes'][classType]+=1
+                    data['total_tweets']+=1
+                print data
+                exit()
             currentDay+=timedelta(days=1)
     
     @staticmethod
@@ -384,6 +401,7 @@ if __name__ == '__main__':
 #    AnalyzeClassifiers.generateStatsForTopFeatures()
 #    AnalyzeClassifiers.generateStatsForTrainingDataPerDay()
 #    AnalyzeClassifiers.generateStatsForGlobalClassifier()
+    AnalyzeClassifiers.generateDataSetStats()
     
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.analyzeStatsForDimnishingAUCMValues()
@@ -393,4 +411,4 @@ if __name__ == '__main__':
 #    AnalyzeClassifiers.analyzeStatsForTopFeaturesFeatureChange()
 #    AnalyzeClassifiers.analyzeStatsForConceptDriftExamples()
 #    AnalyzeClassifiers.analyzeTrainingData()
-    AnalyzeClassifiers.analyzeStatsForGlobalClassifier()
+#    AnalyzeClassifiers.analyzeStatsForGlobalClassifier()
