@@ -207,7 +207,7 @@ class AnalyzeClassifiers:
                 for noOfDays in noOfDaysList:
                     streamClassifier = classifier(decayRate=Settings.stream_classifier_decay_rate, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=numberOfExperts, noOfDays=noOfDays)
                     streamClassifier.classifyingMethod = streamClassifier.classifyForAUCM
-                    print 'Running: %s for %s number of days, and with %d experts'%(streamClassifier.type, noOfDays, numberOfExperts)
+                    print 'Running: %s for %s number of days, and with %d experts'%(streamClassifier.type, noOfDays, numberOfExperts),
                     streamClassifier.start()
                     print streamClassifier.type, len(streamClassifier.classifiedDocuments), streamClassifier.getAUCM()
     

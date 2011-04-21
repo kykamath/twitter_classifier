@@ -32,7 +32,7 @@ class StreamClassifier(object):
     
     def __init__(self, type, numberOfInitialBufferDays=1, classifyingMethod=None, **kwargs):
         self.featureMap = {}
-        self.type = StreamClassifier.typeDefault
+        self.type = type
         self.numberOfInitialBufferDays = numberOfInitialBufferDays
         self.classifyingMethod = classifyingMethod
         if self.classifyingMethod==None: self.classifyingMethod = self.classify
