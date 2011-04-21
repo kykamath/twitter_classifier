@@ -192,8 +192,8 @@ class AnalyzeClassifiers:
                     classType = allExpertsList[tweet['user']['id_str']]['class']
                     data['classes'][classType]+=1
                     data['total_tweets']+=1
-                print data
-                exit()
+            print data
+            exit()
             currentDay+=timedelta(days=1)
     
     @staticmethod
