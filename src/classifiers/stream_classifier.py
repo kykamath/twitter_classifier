@@ -101,14 +101,19 @@ class StreamClassifierFeatureScoreDecay(StreamClassifier):
     def getPerClassScore(self, tweetFeatureMap):
         perClassScores = defaultdict(float)
         for k, v in tweetFeatureMap.iteritems(): 
-            featureScore = float(StreamClassifier.numberOfClasses)/len(v)
-            if featureScore!=0:
-                for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
+            for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(score)
         return perClassScores
 
 class StreamClassifierFeatureScoreDecayWithInverseClassFrequency(StreamClassifierFeatureScoreDecay):
     def __init__(self, decayRate, type=StreamClassifier.typeFeatureScoreDecayWithInverseClassFrequency, **kwargs):
         super(StreamClassifierFeatureScoreDecayWithInverseClassFrequency, self).__init__(decayRate, type=StreamClassifier.typeFeatureScoreDecayWithInverseClassFrequency, **kwargs)
+    def getPerClassScore(self, tweetFeatureMap):
+        perClassScores = defaultdict(float)
+        for k, v in tweetFeatureMap.iteritems(): 
+            featureScore = float(StreamClassifier.numberOfClasses)/len(v)
+            if featureScore!=0:
+                for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
+        return perClassScores
         
 
 class StreamClassifierNaiveBayesWithLaplaceSmoothing(StreamClassifier):

@@ -19,7 +19,8 @@ from operator import itemgetter
 from matplotlib import mpl
 from matplotlib.dates import drange
 from classifiers.stream_classifier import StreamClassifierNaiveBayesWithLaplaceSmoothing,\
-    StreamClassifierFeatureScoreDecay
+    StreamClassifierFeatureScoreDecay,\
+    StreamClassifierFeatureScoreDecayWithInverseClassFrequency
 
 maxLength=16
 idealModelLength = 8
@@ -199,7 +200,7 @@ class AnalyzeClassifiers:
     
     @staticmethod
     def generateStatsForStreamClassifier():
-        streamClassifiers = [StreamClassifierFeatureScoreDecay, StreamClassifierNaiveBayesWithLaplaceSmoothing]
+        streamClassifiers = [StreamClassifierFeatureScoreDecay, StreamClassifierFeatureScoreDecayWithInverseClassFrequency, StreamClassifierNaiveBayesWithLaplaceSmoothing]
         numberOfExpertsList = [Settings.numberOfExperts]
         noOfDaysList = [10]
         for classifier in streamClassifiers:
