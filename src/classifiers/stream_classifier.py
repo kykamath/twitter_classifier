@@ -46,14 +46,7 @@ class StreamClassifier(object):
             tweetTimeStamp = datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format)
             if tweet['tweet_type'] == TweetType.train: self.learnFromTweet(tweet)
             else:
-                if firstDay<tweetTimeStamp: 
-#                    self.classifyTweet(tweet)
-                    self.classifyingMethod(tweet, self.classifyTweet(tweet))
-#                    print i, self.classifyingMethod(tweet, self.classifyTweet(tweet)), tweet['class'], tweet['text']
-#                    if i==25: 
-#                        print self.getAUCM()
-#                        exit()
-#                    i+=1
+                if firstDay<tweetTimeStamp: self.classifyingMethod(tweet, self.classifyTweet(tweet))
     def classify(self, tweet, perClassScores):
         sortedScores = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
         if sortedScores: return sortedScores[0][0]
@@ -61,6 +54,8 @@ class StreamClassifier(object):
     def classifyForAUCM(self, tweet, perClassScores):
         tempDict = {}
         if perClassScores:
+            total = sum(v for v in perClassScores.itervalues())
+            for k in perClassScores: perClassScores[k]=perClassScores[k]/total
 #            sortedScores = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
 #            if sortedScores[0][1]>=Utilities.my_log(Settings.stream_classifier_class_probability_threshold):
             for classLabel, classId in classToIntMap.iteritems():
@@ -140,8 +135,6 @@ class StreamClassifierNaiveBayesWithLaplaceSmoothing(StreamClassifier):
                     self.featureMap[feature]['class'][classLabel].update(self.decayRate, tweetTime, 0)
                     featureCountForClass = self.featureMap[feature]['class'][classLabel].score
                 classProbabilities[classLabel]+=math.log((featureCountForClass+1)/(numberOfFeaturesInClass+totalNumberOffUniqueFeatures))
-#        total = sum(v for v in classProbabilities.itervalues())
-#        for k in classProbabilities: classProbabilities[k]=classProbabilities[k]/total
         return classProbabilities
                 
 if __name__ == '__main__':
