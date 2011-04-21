@@ -99,7 +99,9 @@ class StreamClassifierFeatureScoreDecay(StreamClassifier):
         for k, v in tweetFeatureMap.iteritems(): 
 #            for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(score)
             for classLabel, score in v.iteritems(): 
-                if score!=0: perClassScores[classLabel]*=score
+                if score!=0: 
+                    perClassScores[classLabel]*=score
+                    print perClassScores
         return perClassScores
 
 class StreamClassifierFeatureScoreDecayWithInverseClassFrequency(StreamClassifierFeatureScoreDecay):
