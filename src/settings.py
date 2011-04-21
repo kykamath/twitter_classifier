@@ -36,7 +36,7 @@ class Settings:
     collocations_percentage_of_collocations_to_output = 0.01
     
     #Stream classifier.
-#    stream_classifier_class_probability_threshold = 0.40
+    stream_classifier_class_probability_threshold = 0.0
     stream_classifier_decay_rate = 0.80
     
     # Experiments
@@ -50,3 +50,4 @@ class Settings:
     stats_for_training_data = stats_folder+'stats_for_training_data'
     stats_for_global_classifier = stats_folder+'stats_for_global_classifier'
     stats_for_dataset = stats_folder+'stats_for_dataset'
+    stats_for_stream_classifier_comparisons=stats_folder+'stats_for_stream_classifier_comparisons'
