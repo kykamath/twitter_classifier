@@ -224,7 +224,7 @@ class CreateTrainingAndTestSets:
                     else: Utilities.writeAsJsonToFile(tweet, testFile)
             currentTime+=timedelta(days=1)
     @staticmethod
-    def generateRawDataForSetOfUsers():
+    def generateRawDataForIntermediateSetOfUsers():
         currentTime = Settings.startTime
         allExpertsTop = ExpertUsers(Settings.numberOfExperts)
         allExpertsIntermediate = ExpertUsers(Settings.numberOfExpertsSecondSet)
@@ -240,6 +240,25 @@ class CreateTrainingAndTestSets:
                     tweet['class'] = allExpertsList[tweet['user']['id_str']]['class']
                     Utilities.writeAsJsonToFile(tweet, trainingFile)
             currentTime+=timedelta(days=1)
+    
+    @staticmethod
+    def generateRawDataForGivenSetOfUsers(numberOfUsersList):
+        for numberOfUsers in numberOfUsersList:
+            currentTime = Settings.startTime
+            allExpertsTop, allExpertsBottom = ExpertUsers(number=numberOfUsers), ExpertUsers(number=numberOfUsers, type=ExpertUsers.typeBottom)
+            allExpertsList={}
+            for k, v in allExpertsTop.list.iteritems(): allExpertsList[k]=v
+            for k, v in allExpertsBottom.list.iteritems(): allExpertsList[k]=v
+            while currentTime <= Settings.endTime:
+                trainingFile = Utilities.getTrainingFile(currentTime, DocumentType.typeRaw, numberOfUsers)
+                testFile = Utilities.getTestFile(currentTime, DocumentType.typeRaw, numberOfUsers, bottom=True)
+                Utilities.createDirectory(trainingFile), Utilities.createDirectory(testFile)
+                print numberOfUsers, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)
+                for tweet in CreateTrainingAndTestSets.getTweetsFromExperts(allExpertsList, Settings.twitterUsersTweetsFolder+'%s.gz'%Utilities.getDataFile(currentTime)):
+                    tweet['class'] = allExpertsList[tweet['user']['id_str']]['class']
+                    if tweet['user']['id_str'] in allExpertsTop.list: Utilities.writeAsJsonToFile(tweet, trainingFile)
+                    else: Utilities.writeAsJsonToFile(tweet, testFile)
+                currentTime+=timedelta(days=1)
             
     @staticmethod
     def createModifiedData(dataTypes, numberOfUsers=Settings.numberOfExperts):
@@ -275,7 +294,8 @@ class CreateTrainingAndTestSets:
             except: pass
 if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
-#    CreateTrainingAndTestSets.generateRawDataForSetOfUsers()
+#    CreateTrainingAndTestSets.generateRawDataForIntermediateSetOfUsers()
 #    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigram], Settings.numberOfExpertsSecondSet)
 #    CreateTrainingAndTestSets.createStreamingData([DocumentType.typeRuuslUnigram])
-    CreateTrainingAndTestSets.generateDataForGlobalClassifier()
+#    CreateTrainingAndTestSets.generateDataForGlobalClassifier()
+    CreateTrainingAndTestSets.generateRawDataForGivenSetOfUsers(range(50,450,50))
