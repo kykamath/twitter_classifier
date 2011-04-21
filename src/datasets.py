@@ -274,12 +274,13 @@ class CreateTrainingAndTestSets:
             currentTime+=timedelta(days=1)
             
     @staticmethod
-    def createStreamingData(dataTypes):
+    def createStreamingData(dataTypes, numberOfExperts):
         currentTime = Settings.startTime
         while currentTime <= Settings.endTime:
             for dataType in dataTypes: 
-                print currentTime, dataType
-                StreamingSets(currentTime, dataType, Settings.numberOfExperts).generate()
+                for numberOfExpert in numberOfExperts:
+                    print currentTime, dataType
+                    StreamingSets(currentTime, dataType, numberOfExpert).generate()
             currentTime+=timedelta(days=1)
         
     @staticmethod
@@ -296,6 +297,6 @@ if __name__ == '__main__':
 #    CreateTrainingAndTestSets.rawData()
 #    CreateTrainingAndTestSets.generateRawDataForIntermediateSetOfUsers()
 #    CreateTrainingAndTestSets.createModifiedData([DocumentTypeRuuslUnigram], Settings.numberOfExpertsSecondSet)
-#    CreateTrainingAndTestSets.createStreamingData([DocumentType.typeRuuslUnigram])
+    CreateTrainingAndTestSets.createStreamingData([DocumentType.typeRuuslUnigram], range(50,450,50))
 #    CreateTrainingAndTestSets.generateDataForGlobalClassifier()
-    CreateTrainingAndTestSets.generateRawDataForGivenSetOfUsers(range(50,450,50))
+#    CreateTrainingAndTestSets.generateRawDataForGivenSetOfUsers(range(50,450,50))
