@@ -202,7 +202,7 @@ class AnalyzeClassifiers:
     def generateStatsForStreamClassifier():
         streamClassifiers = [StreamClassifierFeatureScoreDecay, StreamClassifierFeatureScoreDecayWithInverseClassFrequency, StreamClassifierNaiveBayesWithLaplaceSmoothing]
         numberOfExpertsList = [Settings.numberOfExperts]
-        noOfDaysList = [10]
+        noOfDaysList = [25]
         for classifier in streamClassifiers:
             for numberOfExperts in numberOfExpertsList:
                 for noOfDays in noOfDaysList:
