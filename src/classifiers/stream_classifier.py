@@ -140,8 +140,8 @@ class StreamClassifierNaiveBayesWithLaplaceSmoothing(StreamClassifier):
                     self.featureMap[feature]['class'][classLabel].update(self.decayRate, tweetTime, 0)
                     featureCountForClass = self.featureMap[feature]['class'][classLabel].score
                 classProbabilities[classLabel]+=math.log((featureCountForClass+1)/(numberOfFeaturesInClass+totalNumberOffUniqueFeatures))
-        total = sum(v for v in classProbabilities.itervalues())
-        for k in classProbabilities: classProbabilities[k]=classProbabilities[k]/total
+#        total = sum(v for v in classProbabilities.itervalues())
+#        for k in classProbabilities: classProbabilities[k]=classProbabilities[k]/total
         return classProbabilities
                 
 if __name__ == '__main__':
