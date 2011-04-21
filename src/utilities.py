@@ -5,7 +5,7 @@ Created on Mar 18, 2011
 '''
 from collections import defaultdict
 from settings import Settings
-import gzip, cjson, os
+import gzip, cjson, os, math
 from datetime import timedelta
 
 class ExpertUsers:
@@ -23,6 +23,11 @@ class ExpertUsers:
             
 class Utilities:
     stopwords = [l.strip() for l in open(Settings.applicationCommonFilesFolder+'stopwords')]
+    
+    @staticmethod
+    def my_log(val):
+        if val==0: return 0.0
+        else: return math.log(val)
     
     @staticmethod
     def iterateTweetsFromGzip(file):
@@ -124,9 +129,5 @@ class Utilities:
         elif index == '8' : return "NotClassified"
         elif index == '-1': return "Other"
 
-#if __name__ == '__main__':
-#    i = 1
-#    for w in Utilities.getWordsFromTweets(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past,):
-#        print i, w
-#        i+=1
-#    Utilities.getTweets(fileNameMethod=Utilities.getTrainingFile, dataDirection=DataDirection.past, **self.kwargs)
+if __name__ == '__main__':
+    print Utilities.my_log(0), Utilities.my_log(1), Utilities.my_log(2)
