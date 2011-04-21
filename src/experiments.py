@@ -208,7 +208,9 @@ class AnalyzeClassifiers:
             print inputTestSetFile, inputTrainingSetFile
             for file, tweetType in [(inputTrainingSetFile, 'training'), (inputTestSetFile, 'test')]:
                 for tweet in Utilities.iterateTweetsFromFile(file):
-                    print tweetType, tweet['class']
+                    if tweetType=='training': data['train_classes'][tweet['class']]+=1
+                    else: data['test_classes'][tweet['class']]+=1
+            print data
             currentDay+=timedelta(days=1)
     
     
