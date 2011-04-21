@@ -215,7 +215,7 @@ class AnalyzeClassifiers:
                         streamClassifier.start()
                         data['number_of_documents_classified'] = len(streamClassifier.classifiedDocuments)
                         data['value']=streamClassifier.getAUCM()
-                        Utilities.writeAsJsonToFile(Settings.stream_classifier_class_probability_threshold, Settings.stats_for_stream_classifier_comparisons)
+                        Utilities.writeAsJsonToFile(data, Settings.stats_for_stream_classifier_comparisons)
     
     @staticmethod
     def analyzeStatsToDetermineFixedWindowLength():
