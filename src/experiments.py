@@ -208,9 +208,11 @@ class AnalyzeClassifiers:
                 for noOfDays in noOfDaysList:
                     streamClassifier = classifier(decayRate=Settings.stream_classifier_decay_rate, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=numberOfExperts, noOfDays=noOfDays)
                     streamClassifier.classifyingMethod = streamClassifier.classifyForAUCM
-                    print 'Running: %s for %s number of days, and with %d experts'%(streamClassifier.type, noOfDays, numberOfExperts),
+                    data = {'classifier_type':streamClassifier.type, 'stream_length_in_days':noOfDays, 'number_of_experts': numberOfExperts, 'metric':'aucm'}
                     streamClassifier.start()
-                    print streamClassifier.type, len(streamClassifier.classifiedDocuments), streamClassifier.getAUCM()
+                    data['number_of_documents_classified'] = len(streamClassifier.classifiedDocuments)
+                    data['value']=streamClassifier.getAUCM()
+                    print data
     
     @staticmethod
     def analyzeStatsToDetermineFixedWindowLength():
