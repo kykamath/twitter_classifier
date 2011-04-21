@@ -205,12 +205,11 @@ class AnalyzeClassifiers:
             data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'train_classes': defaultdict(int), 'test_classes': defaultdict(int)}
             inputTrainingSetFile = Utilities.getTrainingFile(currentDay, DocumentType.typeRuuslUnigram, Settings.numberOfExperts)
             inputTestSetFile = Utilities.getTestFile(currentDay, DocumentType.typeRuuslUnigram, Settings.numberOfExperts, bottom=True)
-            print inputTestSetFile, inputTrainingSetFile
             for file, tweetType in [(inputTrainingSetFile, 'training'), (inputTestSetFile, 'test')]:
                 for tweet in Utilities.iterateTweetsFromFile(file):
                     if tweetType=='training': data['train_classes'][tweet['class']]+=1
                     else: data['test_classes'][tweet['class']]+=1
-            print data
+            Utilities.writeAsJsonToFile(data, Settings.stats_for_dataset_125)
             currentDay+=timedelta(days=1)
     
     

@@ -50,4 +50,5 @@ class Settings:
     stats_for_training_data = stats_folder+'stats_for_training_data'
     stats_for_global_classifier = stats_folder+'stats_for_global_classifier'
     stats_for_dataset = stats_folder+'stats_for_dataset'
+    stats_for_dataset_125 = stats_folder+'stats_for_dataset_125'
     stats_for_stream_classifier_comparisons=stats_folder+'stats_for_stream_classifier_comparisons'
