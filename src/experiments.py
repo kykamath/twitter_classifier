@@ -202,12 +202,13 @@ class AnalyzeClassifiers:
     def generateDataSetStats125():
         currentDay = Settings.startTime
         while currentDay<=Settings.endTime:
+            data = {'day': datetime.strftime(currentDay, Settings.twitter_api_time_format), 'train_classes': defaultdict(int), 'test_classes': defaultdict(int)}
             inputTrainingSetFile = Utilities.getTrainingFile(currentDay, DocumentType.typeRuuslUnigram, Settings.numberOfExperts)
             inputTestSetFile = Utilities.getTestFile(currentDay, DocumentType.typeRuuslUnigram, Settings.numberOfExperts, bottom=True)
             print inputTestSetFile, inputTrainingSetFile
             for file, tweetType in [(inputTrainingSetFile, 'training'), (inputTestSetFile, 'test')]:
                 for tweet in Utilities.iterateTweetsFromFile(file):
-                    print tweetType, tweet
+                    print tweetType, tweet['class']
             currentDay+=timedelta(days=1)
     
     
