@@ -208,7 +208,7 @@ class AnalyzeClassifiers:
 #            for file, tweetType in [(inputTrainingSetFile, 'training'), (inputTestSetFile, 'test')]:
 #                for tweet in Utilities.iterateTweetsFromFile(file):
 #                    print tweetType, tweet
-        currentDay+=timedelta(days=1)
+            currentDay+=timedelta(days=1)
     
     
     @staticmethod
