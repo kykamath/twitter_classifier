@@ -18,6 +18,8 @@ from itertools import groupby
 from operator import itemgetter
 from matplotlib import mpl
 from matplotlib.dates import drange
+from classifiers.stream_classifier import StreamClassifierNaiveBayes,\
+    StreamClassifierWithDecay
 
 maxLength=16
 idealModelLength = 8
@@ -194,6 +196,20 @@ class AnalyzeClassifiers:
                     data['total_tweets']+=1
             Utilities.writeAsJsonToFile(data, Settings.stats_for_dataset)
             currentDay+=timedelta(days=1)
+    
+    @staticmethod
+    def generateStatsForStreamClassifier():
+        streamClassifiers = [StreamClassifierWithDecay, StreamClassifierNaiveBayes]
+        numberOfExpertsList = [Settings.numberOfExperts]
+        noOfDaysList = [10]
+        for classifier in streamClassifiers:
+            for numberOfExperts in numberOfExpertsList:
+                for noOfDays in noOfDaysList:
+                    streamClassifier = classifier(decayRate=Settings.stream_classifier_decay_rate, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=numberOfExperts, noOfDays=noOfDays)
+                    streamClassifier.classifyingMethod = streamClassifier.classifyForAUCM
+                    print 'Running: %s for %s number of days, and with %d experts'%(streamClassifier.type, noOfDays, numberOfExperts)
+                    streamClassifier.start()
+                    print streamClassifier.type, len(streamClassifier.classifiedDocuments), streamClassifier.getAUCM()
     
     @staticmethod
     def analyzeStatsToDetermineFixedWindowLength():
@@ -423,6 +439,7 @@ if __name__ == '__main__':
 #    AnalyzeClassifiers.generateStatsForTrainingDataPerDay()
 #    AnalyzeClassifiers.generateStatsForGlobalClassifier()
 #    AnalyzeClassifiers.generateDataSetStats()
+    AnalyzeClassifiers.generateStatsForStreamClassifier()
     
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.analyzeStatsForDimnishingAUCMValues()
@@ -433,4 +450,4 @@ if __name__ == '__main__':
 #    AnalyzeClassifiers.analyzeStatsForConceptDriftExamples()
 #    AnalyzeClassifiers.analyzeTrainingData()
 #    AnalyzeClassifiers.analyzeStatsForGlobalClassifier()
-    AnalyzeClassifiers.analyzeStatsForDatasets()
+#    AnalyzeClassifiers.analyzeStatsForDatasets()

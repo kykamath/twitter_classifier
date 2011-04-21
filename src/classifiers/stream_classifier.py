@@ -24,12 +24,15 @@ class FeatureScore:
 
 class StreamClassifier(object):
     typeDefault='stream_classifier_default'
+    typeDecay='stream_classifier_decay'
+    typeNaiveBayes='stream_classifier_naive_bayes'
     
     notClassified = 'not_classified'
     numberOfClasses = 4
     
-    def __init__(self, numberOfInitialBufferDays=1, classifyingMethod=None, **kwargs):
+    def __init__(self, type, numberOfInitialBufferDays=1, classifyingMethod=None, **kwargs):
         self.featureMap = {}
+        self.type = StreamClassifier.typeDefault
         self.numberOfInitialBufferDays = numberOfInitialBufferDays
         self.classifyingMethod = classifyingMethod
         if self.classifyingMethod==None: self.classifyingMethod = self.classify
@@ -80,7 +83,7 @@ class StreamClassifier(object):
 
 class StreamClassifierWithDecay(StreamClassifier):
     def __init__(self, decayRate, **kwargs):
-        super(StreamClassifierWithDecay, self).__init__(**kwargs)
+        super(StreamClassifierWithDecay, self).__init__(type=StreamClassifier.typeDecay, **kwargs)
         self.decayRate=decayRate
     def learnFromTweet(self, tweet):
         classLabel = tweet['class']
@@ -102,7 +105,7 @@ class StreamClassifierWithDecay(StreamClassifier):
 
 class StreamClassifierNaiveBayes(StreamClassifier):
     def __init__(self, decayRate, **kwargs):
-        super(StreamClassifierNaiveBayes, self).__init__(**kwargs)
+        super(StreamClassifierNaiveBayes, self).__init__(type=StreamClassifier.typeNaiveBayes, **kwargs)
         self.decayRate=decayRate
         self.classStats = defaultdict(FeatureScore)
     def learnFromTweet(self, tweet):
@@ -132,6 +135,5 @@ if __name__ == '__main__':
     streamClassifier = StreamClassifierWithDecay(decayRate=Settings.stream_classifier_decay_rate, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=10)
     streamClassifier.classifyingMethod = streamClassifier.classifyForAUCM
     streamClassifier.start()
-    print len(streamClassifier.classifiedDocuments)
-    print streamClassifier.getAUCM()
+    print streamClassifier.type, len(streamClassifier.classifiedDocuments), streamClassifier.getAUCM()
 
