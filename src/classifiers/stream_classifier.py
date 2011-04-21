@@ -102,7 +102,6 @@ class StreamClassifierFeatureScoreDecay(StreamClassifier):
                 if score!=0: 
                     if classLabel not in perClassScores: perClassScores[classLabel]=1
                     perClassScores[classLabel]*=score
-                    print perClassScores
         return perClassScores
 
 class StreamClassifierFeatureScoreDecayWithInverseClassFrequency(StreamClassifierFeatureScoreDecay):
