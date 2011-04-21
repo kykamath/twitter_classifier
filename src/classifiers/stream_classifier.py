@@ -23,9 +23,10 @@ class FeatureScore:
         self.lastUpdateTime=newTime
 
 class StreamClassifier(object):
-    typeDefault='stream_classifier_default'
-    typeDecay='stream_classifier_decay'
-    typeNaiveBayes='stream_classifier_naive_bayes'
+    typeDefault='default'
+    typeFeatureScoreDecay='feature_score_decay'
+    typeFeatureScoreDecayWithInverseClassFrequency = 'feature_score_decay_with_inverse_class_frequency'
+    typeNaiveBayesWithLaplaceSmoothing='naive_bayes_with_laplace_smoothing'
     
     notClassified = 'not_classified'
     numberOfClasses = 4
@@ -81,9 +82,9 @@ class StreamClassifier(object):
         for feature in document:
             if feature not in Utilities.stopwords: yield feature
 
-class StreamClassifierWithDecay(StreamClassifier):
-    def __init__(self, decayRate, **kwargs):
-        super(StreamClassifierWithDecay, self).__init__(type=StreamClassifier.typeDecay, **kwargs)
+class StreamClassifierFeatureScoreDecay(StreamClassifier):
+    def __init__(self, decayRate, type=StreamClassifier.typeFeatureScoreDecay, **kwargs):
+        super(StreamClassifierFeatureScoreDecay, self).__init__(type=type, **kwargs)
         self.decayRate=decayRate
     def learnFromTweet(self, tweet):
         classLabel = tweet['class']
@@ -96,6 +97,8 @@ class StreamClassifierWithDecay(StreamClassifier):
         tweetTime = datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format)
         for feature in StreamClassifier.extractFeatures(tweet['document']):
             if feature in self.featureMap: tweetFeatureMap[feature]=self.getFeatureProbabilites(self.featureMap[feature], tweetTime)
+        return self.getPerClassScore(tweetFeatureMap)
+    def getPerClassScore(self, tweetFeatureMap):
         perClassScores = defaultdict(float)
         for k, v in tweetFeatureMap.iteritems(): 
             featureScore = float(StreamClassifier.numberOfClasses)/len(v)
@@ -103,9 +106,14 @@ class StreamClassifierWithDecay(StreamClassifier):
                 for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
         return perClassScores
 
-class StreamClassifierNaiveBayes(StreamClassifier):
+class StreamClassifierFeatureScoreDecayWithInverseClassFrequency(StreamClassifierFeatureScoreDecay):
+    def __init__(self, decayRate, type=StreamClassifier.typeFeatureScoreDecayWithInverseClassFrequency, **kwargs):
+        super(StreamClassifierFeatureScoreDecayWithInverseClassFrequency, self).__init__(decayRate, type=StreamClassifier.typeFeatureScoreDecayWithInverseClassFrequency, **kwargs)
+        
+
+class StreamClassifierNaiveBayesWithLaplaceSmoothing(StreamClassifier):
     def __init__(self, decayRate, **kwargs):
-        super(StreamClassifierNaiveBayes, self).__init__(type=StreamClassifier.typeNaiveBayes, **kwargs)
+        super(StreamClassifierNaiveBayesWithLaplaceSmoothing, self).__init__(type=StreamClassifier.typeNaiveBayesWithLaplaceSmoothing, **kwargs)
         self.decayRate=decayRate
         self.classStats = defaultdict(FeatureScore)
     def learnFromTweet(self, tweet):
@@ -132,7 +140,7 @@ class StreamClassifierNaiveBayes(StreamClassifier):
         return classProbabilities
                 
 if __name__ == '__main__':
-    streamClassifier = StreamClassifierWithDecay(decayRate=Settings.stream_classifier_decay_rate, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=10)
+    streamClassifier = StreamClassifierFeatureScoreDecay(decayRate=Settings.stream_classifier_decay_rate, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=10)
     streamClassifier.classifyingMethod = streamClassifier.classifyForAUCM
     streamClassifier.start()
     print streamClassifier.type, len(streamClassifier.classifiedDocuments), streamClassifier.getAUCM()
