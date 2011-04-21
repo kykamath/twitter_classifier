@@ -199,6 +199,19 @@ class AnalyzeClassifiers:
             currentDay+=timedelta(days=1)
     
     @staticmethod
+    def generateDataSetStats125():
+        currentDay = Settings.startTime
+        while currentDay<=Settings.endTime:
+            inputTrainingSetFile = Utilities.getTrainingFile(currentDay, DocumentType.typeRuuslUnigram, Settings.numberOfExperts)
+            inputTestSetFile = Utilities.getTestFile(currentDay, DocumentType.typeRuuslUnigram, Settings.numberOfExperts, bottom=True)
+            print inputTestSetFile, inputTrainingSetFile
+#            for file, tweetType in [(inputTrainingSetFile, 'training'), (inputTestSetFile, 'test')]:
+#                for tweet in Utilities.iterateTweetsFromFile(file):
+#                    print tweetType, tweet
+        currentDay+=timedelta(days=1)
+    
+    
+    @staticmethod
     def generateStatsForStreamClassifier():
         '''
         Total documents: 117731
@@ -449,7 +462,9 @@ if __name__ == '__main__':
 #    AnalyzeClassifiers.generateStatsForTrainingDataPerDay()
 #    AnalyzeClassifiers.generateStatsForGlobalClassifier()
 #    AnalyzeClassifiers.generateDataSetStats()
-    AnalyzeClassifiers.generateStatsForStreamClassifier()
+    AnalyzeClassifiers.generateDataSetStats125()
+#    AnalyzeClassifiers.generateStatsForStreamClassifier()
+    
     
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.analyzeStatsForDimnishingAUCMValues()
