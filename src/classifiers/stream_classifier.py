@@ -56,14 +56,14 @@ class StreamClassifier(object):
         if perClassScores:
             total = sum(v for v in perClassScores.itervalues())
             for k in perClassScores: perClassScores[k]=perClassScores[k]/total
-            print perClassScores
-#            sortedScores = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
+            sortedScores = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
 #            if sortedScores[0][1]>=Utilities.my_log(Settings.stream_classifier_class_probability_threshold):
-            for classLabel, classId in classToIntMap.iteritems():
-                if classLabel not in perClassScores: tempDict[classId]=None
-                else: tempDict[classId]=perClassScores[classLabel]
-            self.classifiedDocuments.append((self.numberOfTestTweets, classToIntMap[tweet['class']], tempDict))
-            self.numberOfTestTweets+=1
+            if sortedScores[0][1]>=Settings.stream_classifier_class_probability_threshold:
+                for classLabel, classId in classToIntMap.iteritems():
+                    if classLabel not in perClassScores: tempDict[classId]=None
+                    else: tempDict[classId]=perClassScores[classLabel]
+                self.classifiedDocuments.append((self.numberOfTestTweets, classToIntMap[tweet['class']], tempDict))
+                self.numberOfTestTweets+=1
     def getFeatureProbabilites(self, feature, tweetTime):
         mapToReturn = {}
         totalScore = 0
