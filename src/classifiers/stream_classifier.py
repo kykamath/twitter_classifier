@@ -128,7 +128,7 @@ class StreamClassifierNaiveBayes(StreamClassifier):
         return classProbabilities
                 
 if __name__ == '__main__':
-    streamClassifier = StreamClassifierWithDecay(decayRate=Settings.stream_classifier_decay_rate, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=25)
+    streamClassifier = StreamClassifierWithDecay(decayRate=Settings.stream_classifier_decay_rate, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=Settings.numberOfExperts, noOfDays=10)
     streamClassifier.classifyingMethod = streamClassifier.classifyForAUCM
     streamClassifier.start()
     print len(streamClassifier.classifiedDocuments)
