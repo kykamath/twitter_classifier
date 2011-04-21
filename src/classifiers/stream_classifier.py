@@ -54,9 +54,9 @@ class StreamClassifier(object):
     def classifyForAUCM(self, tweet, perClassScores):
         tempDict = {}
         if perClassScores:
-            total = sum(v for v in perClassScores.itervalues())
+#            total = sum(v for v in perClassScores.itervalues())
             print perClassScores
-            for k in perClassScores: perClassScores[k]=perClassScores[k]/total
+#            for k in perClassScores: perClassScores[k]=perClassScores[k]/total
 #            sortedScores = sorted(perClassScores.iteritems(), key=itemgetter(1), reverse=True)
 #            if sortedScores[0][1]>=Utilities.my_log(Settings.stream_classifier_class_probability_threshold):
             for classLabel, classId in classToIntMap.iteritems():
@@ -97,7 +97,7 @@ class StreamClassifierFeatureScoreDecay(StreamClassifier):
     def getPerClassScore(self, tweetFeatureMap):
         perClassScores = defaultdict(float)
         for k, v in tweetFeatureMap.iteritems(): 
-            for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(score)
+            for classLabel, score in v.iteritems(): perClassScores[classLabel]*=score
         return perClassScores
 
 class StreamClassifierFeatureScoreDecayWithInverseClassFrequency(StreamClassifierFeatureScoreDecay):
@@ -108,7 +108,8 @@ class StreamClassifierFeatureScoreDecayWithInverseClassFrequency(StreamClassifie
         for k, v in tweetFeatureMap.iteritems(): 
             featureScore = float(StreamClassifier.numberOfClasses)/len(v)
             if featureScore!=0:
-                for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
+#                for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
+                for classLabel, score in v.iteritems(): perClassScores[classLabel]*=(featureScore*score)
         return perClassScores
         
 
@@ -135,7 +136,8 @@ class StreamClassifierNaiveBayesWithLaplaceSmoothing(StreamClassifier):
                 if feature in self.featureMap and classLabel in self.featureMap[feature]['class']:
                     self.featureMap[feature]['class'][classLabel].update(self.decayRate, tweetTime, 0)
                     featureCountForClass = self.featureMap[feature]['class'][classLabel].score
-                classProbabilities[classLabel]+=math.log((featureCountForClass+1)/(numberOfFeaturesInClass+totalNumberOffUniqueFeatures))
+#                classProbabilities[classLabel]+=math.log((featureCountForClass+1)/(numberOfFeaturesInClass+totalNumberOffUniqueFeatures))
+                classProbabilities[classLabel]*=(featureCountForClass+1)/(numberOfFeaturesInClass+totalNumberOffUniqueFeatures)
         return classProbabilities
                 
 if __name__ == '__main__':
