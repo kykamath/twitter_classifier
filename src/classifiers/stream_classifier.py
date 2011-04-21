@@ -95,11 +95,12 @@ class StreamClassifierFeatureScoreDecay(StreamClassifier):
             if feature in self.featureMap: tweetFeatureMap[feature]=self.getFeatureProbabilites(self.featureMap[feature], tweetTime)
         return self.getPerClassScore(tweetFeatureMap)
     def getPerClassScore(self, tweetFeatureMap):
-        perClassScores = defaultdict(float)
+        perClassScores = {}
         for k, v in tweetFeatureMap.iteritems(): 
 #            for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(score)
             for classLabel, score in v.iteritems(): 
                 if score!=0: 
+                    if classLabel not in perClassScores: perClassScores[classLabel]=1
                     perClassScores[classLabel]*=score
                     print perClassScores
         return perClassScores
@@ -108,12 +109,13 @@ class StreamClassifierFeatureScoreDecayWithInverseClassFrequency(StreamClassifie
     def __init__(self, decayRate, type=StreamClassifier.typeFeatureScoreDecayWithInverseClassFrequency, **kwargs):
         super(StreamClassifierFeatureScoreDecayWithInverseClassFrequency, self).__init__(decayRate, type=StreamClassifier.typeFeatureScoreDecayWithInverseClassFrequency, **kwargs)
     def getPerClassScore(self, tweetFeatureMap):
-        perClassScores = defaultdict(float)
+        perClassScores = {}
         for k, v in tweetFeatureMap.iteritems(): 
             featureScore = float(StreamClassifier.numberOfClasses)/len(v)
             if featureScore!=0:
 #                for classLabel, score in v.iteritems(): perClassScores[classLabel]+=math.log(featureScore*score)
                 for classLabel, score in v.iteritems(): 
+                    if classLabel not in perClassScores: perClassScores[classLabel]=1
                     if score!=0: perClassScores[classLabel]*=(featureScore*score)
         return perClassScores
         
@@ -132,7 +134,7 @@ class StreamClassifierNaiveBayesWithLaplaceSmoothing(StreamClassifier):
             self.classStats[classLabel].update(self.decayRate, tweetTime, 1)
     def classifyTweet(self, tweet):
         tweetTime = datetime.strptime(tweet['created_at'], Settings.twitter_api_time_format)
-        classProbabilities, totalNumberOffUniqueFeatures = defaultdict(float), len(self.featureMap)
+        classProbabilities, totalNumberOffUniqueFeatures = {}, len(self.featureMap)
         for classLabel, classFeatureScore in self.classStats.iteritems(): 
             classFeatureScore.update(self.decayRate, tweetTime, 0)
             numberOfFeaturesInClass = classFeatureScore.score
@@ -142,6 +144,7 @@ class StreamClassifierNaiveBayesWithLaplaceSmoothing(StreamClassifier):
                     self.featureMap[feature]['class'][classLabel].update(self.decayRate, tweetTime, 0)
                     featureCountForClass = self.featureMap[feature]['class'][classLabel].score
 #                classProbabilities[classLabel]+=math.log((featureCountForClass+1)/(numberOfFeaturesInClass+totalNumberOffUniqueFeatures))
+                if classLabel not in classProbabilities: classProbabilities[classLabel]=1
                 classProbabilities[classLabel]*=(featureCountForClass+1)/(numberOfFeaturesInClass+totalNumberOffUniqueFeatures)
         return classProbabilities
                 
