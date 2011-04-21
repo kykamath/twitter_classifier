@@ -386,6 +386,28 @@ class AnalyzeClassifiers:
         plt.legend()
         fig.autofmt_xdate()
         plt.show()
+        
+    @staticmethod
+    def analyzeStatsForDatasets():
+        '''
+        1253451
+        politics 325699 13027.96
+        entertainment 222124 8884.96
+        technology 372908 14916.32
+        sports 332720 13308.8
+        25
+        '''
+        total, perClassCount = 0, {}
+        for l in Utilities.iterateJsonFromFile(Settings.stats_for_dataset):
+            total+=l['total_tweets']
+            for classType in l['classes']:
+                if classType not in perClassCount: perClassCount[classType]={'total':0, 'no_of_days':0}
+                perClassCount[classType]['total']+=l['classes'][classType]
+                perClassCount[classType]['no_of_days']+=1
+        print total
+        for k, v in perClassCount.iteritems(): print k, perClassCount[k]['total'], perClassCount[k]['total']/float(perClassCount[k]['no_of_days'])
+        print perClassCount[k]['no_of_days']
+        
 if __name__ == '__main__':
 #    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
 #    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations(numberOfExperts=Settings.numberOfExpertsSecondSet)
@@ -400,7 +422,7 @@ if __name__ == '__main__':
 #    AnalyzeClassifiers.generateStatsForTopFeatures()
 #    AnalyzeClassifiers.generateStatsForTrainingDataPerDay()
 #    AnalyzeClassifiers.generateStatsForGlobalClassifier()
-    AnalyzeClassifiers.generateDataSetStats()
+#    AnalyzeClassifiers.generateDataSetStats()
     
 #    AnalyzeClassifiers.analyzeStatsToDetermineFixedWindowLength()
 #    AnalyzeClassifiers.analyzeStatsForDimnishingAUCMValues()
@@ -411,3 +433,4 @@ if __name__ == '__main__':
 #    AnalyzeClassifiers.analyzeStatsForConceptDriftExamples()
 #    AnalyzeClassifiers.analyzeTrainingData()
 #    AnalyzeClassifiers.analyzeStatsForGlobalClassifier()
+    AnalyzeClassifiers.analyzeStatsForDatasets()
