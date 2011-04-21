@@ -200,6 +200,9 @@ class AnalyzeClassifiers:
     
     @staticmethod
     def generateStatsForStreamClassifier():
+        '''
+        Total documents: 117731
+        '''
         streamClassifiers = [StreamClassifierFeatureScoreDecay, StreamClassifierFeatureScoreDecayWithInverseClassFrequency, StreamClassifierNaiveBayesWithLaplaceSmoothing]
         numberOfExpertsList = [Settings.numberOfExperts]
         noOfDaysList = [25]
