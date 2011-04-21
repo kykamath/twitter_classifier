@@ -203,19 +203,20 @@ class AnalyzeClassifiers:
         streamClassifiers = [StreamClassifierFeatureScoreDecay, StreamClassifierFeatureScoreDecayWithInverseClassFrequency, StreamClassifierNaiveBayesWithLaplaceSmoothing]
         numberOfExpertsList = [Settings.numberOfExperts]
         noOfDaysList = [25]
-        score_thresholds = [0.2*i for i in range(5)]
+#        score_thresholds = [0.2*i for i in range(5)]
         for classifier in streamClassifiers:
             for numberOfExperts in numberOfExpertsList:
                 for noOfDays in noOfDaysList:
-                    for score_threshold in score_thresholds:
-                        Settings.stream_classifier_class_probability_threshold = score_threshold
-                        streamClassifier = classifier(decayRate=Settings.stream_classifier_decay_rate, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=numberOfExperts, noOfDays=noOfDays)
-                        streamClassifier.classifyingMethod = streamClassifier.classifyForAUCM
-                        data = {'classifier_type':streamClassifier.type, 'stream_length_in_days':noOfDays, 'number_of_experts': numberOfExperts, 'metric':'aucm', 'score_threshold':Settings.stream_classifier_class_probability_threshold}
-                        streamClassifier.start()
-                        data['number_of_documents_classified'] = len(streamClassifier.classifiedDocuments)
-                        data['value']=streamClassifier.getAUCM()
-                        Utilities.writeAsJsonToFile(data, Settings.stats_for_stream_classifier_comparisons)
+#                    for score_threshold in score_thresholds:
+#                    Settings.stream_classifier_class_probability_threshold = score_threshold
+                    streamClassifier = classifier(decayRate=Settings.stream_classifier_decay_rate, currentTime=Settings.startTime, dataType=DocumentType.typeRuuslUnigram, numberOfExperts=numberOfExperts, noOfDays=noOfDays)
+                    streamClassifier.classifyingMethod = streamClassifier.classifyForAUCM
+#                    data = {'classifier_type':streamClassifier.type, 'stream_length_in_days':noOfDays, 'number_of_experts': numberOfExperts, 'metric':'aucm', 'score_threshold':Settings.stream_classifier_class_probability_threshold}
+                    data = {'classifier_type':streamClassifier.type, 'stream_length_in_days':noOfDays, 'number_of_experts': numberOfExperts, 'metric':'aucm'}
+                    streamClassifier.start()
+                    data['number_of_documents_classified'] = len(streamClassifier.classifiedDocuments)
+                    data['value']=streamClassifier.getAUCM()
+                    Utilities.writeAsJsonToFile(data, Settings.stats_for_stream_classifier_comparisons)
     
     @staticmethod
     def analyzeStatsToDetermineFixedWindowLength():
