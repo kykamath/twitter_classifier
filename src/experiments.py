@@ -449,6 +449,35 @@ class AnalyzeClassifiers:
         for k, v in perClassCount.iteritems(): print k, perClassCount[k]['total'], perClassCount[k]['total']/float(perClassCount[k]['no_of_days'])
         print perClassCount[k]['no_of_days']
         
+    @staticmethod
+    def analyzeStatsForDatasets125():
+        '''
+        train
+        politics 31976 1279
+        entertainment 21064 842
+        technology 36663 1466
+        sports 33005 1320
+        test
+        politics 26373 1054
+        entertainment 25714 1028
+        technology 29734 1189
+        sports 41219 1648
+        25
+        '''
+        trainData, testData, count = defaultdict(int), defaultdict(int), 0
+        for l in Utilities.iterateJsonFromFile(Settings.stats_for_dataset_125):
+            for k in l['train_classes']: 
+                trainData[k]+=l['train_classes'][k]
+                testData[k]+=l['test_classes'][k]
+            count+=1
+        print 'train'
+        for k in trainData:
+            print k, trainData[k], trainData[k]/count
+        print 'test'
+        for k in testData:
+            print k, testData[k], testData[k]/count
+        print count
+        
 if __name__ == '__main__':
 #    GenerateClassifiers.fixedWindowOfDifferentLengthsAndDataTypes()
 #    GenerateClassifiers.fixedWindowWithCollocationsForDifferentCollocations(numberOfExperts=Settings.numberOfExpertsSecondSet)
@@ -464,7 +493,7 @@ if __name__ == '__main__':
 #    AnalyzeClassifiers.generateStatsForTrainingDataPerDay()
 #    AnalyzeClassifiers.generateStatsForGlobalClassifier()
 #    AnalyzeClassifiers.generateDataSetStats()
-    AnalyzeClassifiers.generateDataSetStats125()
+#    AnalyzeClassifiers.generateDataSetStats125()
 #    AnalyzeClassifiers.generateStatsForStreamClassifier()
     
     
@@ -478,3 +507,4 @@ if __name__ == '__main__':
 #    AnalyzeClassifiers.analyzeTrainingData()
 #    AnalyzeClassifiers.analyzeStatsForGlobalClassifier()
 #    AnalyzeClassifiers.analyzeStatsForDatasets()
+    AnalyzeClassifiers.analyzeStatsForDatasets125()
